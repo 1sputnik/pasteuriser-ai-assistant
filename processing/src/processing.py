@@ -181,6 +181,12 @@ def right_data_per_time(data=[], time=[]):
     for i in range(1, len(temp_time)):
         down = find_max_element_before_border(time, temp_time[i], down)
         up = down + 1
+        if time[down] == temp_time[i]:
+            temp_data.append(data[down])
+            continue
+        if time[up] == temp_time[i]:
+            temp_data.append(data[up])
+            continue
         if down == len(time) - 1:
             temp_data.append(data[down])
             break
@@ -189,6 +195,12 @@ def right_data_per_time(data=[], time=[]):
         temp_data.append(unta * data[down] + tega * data[up])
     copy_list(temp_data, data)
     copy_list(temp_time, time)
+
+
+def right_null_start(time=[]):
+    downer = time[0]
+    for i in range(len(time)):
+        time[i] = time[i] - downer
 
 
 data = []
@@ -215,6 +227,7 @@ print("choose the mode of data processing:\n"
       "5 - cut left border of data\n"
       "6 - cut range of data\n"
       "7 - right data per time\n"
+      "8 - make start at 0 per time\n"
       "your action: ")
 action = input()
 
@@ -232,6 +245,8 @@ elif action == '6':
     cut_range(data, time)
 elif action == '7':
     right_data_per_time(data, time)
+elif action == '8':
+    right_null_start(time)
 
 print("enter the result file name:\n")
 result_file_name = input()
