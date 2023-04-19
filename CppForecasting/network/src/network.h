@@ -88,3 +88,6 @@ public:
 	LSTM(double rate, unint16 epochs, unint16 input_range, unint16 hidden_range, string mode = "sequence");
 	~LSTM();
 };
+
+void load_model(LSTM& lstm, string file_name);
+void dump_model(LSTM& lstm, string file_name);

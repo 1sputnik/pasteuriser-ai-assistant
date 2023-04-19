@@ -53,7 +53,7 @@ inline void randfill_matrix(double**& arr, size_t rows, size_t colls, double tif
 	double rank = 1000; // сколько знаков нам нужно при рандоме: [0, rank - 1]
 	for (size_t i = 0; i < rows; i++) 
 		for (size_t j = 0; j < colls; j++)
-			arr[i][j] = double((rand() % (2 * int(rank) + 1)) - int(1.0 * rank))
+			arr[i][j] = double((rand() % (2 * int(rank) + 1)) - int(1. * rank))
 								/ (tiff * double(rank));
 }
 inline void fill_matrix(double**& arr, size_t rows, size_t colls, double value = 0) {
@@ -397,6 +397,9 @@ void LSTM::predict(DataVector& test_data, size_t predict_range) {
 	// расширяем данные, чтобы можно было поместить туда новые предсказанные значения
 	test_data.resize(test_data.size() + predict_range);
 
+	//DataVector temp(1);
+	//temp = test_data;
+
 	// создаём долгосрочную и краткосрочную память
 	C = new double* [2];
 	h = new double* [2];
@@ -422,6 +425,9 @@ void LSTM::predict(DataVector& test_data, size_t predict_range) {
 		double y_predict = forecast(x);
 		double x_ = x[0];
 		delete[] x;
+		//temp[i + this->input_range].cid = test_data[0].cid;
+		//temp[i + this->input_range].time = test_data[0].time + dist * (i + this->input_range);
+		//temp[i + this->input_range].value = y_predict;
 		test_data[i + this->input_range].cid = test_data[0].cid;
 		test_data[i + this->input_range].time = test_data[0].time + dist * (i + this->input_range);
 		test_data[i + this->input_range].value = y_predict;
@@ -429,6 +435,8 @@ void LSTM::predict(DataVector& test_data, size_t predict_range) {
 		copy_vector(h[0], h[1], this->hidden_range);
 	}
 	
+	//test_data = temp;
+
 	// очищаем долгосрочную и краткосрочную память
 	delete[] C[1];
 	delete[] C[0];
@@ -488,4 +496,22 @@ LSTM::~LSTM() {
 	delete_matrix(U_o, hidden_range);
 
 	delete[] W_y;
+}
+
+
+void load_model(LSTM& lstm, string file_name) {
+	std::ifstream work_file;
+	work_file.open(file_name, std::ios::binary);
+	int model_weight;
+	work_file.read((char*)&model_weight, sizeof(int));
+	work_file.read((char*)&lstm, sizeof(lstm));
+	work_file.close();
+}
+void dump_model(LSTM& lstm, string file_name) {
+	std::ofstream result_file;
+	result_file.open(file_name, std::ios::binary);
+	int model_weight = sizeof(lstm);
+	result_file.write((char*)&model_weight, sizeof(int));
+	result_file.write((char*)&lstm, sizeof(lstm));
+	result_file.close();
 }
