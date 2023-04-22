@@ -18,20 +18,26 @@ protected:
 	double** h; // краткосрочная память
 
 
-	// веса и смещения
-	double* W_y; // веса для предскозаний
-	double b_y; // смещение для предсказания 
+	// веса 
+	double* W_y; // веса для предсказаний
 
 public:
 	virtual void fit(DataVector& train_data) = 0; // обучить сеть
-	virtual void predict(DataVector& test_data, size_t add_predict_range) = 0; // выполнить предсказание
+	virtual void predict(DataVector& test_data) = 0; // выполнить предсказание
 
 	void set_input_range(unint16 input_range);
 	void set_hidden_range(unint16 hidden_range);
 	void set_output_range(unint16 output_range);
 
+	void set_precision(double precision);
+
 	RecurrentNeuron(double rate = 0.001, unint16 epochs = 100, unint16 input_range = 1);
 };
+
+class LSTM;
+
+void load_model(LSTM& lstm, string file_name);
+void dump_model(LSTM& lstm, string file_name);
 
 class LSTM : public RecurrentNeuron{
 	// параметры сети
@@ -81,13 +87,14 @@ class LSTM : public RecurrentNeuron{
 	void train(double* x, double y_real, size_t k = 0);
 	double forecast(double* x, size_t k = 0);
 
+	// дружественные
+	friend void load_model(LSTM& lstm, string file_name);
+	friend void dump_model(LSTM& lstm, string file_name);
+
 public:
 	virtual void fit(DataVector& train_data) override;
-	virtual void predict(DataVector& test_data, size_t add_predict_range = 0) override;
+	virtual void predict(DataVector& test_data) override;
 
 	LSTM(double rate, unint16 epochs, unint16 input_range, unint16 hidden_range, string mode = "sequence");
 	~LSTM();
 };
-
-void load_model(LSTM& lstm, string file_name);
-void dump_model(LSTM& lstm, string file_name);

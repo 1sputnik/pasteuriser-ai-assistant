@@ -53,7 +53,7 @@ inline void randfill_matrix(double**& arr, size_t rows, size_t colls, double tif
 	double rank = 1000; // сколько знаков нам нужно при рандоме: [0, rank - 1]
 	for (size_t i = 0; i < rows; i++) 
 		for (size_t j = 0; j < colls; j++)
-			arr[i][j] = double((rand() % (2 * int(rank) + 1)) - int(1. * rank))
+			arr[i][j] = double((rand() % (2 * int(rank) + 1)) - int(1.0 * rank))
 								/ (tiff * double(rank));
 }
 inline void fill_matrix(double**& arr, size_t rows, size_t colls, double value = 0) {
@@ -101,6 +101,9 @@ void RecurrentNeuron::set_output_range(unint16 output_range) {
 	this->output_range = output_range;
 }
 
+void RecurrentNeuron::set_precision(double precision) {
+	this->precision = precision;
+}
 
 // ---------- LSTM ----------
 
@@ -384,7 +387,7 @@ double LSTM::forecast(double* x, size_t k) {
 	// возвращаем предстказание сети
 	return y_predict;
 }
-void LSTM::predict(DataVector& test_data, size_t predict_range) {
+void LSTM::predict(DataVector& test_data) {
 	// создаём и конфигурируем скейлер
 	Scaler sc;
 	sc.configure(120, 0);
@@ -394,11 +397,9 @@ void LSTM::predict(DataVector& test_data, size_t predict_range) {
 
 	// предполагается, что расстояние между точками по оси Х равное, поэтому вычисляем его
 	size_t dist = test_data.count_distance();
-	// расширяем данные, чтобы можно было поместить туда новые предсказанные значения
-	test_data.resize(test_data.size() + predict_range);
 
-	//DataVector temp(1);
-	//temp = test_data;
+	DataVector temp(1);
+	temp = test_data;
 
 	// создаём долгосрочную и краткосрочную память
 	C = new double* [2];
@@ -413,8 +414,6 @@ void LSTM::predict(DataVector& test_data, size_t predict_range) {
 		C[0] = new double [this->hidden_range] {0};
 		h[0] = new double [this->hidden_range] {0};
 	}
-	delete[] last_C_from_train;
-	delete[] last_h_from_train;
 	C[1] = new double[this->hidden_range] {0};
 	h[1] = new double[this->hidden_range] {0};
 
@@ -425,17 +424,14 @@ void LSTM::predict(DataVector& test_data, size_t predict_range) {
 		double y_predict = forecast(x);
 		double x_ = x[0];
 		delete[] x;
-		//temp[i + this->input_range].cid = test_data[0].cid;
-		//temp[i + this->input_range].time = test_data[0].time + dist * (i + this->input_range);
-		//temp[i + this->input_range].value = y_predict;
-		test_data[i + this->input_range].cid = test_data[0].cid;
-		test_data[i + this->input_range].time = test_data[0].time + dist * (i + this->input_range);
-		test_data[i + this->input_range].value = y_predict;
+		temp[i + this->input_range].cid = test_data[0].cid;
+		temp[i + this->input_range].time = test_data[0].time + dist * (i + this->input_range);
+		temp[i + this->input_range].value = y_predict;
 		copy_vector(C[0], C[1], this->hidden_range);
 		copy_vector(h[0], h[1], this->hidden_range);
 	}
 	
-	//test_data = temp;
+	test_data = temp;
 
 	// очищаем долгосрочную и краткосрочную память
 	delete[] C[1];
@@ -501,17 +497,100 @@ LSTM::~LSTM() {
 
 void load_model(LSTM& lstm, string file_name) {
 	std::ifstream work_file;
-	work_file.open(file_name, std::ios::binary);
-	int model_weight;
-	work_file.read((char*)&model_weight, sizeof(int));
-	work_file.read((char*)&lstm, sizeof(lstm));
+	work_file.open(file_name, std::ios::binary|std::ios::in);
+
+	// ranges
+	unint16 temp_range;
+	work_file.read((char*)&temp_range, sizeof(lstm.input_range));
+	if (temp_range != lstm.input_range) {
+		system("cls");
+		std::cerr << "При чтении данных модели с файла произошла ошибка: входная размерность сохранённой модели не совпадает с переданной в функцию!\n";
+		exit(0);
+	}
+	lstm.input_range = temp_range;
+	work_file.read((char*)&temp_range, sizeof(lstm.hidden_range));
+	if (temp_range != lstm.hidden_range) {
+		system("cls");
+		std::cerr << "При чтении данных модели с файла произошла ошибка: входная размерность сохранённой модели не совпадает с переданной в функцию!\n";
+		exit(0);
+	}
+	lstm.hidden_range = temp_range;
+	work_file.read((char*)&temp_range, sizeof(lstm.output_range));
+	if (temp_range != lstm.output_range) {
+		system("cls");
+		std::cerr << "При чтении данных модели с файла произошла ошибка: входная размерность сохранённой модели не совпадает с переданной в функцию!\n";
+		exit(0);
+	}
+	lstm.output_range = temp_range;
+
+	// параметры
+	work_file.read((char*)&lstm.precision, sizeof(double));
+	work_file.read((char*)&lstm.rate, sizeof(double));
+	work_file.read((char*)&lstm.e_predict, sizeof(double));
+	work_file.read((char*)&lstm.epochs, sizeof(unint16));
+	work_file.read((char*)&lstm.train_mode, sizeof(string));
+
+	lstm.last_h_from_train = new double[lstm.hidden_range];
+	lstm.last_C_from_train = new double[lstm.hidden_range];
+	
+	for (size_t i = 0; i < lstm.hidden_range; i++) {
+		for (size_t j = 0; j < lstm.hidden_range; j++) {
+			work_file.read((char*)&lstm.U_f[i][j], sizeof(lstm.U_f[i][j]));
+			work_file.read((char*)&lstm.U_i[i][j], sizeof(lstm.U_i[i][j]));
+			work_file.read((char*)&lstm.U_o[i][j], sizeof(lstm.U_o[i][j]));
+			work_file.read((char*)&lstm.U_g[i][j], sizeof(lstm.U_g[i][j]));
+		}
+		for (size_t j = 0; j < lstm.input_range; j++) {
+			work_file.read((char*)&lstm.W_f[i][j], sizeof(lstm.W_f[i][j]));
+			work_file.read((char*)&lstm.W_i[i][j], sizeof(lstm.W_i[i][j]));
+			work_file.read((char*)&lstm.W_o[i][j], sizeof(lstm.W_o[i][j]));
+			work_file.read((char*)&lstm.W_g[i][j], sizeof(lstm.W_g[i][j]));
+		}
+		work_file.read((char*)&lstm.W_y[i], sizeof(lstm.W_y[i]));
+		work_file.read((char*)&lstm.last_h_from_train[i], sizeof(lstm.last_h_from_train[i]));
+		work_file.read((char*)&lstm.last_C_from_train[i], sizeof(lstm.last_C_from_train[i]));
+	}
 	work_file.close();
 }
 void dump_model(LSTM& lstm, string file_name) {
+	if (lstm.last_h_from_train == nullptr || lstm.last_C_from_train == nullptr) {
+		system("cls");
+		std::cerr << "При сохранении модели произошла ошибка: нельзя сохранять необученную модель!\n";
+		exit(0);
+	}
+
 	std::ofstream result_file;
-	result_file.open(file_name, std::ios::binary);
-	int model_weight = sizeof(lstm);
-	result_file.write((char*)&model_weight, sizeof(int));
-	result_file.write((char*)&lstm, sizeof(lstm));
+	result_file.open(file_name, std::ios::binary | std::ios::out);
+
+	// ranges
+	result_file.write((char*)&lstm.input_range, sizeof(lstm.input_range));
+	result_file.write((char*)&lstm.hidden_range, sizeof(lstm.hidden_range));
+	result_file.write((char*)&lstm.output_range, sizeof(lstm.output_range));
+
+	// параметры
+	result_file.write((char*)&lstm.precision, sizeof(lstm.precision));
+	result_file.write((char*)&lstm.rate, sizeof(lstm.rate));
+	result_file.write((char*)&lstm.e_predict, sizeof(lstm.e_predict));
+	result_file.write((char*)&lstm.epochs, sizeof(lstm.epochs));
+	result_file.write((char*)&lstm.train_mode, sizeof(lstm.train_mode));
+
+	// веса и память 
+	for (size_t i = 0; i < lstm.hidden_range; i++) {
+		for (size_t j = 0; j < lstm.hidden_range; j++) {
+			result_file.write((char*)&lstm.U_f[i][j], sizeof(lstm.U_f[i][j]));
+			result_file.write((char*)&lstm.U_i[i][j], sizeof(lstm.U_i[i][j]));
+			result_file.write((char*)&lstm.U_o[i][j], sizeof(lstm.U_o[i][j]));
+			result_file.write((char*)&lstm.U_g[i][j], sizeof(lstm.U_g[i][j]));
+		}
+		for (size_t j = 0; j < lstm.input_range; j++) {
+			result_file.write((char*)&lstm.W_f[i][j], sizeof(lstm.W_f[i][j]));
+			result_file.write((char*)&lstm.W_i[i][j], sizeof(lstm.W_i[i][j]));
+			result_file.write((char*)&lstm.W_o[i][j], sizeof(lstm.W_o[i][j]));
+			result_file.write((char*)&lstm.W_g[i][j], sizeof(lstm.W_g[i][j]));
+		}
+		result_file.write((char*)&lstm.W_y[i], sizeof(lstm.W_y[i]));
+		result_file.write((char*)&lstm.last_h_from_train[i], sizeof(lstm.last_h_from_train[i]));
+		result_file.write((char*)&lstm.last_C_from_train[i], sizeof(lstm.last_C_from_train[i]));
+	}
 	result_file.close();
 }
