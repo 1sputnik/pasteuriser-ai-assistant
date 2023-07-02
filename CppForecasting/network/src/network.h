@@ -17,21 +17,14 @@ protected:
 	// параметрые, представл€ющие пам€ть сети
 	double** h; // краткосрочна€ пам€ть
 
-
 	// веса 
-	double* W_y; // веса дл€ предсказаний
+	double** W_y; // веса дл€ предсказаний
 
 public:
 	virtual void fit(DataVector& train_data) = 0; // обучить сеть
 	virtual void predict(DataVector& test_data) = 0; // выполнить предсказание
 
-	void set_input_range(unint16 input_range);
-	void set_hidden_range(unint16 hidden_range);
-	void set_output_range(unint16 output_range);
-
-	void set_precision(double precision);
-
-	RecurrentNeuron(double rate = 0.001, unint16 epochs = 100, unint16 input_range = 1);
+	RecurrentNeuron(double rate, unint16 epochs, unint16 input_range);
 };
 
 class LSTM;
@@ -40,9 +33,6 @@ void load_model(LSTM& lstm, string file_name);
 void dump_model(LSTM& lstm, string file_name);
 
 class LSTM : public RecurrentNeuron{
-	// параметры сети
-	string train_mode = "sequence";
-
 	// параметрые, представл€ющие пам€ть сети
 	double** C; // долгосрочна€ пам€ть 
 	double* last_C_from_train = nullptr; // последний расчЄт долгосрочной пам€ти при обучении 
@@ -77,24 +67,26 @@ class LSTM : public RecurrentNeuron{
 	double** _U_g = nullptr;
 	double** _U_o = nullptr;
 
-	double* _W_y = nullptr;
+	double** _W_y = nullptr;
 
-	// приватные функции
-	void select_memory_for_temp_weight_and_biases();
-	void copy_weight_and_biases();
-	void free_temp_weigth_and_biases();
+	// функции дл€ работы с промежуточными весами
+	void select_memory_for_temp_weight();
+	void copy_weight();
+	void free_temp_weigth();
 
-	void train(double* x, double y_real, size_t k = 0);
-	double forecast(double* x, size_t k = 0);
+	// функции реализующие математический аппарат дл€ работы сети
+	void train(double* x, double* y_real, size_t k = 0);
+	double* forecast(double* x, size_t k = 0);
 
-	// дружественные
+	// функции дл€ сохранени€ и загрузки сети
 	friend void load_model(LSTM& lstm, string file_name);
 	friend void dump_model(LSTM& lstm, string file_name);
 
 public:
+	// функции, реализующий подачу данных в математический аппарат сети дл€ нормального обучени€ или прогноза
 	virtual void fit(DataVector& train_data) override;
 	virtual void predict(DataVector& test_data) override;
 
-	LSTM(double rate, unint16 epochs, unint16 input_range, unint16 hidden_range, string mode = "sequence");
+	LSTM(double rate, unint16 epochs, unint16 input_range, unint16 hidden_range, unint16 output_range = 1);
 	~LSTM();
 };
