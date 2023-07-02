@@ -24,8 +24,11 @@ def create_dataset(dataset, look_back=1):
 
 numpy.random.seed(7)
 
-dataset = pd.read_csv('E:\\data_1_cid_6.csv', delimiter=';', engine='python',names=['value'])
+file_name = ''
+print("Введите имя файла для прогноза: ")
+file_name = input()
 
+dataset = pd.read_csv(file_name, delimiter=';', engine='python',names=['value'])
 
 scaler = MinMaxScaler(feature_range=(0, 1))
 dataset = scaler.fit_transform(dataset)
@@ -73,5 +76,3 @@ plt.plot(scaler.inverse_transform(dataset))
 plt.plot(trainPredictPlot)
 plt.plot(testPredictPlot)
 plt.show()
-
-
