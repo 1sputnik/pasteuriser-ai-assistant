@@ -1,5 +1,3 @@
-pasteuriser-ai-assistant
-
 ***<h1 align = "center">Pasteuriser AI Assistant</a>***
 
 # **Прогнозирование временных рядов с помощью LSTM**
