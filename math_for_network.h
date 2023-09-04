@@ -1,5 +1,5 @@
 #pragma once
-#include "data_changer.h"
+#include "Scaler.h"
 
 // математические функции
 inline double sigm(double x);
