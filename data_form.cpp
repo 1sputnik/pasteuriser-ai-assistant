@@ -1,4 +1,4 @@
-#include "data_form.h"
+п»ї#include "data_form.h"
 
 std::ostream& operator<<(std::ostream& os, const DATA& data) {
 	os << data.cid << ";" << data.time << ";" << data.value << "\n";
@@ -26,34 +26,46 @@ DATA::DATA(__int8 cid, unsigned int time, double value) {
 	this->value = value;
 }
 
-DataVector::DataVector() { //обычный конструктор
+DataVector::DataVector() { //Г®ГЎГ»Г·Г­Г»Г© ГЄГ®Г­Г±ГІГ°ГіГЄГІГ®Г°
 	array = new DATA[1];
 	capacity = 1;
 }
-DataVector::DataVector(std::string FileName) { //конструктор, в помощью которого можно сразу выделить память под файл
+DataVector::DataVector(std::string FileName) { //ГЄГ®Г­Г±ГІГ°ГіГЄГІГ®Г°, Гў ГЇГ®Г¬Г®Г№ГјГѕ ГЄГ®ГІГ®Г°Г®ГЈГ® Г¬Г®Г¦Г­Г® Г±Г°Г Г§Гі ГўГ»Г¤ГҐГ«ГЁГІГј ГЇГ Г¬ГїГІГј ГЇГ®Г¤ ГґГ Г©Г«
 	size_t size_of_file = MemFromFile(FileName);
 	array = new DATA[size_of_file];
 	capacity = size_of_file;
 }
-DataVector::DataVector(size_t size_of) { //конструктор, в помощью которого можно сразу выделить память под файл
+DataVector::DataVector(size_t size_of) { //ГЄГ®Г­Г±ГІГ°ГіГЄГІГ®Г°, Гў ГЇГ®Г¬Г®Г№ГјГѕ ГЄГ®ГІГ®Г°Г®ГЈГ® Г¬Г®Г¦Г­Г® Г±Г°Г Г§Гі ГўГ»Г¤ГҐГ«ГЁГІГј ГЇГ Г¬ГїГІГј ГЇГ®Г¤ ГґГ Г©Г«
 	array = new DATA[size_of];
 	capacity = size_of;
 }
-void DataVector::MemAddForFile(std::string FileName) {//выделение памяти под файл как метод класса
+
+
+void DataVector::MemAddForFile(std::string FileName) {//ГўГ»Г¤ГҐГ«ГҐГ­ГЁГҐ ГЇГ Г¬ГїГІГЁ ГЇГ®Г¤ ГґГ Г©Г« ГЄГ ГЄ Г¬ГҐГІГ®Г¤ ГЄГ«Г Г±Г±Г 
 	delete[] array;
 	size_ = 0;
 	size_t size_of_file = MemFromFile(FileName);
 	array = new DATA[size_of_file];
 	capacity = size_of_file;
 }
-void DataVector::MemAdd() {//выделение доп памяти при обычной работе
+void DataVector::MemAdd() {//ГўГ»Г¤ГҐГ«ГҐГ­ГЁГҐ Г¤Г®ГЇ ГЇГ Г¬ГїГІГЁ ГЇГ°ГЁ Г®ГЎГ»Г·Г­Г®Г© Г°Г ГЎГ®ГІГҐ
 	capacity *= 2;
 	DATA* tmp = array;
 	array = new DATA[capacity];
 	for (size_t i = 0; i < size_; ++i) array[i] = tmp[i];
 	delete[] tmp;
 }
-int DataVector::MemFromFile(std::string FileName) { // метод который считывает количество переходов на новую строку и возвращает их количество+1 для выделения памяти
+void DataVector::MemNAdd(size_t add_size) {//ГўГ»Г¤ГҐГ«ГҐГ­ГЁГҐ Г¤Г®ГЇ ГЇГ Г¬ГїГІГЁ ГЇГ°ГЁ Г®ГЎГ»Г·Г­Г®Г© Г°Г ГЎГ®ГІГҐ
+	capacity += add_size;
+	DATA* tmp = array;
+	array = new DATA[capacity];
+	for (size_t i = 0; i < size_; ++i) array[i] = tmp[i];
+	delete[] tmp;
+}
+
+
+
+int DataVector::MemFromFile(std::string FileName) { // Г¬ГҐГІГ®Г¤ ГЄГ®ГІГ®Г°Г»Г© Г±Г·ГЁГІГ»ГўГ ГҐГІ ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГЇГҐГ°ГҐГµГ®Г¤Г®Гў Г­Г  Г­Г®ГўГіГѕ Г±ГІГ°Г®ГЄГі ГЁ ГўГ®Г§ГўГ°Г Г№Г ГҐГІ ГЁГµ ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ®+1 Г¤Г«Гї ГўГ»Г¤ГҐГ«ГҐГ­ГЁГї ГЇГ Г¬ГїГІГЁ
 	std::ifstream DATAFile(FileName, std::ios::binary);
 	int PAR = 1;
 	if (DATAFile.is_open())
@@ -65,11 +77,11 @@ int DataVector::MemFromFile(std::string FileName) { // метод который считывает к
 	DATAFile.close();
 	return PAR;
 }
-void DataVector::push_back(const DATA& value) { // добавление в конец
+void DataVector::push_back(const DATA& value) { // Г¤Г®ГЎГ ГўГ«ГҐГ­ГЁГҐ Гў ГЄГ®Г­ГҐГ¶
 	if (size_ >= capacity) MemAdd();
 	array[size_++] = value;
 }
-DATA& DataVector::operator[](size_t index) { // операция получения по индексу
+DATA& DataVector::operator[](size_t index) { // Г®ГЇГҐГ°Г Г¶ГЁГї ГЇГ®Г«ГіГ·ГҐГ­ГЁГї ГЇГ® ГЁГ­Г¤ГҐГЄГ±Гі
 	if (index < size_)
 		return array[index];
 	else {

@@ -37,6 +37,7 @@ public:
 	DataVector(size_t size_of);
 	void MemAddForFile(std::string FileName);
 	void MemAdd();
+	void MemNAdd(size_t add_size);
 	int MemFromFile(std::string FileName);
 	void push_back(const DATA& value);
 	DATA& operator[](size_t index);
