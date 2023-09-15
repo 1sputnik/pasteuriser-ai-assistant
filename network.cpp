@@ -8,7 +8,6 @@ RecurrentNeuron::RecurrentNeuron(double rate, unint16 epochs, unint16 input_rang
 	this->input_range = input_range;
 }
 
-
 // ---------- LSTM ----------
 
 void LSTM::select_memory_for_temp_weight() {
@@ -98,6 +97,7 @@ void LSTM::train(double* x, double* y_real, size_t k) {
 		for (size_t i = 0; i < this->output_range; i++) {
 			de_dy[i] = (y_predict[i] - y_real[i]) * dif_sigm(y_predict[i]);
 		}
+		delete[] y_predict;
 
 		double* de_dO = new double[this->hidden_range];
 		double* de_dF = new double[this->hidden_range];
@@ -166,7 +166,6 @@ void LSTM::train(double* x, double* y_real, size_t k) {
 	delete[] state_gate;
 	delete[] output_gate;
 }
-// TODO исправить функцию с учётом output range 
 void LSTM::fit(DataVector& train_data) {
 	// создаём и конфигурируем скейлер
 	Scaler sc;
@@ -175,15 +174,16 @@ void LSTM::fit(DataVector& train_data) {
 	// скейлим входные данные
 	sc.scale(train_data);
 
-	// смещение сети в зависимости от режима подачи входных цепочек
-	size_t mode_bias = this->input_range;
+	// для сбора мусора
+	double* garbage_catcher = nullptr;
 
 	// подготовка к обучению
-	double** x = new double* [train_data.size() - mode_bias]; // матрица входных цепочек для каждой итерации
-	double** y_real = new double* [train_data.size() - mode_bias]; // вектор реальных значений каждой итерации
-	C = new double* [train_data.size() + 1 - mode_bias]; // + 1 для хранеия значений C[t + 1] (следующих значений)
-	h = new double* [train_data.size() + 1 - mode_bias];
-	for (size_t i = 0; i <= train_data.size() - mode_bias; i++) { // орагнизуем начальную долгосрочную и краткосрочную память
+	size_t work_size = train_data.size() - (this->input_range + this->output_range - 1); // допустимая размерность для работы
+	double** x = new double* [work_size]; // матрица входных цепочек для каждой итерации
+	double** y_real = new double* [work_size]; // вектор реальных значений каждой итерации
+	C = new double* [work_size + 1]; // + 1 для хранеия значений C[t + 1] (следующих значений)
+	h = new double* [work_size + 1];
+	for (size_t i = 0; i <= work_size; i++) { // орагнизуем начальную долгосрочную и краткосрочную память
 		C[i] = new double[this->hidden_range] {0};
 		h[i] = new double[this->hidden_range] {0};
 	}
@@ -204,18 +204,20 @@ void LSTM::fit(DataVector& train_data) {
 		e_predict = 0;
 
 		// формируем входные цепочки и их соотвесттвующие реальные значения, с которыми будет проводиться сравнение предсказаний
-		for (int j = 0; j < train_data.size() - mode_bias; j++) {
-			x[j] = create_input_vector(train_data, mode_bias, j);
-			//y_real[j] = train_data[mode_bias + j].value;
+		for (int j = 0; j < work_size; j++) {
+			x[j] = create_input_vector(train_data, this->input_range, j);
+			y_real[j] = create_input_vector(train_data, this->output_range, j + this->input_range);
 		}
 		
-		for (size_t j = 0; j < train_data.size() - mode_bias; j++) {
-			forecast(x[j], j); // этот цикл нужен, чтобы расчитать каждые вектора C и h для каждой итерации 
+		for (size_t j = 0; j < work_size; j++) {
+			garbage_catcher = forecast(x[j], j); // этот цикл нужен, чтобы расчитать каждые вектора C и h для каждой итерации 
+			delete[] garbage_catcher;
 		}
 		
-		for (int j = train_data.size() - 1 - mode_bias; j >= 0; j--) {
+		for (int j = work_size - 1; j >= 0; j--) {
 			train(x[j], y_real[j], j); // метод обратного распространения во времени		
 			delete[] x[j]; // удаление для дальнейшего обновления
+			delete[] y_real[j];
 		}
 
 		finish = clock();
@@ -224,12 +226,12 @@ void LSTM::fit(DataVector& train_data) {
 	}
 
 	// сохраняем память сети после последнего её расчёта при обучении
-	copy_vector(last_C_from_train, C[train_data.size() - mode_bias], this->hidden_range);
-	copy_vector(last_h_from_train, h[train_data.size() - mode_bias], this->hidden_range);
+	copy_vector(last_C_from_train, C[work_size], this->hidden_range);
+	copy_vector(last_h_from_train, h[work_size], this->hidden_range);
 
 	// очищаем память
 	free_temp_weigth();
-	for (int i = 0; i <= train_data.size() - mode_bias; i++) {
+	for (int i = 0; i <= work_size; i++) {
 		delete[] C[i];
 		delete[] h[i];
 	}
@@ -241,7 +243,6 @@ void LSTM::fit(DataVector& train_data) {
 	// восстанавливаем данные
 	sc.unscale(train_data);
 }
-//---------------------------
 
 double* LSTM::forecast(double* x, size_t k) {
 	// создаём вентили и расчитываем модель сети
@@ -273,7 +274,7 @@ double* LSTM::forecast(double* x, size_t k) {
 	}
 	
 	// рассчитываем прогноз
-	double* y_predict = new double[this->output_range];
+	double* y_predict = new double[this->output_range] {0};
 	for (size_t i = 0; i < this->output_range; i++) {
 		for (size_t j = 0; j < this->hidden_range; j++) 
 			y_predict[i] += W_y[i][j] * h[k + 1][j];
@@ -300,14 +301,10 @@ void LSTM::predict(DataVector& test_data) {
 	// предполагается, что расстояние между точками по оси Х равное, поэтому вычисляем его
 	size_t dist = test_data.count_distance();
 	
-	
-	// TODO необходимо расширить temp на output range
+	// создаём временный вектор с увелеченный на output_range памятью
 	DataVector temp(1);
 	temp = test_data;
-	//temp.add_mem(this->output_range);
-	std::cout << temp.size() << '/' << test_data.size() << "\n";
-	// --------------------------
-
+	temp.resize(test_data.size() + this->output_range);
 
 	// создаём долгосрочную и краткосрочную память
 	C = new double* [2];
@@ -333,6 +330,7 @@ void LSTM::predict(DataVector& test_data) {
 		for (int j = 0; j < this->output_range; j++) {
 			temp[i + this->input_range + j].cid = test_data[0].cid;
 			temp[i + this->input_range + j].time = test_data[0].time + dist * (i + this->input_range + j);
+			size_t temp_time = temp[i + this->input_range + j].time;
 			temp[i + this->input_range + j].value = y_predict[j];
 		}
 		copy_vector(C[0], C[1], this->hidden_range);
@@ -340,7 +338,8 @@ void LSTM::predict(DataVector& test_data) {
 		delete[] x;
 		delete[] y_predict;
 	}
-	
+
+	// сохраняем результаты предсказаний как реальные данные
 	test_data = temp;
 
 	// очищаем долгосрочную и краткосрочную память
@@ -369,17 +368,18 @@ LSTM::LSTM(double rate, unint16 epochs, unint16 input_range, unint16 hidden_rang
 	forgate_futur = new double[this->hidden_range] {0};
 
 	// веса 
-	create_random_matrix(W_f, hidden_range, input_range);
-	create_random_matrix(W_i, hidden_range, input_range);
-	create_random_matrix(W_g, hidden_range, input_range);
-	create_random_matrix(W_o, hidden_range, input_range);
+	int deep = 10; 
+	create_random_matrix(W_f, hidden_range, input_range, deep);
+	create_random_matrix(W_i, hidden_range, input_range, deep);
+	create_random_matrix(W_g, hidden_range, input_range, deep);
+	create_random_matrix(W_o, hidden_range, input_range, deep);
 
-	create_random_matrix(U_f, hidden_range, hidden_range);
-	create_random_matrix(U_i, hidden_range, hidden_range);
-	create_random_matrix(U_g, hidden_range, hidden_range);
-	create_random_matrix(U_o, hidden_range, hidden_range);
+	create_random_matrix(U_f, hidden_range, hidden_range, deep);
+	create_random_matrix(U_i, hidden_range, hidden_range, deep);
+	create_random_matrix(U_g, hidden_range, hidden_range, deep);
+	create_random_matrix(U_o, hidden_range, hidden_range, deep);
 
-	create_random_matrix(W_y, output_range, hidden_range);
+	create_random_matrix(W_y, output_range, hidden_range, deep);
 }
 LSTM::~LSTM() {
 	// параметрые, представляющие память сети

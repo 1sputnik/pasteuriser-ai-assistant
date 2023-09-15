@@ -87,6 +87,6 @@ public:
 	virtual void fit(DataVector& train_data) override;
 	virtual void predict(DataVector& test_data) override;
 
-	LSTM(double rate, unint16 epochs, unint16 input_range, unint16 hidden_range, unint16 output_range = 1);
+	LSTM(double rate, unint16 epochs, unint16 input_range, unint16 hidden_range, unint16 output_range);
 	~LSTM();
 };
