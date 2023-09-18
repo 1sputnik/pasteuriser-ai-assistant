@@ -43,6 +43,7 @@ public:
 	DATA& operator[](size_t index);
 	void inc_size();
 	size_t size();
+	size_t get_by_buff(std::ifstream& DATAFile, char buf_symb);
 	void resize(size_t new_size);
 	size_t count_distance();
 	void clear();
