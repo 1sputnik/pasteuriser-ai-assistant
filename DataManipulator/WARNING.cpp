@@ -63,3 +63,11 @@ void enter_point_menu_warning() {
 	SetConsoleTextAttribute(hConsole, 7);
 	system("pause");
 }
+
+void enter_invalid_data() {
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, 12);
+	std::cerr << "\nќшибка ввода данных! ¬ведЄнное число недопустимо!\n\n";
+	SetConsoleTextAttribute(hConsole, 7);
+	system("pause");
+}

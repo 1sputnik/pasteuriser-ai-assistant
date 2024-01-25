@@ -123,15 +123,14 @@ vector<OneCIDDataFormat> load_data(vector<OneCIDDataFormat> data, string file_na
 	load_file.close();
 	return data;
 }
-//void dump_data(OneCIDDataFormat*& data, string file_name);
-//
-//void dump_data(DataVector& data, string file_name) {
-//	std::ofstream dump_file;
-//	dump_file.open(file_name);
-//	for (int i = 0; i < data.get_size(); i++)
-//		dump_file << data[i];
-//	dump_file.close();
-//}
+void dump_data(vector<OneCIDDataFormat>& data, string file_name) {
+	std::ofstream dump_file;
+	dump_file.open(file_name);
+	for (int i = 0; i < data.size(); i++) {
+		dump_file << data[i] << '\n';
+	}
+	dump_file.close();
+}
 bool check_OCDF_in_file(string file_name) {
 	std::ifstream file;
 	if (have_promlems_with_opening_file(file, file_name)){

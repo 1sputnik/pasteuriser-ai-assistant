@@ -18,3 +18,5 @@ void enter_int_numeric_warning();
 void enter_double_numeric_warning();
 
 void enter_point_menu_warning();
+
+void enter_invalid_data();
