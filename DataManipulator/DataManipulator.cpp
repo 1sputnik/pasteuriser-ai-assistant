@@ -1,15 +1,20 @@
 ﻿#include "DataManipulator.h"
 
+// иерархия меню
 void MainDataFormat_Menu();
-	void read_OCDF_file(); void MainOCDF_Menu(vector<OCDF>& data);
-		void cut_percent_OCDF_data(vector<OCDF>& data);
-		void cut_quantity_OCDF_data(vector<OCDF>& data);
-		void right_time_OCDF(vector<OCDF>& data);
-		//void show_OCDF_data(vector<OCDF>& data);
-		//void pars_OCDF_data_per_cid(vector<OCDF>& data);
-		void save_OCDF_data(vector<OCDF>& data);
-	void read_TDF_file(); void MainTDF_Menu(vector<TDF>& data);
+	void read_OCDF_file(); 
+		void MainOCDF_Menu(vector<OCDF>& data);
+			void cut_percent_OCDF_data(vector<OCDF>& data);
+			void cut_quantity_OCDF_data(vector<OCDF>& data);
+			void right_time_OCDF(vector<OCDF>& data);
+			//void show_OCDF_data(vector<OCDF>& data);
+			void pars_OCDF_data_per_cid(vector<OCDF>& data);
+			void save_OCDF_data(vector<OCDF>& data);
+	void read_TDF_file(); 
+		void MainTDF_Menu(vector<TDF>& data);
 	void create_TDF_file();
+		void create_TDF_file_out_general_OCDF_file();
+		void create_TDF_file_out_six_OCDF_files();
 	void show_info();
 
 int main()
@@ -44,11 +49,8 @@ void MainDataFormat_Menu() {
 			<< "Введите пункт меню: ";
 		
 		string answer;
-		std::getline(std::cin, answer);
-		if (answer.size() != 1) {
-			enter_point_menu_warning();
+		if (!enter_menu_point(answer))
 			continue;
-		}
 
 		if (answer[0] == '0')
 			return;
@@ -68,23 +70,18 @@ void read_OCDF_file() {
 	vector<OCDF> data;
 
 	string load_file_path;
-	string bufer_str_data_size;
 	long long data_size;
 
 	while (true) {
 		system("cls");
-		std::cout << "Введите имя файла для загрузки из него данных: ";
+		std::cout << "Введите имя файла для загрузки из него данных (введите 0, чтобы выйти): ";
 		std::getline(std::cin, load_file_path);
+		if (load_file_path == "0")
+			return;
 
 		std::cout << "Сколько данных необходимо загрузить (введите 0, если надо загрузить все данные): ";
-		std::getline(std::cin, bufer_str_data_size);
-		if (is_int_numeric(bufer_str_data_size)) {
-			data_size = std::stol(bufer_str_data_size);
-		}
-		else {
-			enter_int_numeric_warning();
+		if (!enter_int_numeric(data_size))
 			continue;
-		}
 
 		try {
 			if (check_OCDF_in_file(load_file_path)) {
@@ -110,8 +107,8 @@ void MainOCDF_Menu(vector<OCDF>& data) {
 		make_pair('2', cut_quantity_OCDF_data),
 		make_pair('3', right_time_OCDF),
 		//make_pair('3', show_OCDF_data),
-		//make_pair('4', pars_OCDF_data_per_cid),
-		make_pair('5', save_OCDF_data)
+		make_pair('5', pars_OCDF_data_per_cid),
+		make_pair('6', save_OCDF_data)
 	};
 
 	while (true) {
@@ -128,16 +125,14 @@ void MainOCDF_Menu(vector<OCDF>& data) {
 			<< "2 - обрезать заданное количество данных\n"
 			<< "3 - выровнять диапазон по оси времени\n"
 			<< "4 - визуализировать данные\n"
-			<< "5 - сохранить данные в файл\n"
+			<< "5 - распарсить данные по сиду\n"
+			<< "6 - сохранить данные в файл\n"
 			<< "0 - выход в главное меню\n"
 			<< "Введите пункт меню: ";
 
 		string answer;
-		std::getline(std::cin, answer);
-		if (answer.size() != 1) {
-			enter_point_menu_warning();
+		if (!enter_menu_point(answer))
 			continue;
-		}
 
 		if (answer[0] == '0')
 			return;
@@ -156,41 +151,22 @@ void cut_percent_OCDF_data(vector<OCDF>& data) {
 		system("cls");
 
 		double cut_percent;
-		string buffer_double;
 		std::cout << "Введите процент данных, который нужно оставить: ";
-		std::getline(std::cin, buffer_double);
-		if (is_double_numeric(buffer_double)) {
-			std::replace(buffer_double.begin(), buffer_double.end(), '.', ',');
-			cut_percent = std::stod(buffer_double);
-			if (cut_percent > 1.0 || cut_percent < 0.0) {
-				enter_invalid_data();
-				continue;
-			}
-		}
-		else {
-			enter_double_numeric_warning();
+		if (!enter_double_numeric(cut_percent, true))
+			continue;
+		if (cut_percent > 1.0 || cut_percent < 0.0) {
+			enter_invalid_data();
 			continue;
 		}
 
 		bool cut_trend;
 		string answer;
 		std::cout << "Выберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
-		std::getline(std::cin, answer);
-		if (answer.size() != 1) {
-			enter_point_menu_warning();
+		if (!enter_menu_point(answer))
 			continue;
-		}
 
-		if (answer[0] == '0') {
-			cut_trend = 0;
-		}
-		else if (answer[0] == '1') {
-			cut_trend = 1;
-		}
-		else {
-			enter_invalid_data();
+		if (!string_symbol_to_bool(answer, cut_trend))
 			continue;
-		}
 
 		data = cut_percent_data(data, cut_percent, cut_trend);
 
@@ -202,41 +178,23 @@ void cut_quantity_OCDF_data(vector<OCDF>& data) {
 	while (true) {
 		system("cls");
 
-		double cut_quantity;
-		string buffer_double;
+		long long cut_quantity;
 		std::cout << "Введите количество данных, которое нужно оставить: ";
-		std::getline(std::cin, buffer_double);
-		if (is_int_numeric(buffer_double)) {
-			cut_quantity = std::stoi(buffer_double);
-			if (cut_quantity <= 0) {
-				enter_invalid_data();
-				continue;
-			}
-		}
-		else {
-			enter_int_numeric_warning();
+		if (!enter_int_numeric(cut_quantity))
+			continue;
+		if (cut_quantity <= 0) {
+			enter_invalid_data();
 			continue;
 		}
 
 		bool cut_trend;
 		string answer;
 		std::cout << "Выберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
-		std::getline(std::cin, answer);
-		if (answer.size() != 1) {
-			enter_point_menu_warning();
+		if (!enter_menu_point(answer))
 			continue;
-		}
 
-		if (answer[0] == '0') {
-			cut_trend = 0;
-		}
-		else if (answer[0] == '1') {
-			cut_trend = 1;
-		}
-		else {
-			enter_invalid_data();
+		if (!string_symbol_to_bool(answer, cut_trend))
 			continue;
-		}
 
 		data = cut_quntity_data(data, cut_quantity, cut_trend);
 
@@ -253,26 +211,39 @@ void right_time_OCDF(vector<OCDF>& data) {
 		std::cout << "Внимание! Данная операция предназначена для одного сида!\n\n";
 		SetConsoleTextAttribute(hConsole, 7);
 
-		double range;
-		string buffer_double;
+		long long range;
 		std::cout << "Введите необходимый диапозон между временными точками (0 - выход): ";
-		std::getline(std::cin, buffer_double);
-		if (is_int_numeric(buffer_double)) {
-			range = std::stoi(buffer_double);
-			if (range == 0) {
-				return;
-			}
-			else if (range < 0) {
-				enter_invalid_data();
-				continue;
-			}
+		if (!enter_int_numeric(range))
+			continue;
+		if (range == 0) {
+			return;
 		}
-		else {
-			enter_int_numeric_warning();
+		else if (range < 0) {
+			enter_invalid_data();
 			continue;
 		}
 
 		data = right_range(data, range);
+
+		break;
+	}
+}
+
+void pars_OCDF_data_per_cid(vector<OCDF>& data) {
+	while (true) {
+		system("cls");
+
+		long long number;
+		std::cout << "Введите номер сида, который необходимо оставить: ";
+		if (!enter_int_numeric(number))
+			continue;
+
+		if (number > 6 || number < 0) {
+			enter_invalid_data();
+			continue;
+		}
+
+		data = parsing_data_per_cid(data, number);
 
 		break;
 	}
@@ -289,7 +260,7 @@ void save_OCDF_data(vector<OCDF>& data) {
 
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 10);
-	std::cout << "\nДанные испешно сохранены!\n\n";
+	std::cout << "\nДанные успешно сохранены!\n\n";
 	SetConsoleTextAttribute(hConsole, 7);
 	system("pause");
 	return;
@@ -315,7 +286,50 @@ void MainTDF_Menu(vector<TDF>& data) {
 // CREATE TDF --------------------------------------------------------------
 
 void create_TDF_file() {
-	std::cout << "ss";
+	map<unsigned char, function<void()>> menu{
+		make_pair('1', create_TDF_file_out_general_OCDF_file),
+		make_pair('2', create_TDF_file_out_six_OCDF_files)
+	};
+
+	while (true) {
+		system("cls");
+
+		std::cout << "Выбрите формат файла, для создания файла формата TDF:\n"
+			<< "1 - создать TDF файл из общего OCDF фала со всеми сидами\n"
+			<< "2 - создать TDF файл из шести OCDF файлов разных сидов\n"
+			<< "0 - выход\n"
+			<< "Выберите пункт меню: ";
+
+		string answer;
+		if (!enter_menu_point(answer))
+			continue;
+
+		if (answer[0] == '0')
+			return;
+
+		try {
+			menu.at(answer[0])();
+		}
+		catch (...) {
+			enter_menu_warning();
+		}
+	}
+}
+
+void create_TDF_file_out_general_OCDF_file() {
+	while (true) {
+		system("cls");
+
+		string load_file_path;
+		std::cout << "Введите имя файла для загрузки из него данных (введите 0, чтобы выйти): ";
+		std::getline(std::cin, load_file_path);
+		if (load_file_path == "0")
+			return;
+	}
+}
+
+void create_TDF_file_out_six_OCDF_files() {
+
 }
 
 // INFO --------------------------------------------------------------

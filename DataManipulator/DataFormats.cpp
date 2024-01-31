@@ -17,50 +17,6 @@ vector<string> split_string(string str, char descriptor) {
 	}
 	return splited_string;
 }
-bool is_double_numeric(string str) {
-	vector<char> numerics{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0'};
-	for (size_t i = 0; i < str.size(); i++) {
-		if (find(numerics.begin(), numerics.end(), str[i]) == numerics.end())
-			return false;
-	}
-	return true;
-}
-bool is_int_numeric(string str) {
-	vector<char> numerics{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
-	for (size_t i = 0; i < str.size(); i++) {
-		if (find(numerics.begin(), numerics.end(), str[i]) == numerics.end())
-			return false;
-	}
-	return true;
-}
-bool have_promlems_with_opening_file(std::ifstream& file, string file_name) {
-	try {
-		file.open(file_name);
-	}
-	catch (...) {
-		if (file.is_open())
-			file.close();
-		return true;
-	}
-	if (!file.is_open()) {
-		return true;
-	}
-	return false;
-}
-bool have_promlems_with_reading_data(std::ifstream& file, string& str) {
-	try {
-		std::getline(file, str);
-	}
-	catch (...) {
-		file.close();
-		return true;
-	}
-	if (str == "") {
-		file.close();
-		return true;
-	}
-	return false;
-}
 size_t check_quantity_data_lines_in_file(std::ifstream& file, string file_name) {
 	file.open(file_name);
 	string buffer_string;
@@ -152,7 +108,6 @@ bool check_OCDF_in_file(string file_name) {
 	}
 	return true;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////// TDF ////////////////////////////////////////////////////////////////////////////////////////////////

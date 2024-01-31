@@ -41,6 +41,20 @@ vector<OneCIDDataFormat> cut_quntity_data(vector<OneCIDDataFormat> data, size_t 
 	return cut_data;
 }
 
+vector<OneCIDDataFormat> parsing_data_per_cid(vector<OneCIDDataFormat> data, short cid) {
+	vector<OneCIDDataFormat> parsed_data;
+
+	for (size_t i = 0; i < data.size(); i++) {
+		if (data[i].cid == cid)
+			parsed_data.push_back(data[i]);
+	}
+
+	if (parsed_data.size() == 0)
+		return data;
+
+	return parsed_data;
+}
+
 long long find_max_element_before_border(vector<OneCIDDataFormat>& data, size_t border, long long i) {
 	if (i < 0)
 		i = 0;
