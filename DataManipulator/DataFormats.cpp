@@ -1,35 +1,5 @@
 #include "DataFormats.h"
 
-vector<string> split_string(string str, char descriptor) {
-	vector<string> splited_string;
-	string buffer_string = "";
-	for (size_t i = 0; i < str.length(); i++) {
-		if (str[i] == descriptor) {
-			splited_string.push_back(buffer_string);
-			buffer_string = "";
-		}
-		else {
-			buffer_string += str[i];
-		}
-	}
-	if (buffer_string.size() != 0) {
-		splited_string.push_back(buffer_string);
-	}
-	return splited_string;
-}
-size_t check_quantity_data_lines_in_file(std::ifstream& file, string file_name) {
-	file.open(file_name);
-	string buffer_string;
-	size_t new_size = 0;
-	while (!file.eof()) {
-		std::getline(file, buffer_string);
-		if (buffer_string.length() > 2)
-			new_size++;
-	}
-	file.close();
-	return new_size;
-}
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////// OCDF ////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,27 +56,6 @@ void dump_data(vector<OneCIDDataFormat>& data, string file_name) {
 		dump_file << data[i] << '\n';
 	}
 	dump_file.close();
-}
-bool check_OCDF_in_file(string file_name) {
-	std::ifstream file;
-	if (have_promlems_with_opening_file(file, file_name)){
-		return false;
-	}
-	string test_str;
-	if (have_promlems_with_reading_data(file, test_str)) {
-		return false;
-	}
-	file.close();
-	vector<string> splited_test_str = split_string(test_str, ';');
-	if (splited_test_str.size() != 3) {
-		return false;
-	}
-	for (size_t i = 0; i < splited_test_str.size(); i++) {
-		if (!is_double_numeric(splited_test_str[i])) {
-			return false;
-		}
-	}
-	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

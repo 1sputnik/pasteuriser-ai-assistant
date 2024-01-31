@@ -1,15 +1,14 @@
 ﻿#include "DataManipulator.h"
 
 // иерархия меню
-void MainDataFormat_Menu();
-	void read_OCDF_file(); 
-		void MainOCDF_Menu(vector<OCDF>& data);
-			void cut_percent_OCDF_data(vector<OCDF>& data);
-			void cut_quantity_OCDF_data(vector<OCDF>& data);
-			void right_time_OCDF(vector<OCDF>& data);
-			//void show_OCDF_data(vector<OCDF>& data);
-			void pars_OCDF_data_per_cid(vector<OCDF>& data);
-			void save_OCDF_data(vector<OCDF>& data);
+void MainDataFormat_Menu(); 
+	void MainOCDF_Menu();
+		void cut_percent_OCDF_data(vector<OCDF>& data);
+		void cut_quantity_OCDF_data(vector<OCDF>& data);
+		void right_time_OCDF(vector<OCDF>& data);
+		//void show_OCDF_data(vector<OCDF>& data);
+		void pars_OCDF_data_per_cid(vector<OCDF>& data);
+		void save_OCDF_data(vector<OCDF>& data);
 	void read_TDF_file(); 
 		void MainTDF_Menu(vector<TDF>& data);
 	void create_TDF_file();
@@ -31,7 +30,7 @@ int main()
 
 void MainDataFormat_Menu() {
 	map<char, function<void()>> menu{
-		make_pair('1', read_OCDF_file),
+		make_pair('1', MainOCDF_Menu),
 		make_pair('2', read_TDF_file),
 		make_pair('3', create_TDF_file),
 		make_pair('4', show_info)
@@ -66,7 +65,7 @@ void MainDataFormat_Menu() {
 
 // OCDF menu --------------------------------------------------------------
 
-void read_OCDF_file() {
+vector<OCDF> read_OCDF_file(string special_msg = "") {
 	vector<OCDF> data;
 
 	string load_file_path;
@@ -74,10 +73,11 @@ void read_OCDF_file() {
 
 	while (true) {
 		system("cls");
-		std::cout << "Введите имя файла для загрузки из него данных (введите 0, чтобы выйти): ";
+
+		std::cout << special_msg;
+
+		std::cout << "Введите имя файла для загрузки из него данных: ";
 		std::getline(std::cin, load_file_path);
-		if (load_file_path == "0")
-			return;
 
 		std::cout << "Сколько данных необходимо загрузить (введите 0, если надо загрузить все данные): ";
 		if (!enter_int_numeric(data_size))
@@ -98,10 +98,10 @@ void read_OCDF_file() {
 		}
 	}
 
-	MainOCDF_Menu(data);
+	return data;
 }
 
-void MainOCDF_Menu(vector<OCDF>& data) {
+void MainOCDF_Menu() {
 	map<unsigned char, function<void(vector<OCDF>& data)>> menu{
 		make_pair('1', cut_percent_OCDF_data),
 		make_pair('2', cut_quantity_OCDF_data),
@@ -110,6 +110,9 @@ void MainOCDF_Menu(vector<OCDF>& data) {
 		make_pair('5', pars_OCDF_data_per_cid),
 		make_pair('6', save_OCDF_data)
 	};
+
+	vector<OCDF> data;
+	data = read_OCDF_file();
 
 	while (true) {
 		system("cls");

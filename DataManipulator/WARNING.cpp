@@ -91,11 +91,66 @@ bool is_double_numeric(std::string str) {
 	}
 	return true;
 }
+
 bool is_int_numeric(std::string str) {
 	std::vector<char> numerics{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
 	for (size_t i = 0; i < str.size(); i++) {
 		if (std::find(numerics.begin(), numerics.end(), str[i]) == numerics.end())
 			return false;
+	}
+	return true;
+}
+
+
+std::vector<std::string> split_string(std::string str, char descriptor) {
+	std::vector<std::string> splited_string;
+	std::string buffer_string = "";
+	for (size_t i = 0; i < str.length(); i++) {
+		if (str[i] == descriptor) {
+			splited_string.push_back(buffer_string);
+			buffer_string = "";
+		}
+		else {
+			buffer_string += str[i];
+		}
+	}
+	if (buffer_string.size() != 0) {
+		splited_string.push_back(buffer_string);
+	}
+	return splited_string;
+}
+
+size_t check_quantity_data_lines_in_file(std::ifstream& file, std::string file_name) {
+	file.open(file_name);
+	std::string buffer_string;
+	size_t new_size = 0;
+	while (!file.eof()) {
+		std::getline(file, buffer_string);
+		if (buffer_string.length() > 2)
+			new_size++;
+	}
+	file.close();
+	return new_size;
+}
+
+bool check_OCDF_in_file(std::string file_name) {
+	std::ifstream file;
+	if (have_promlems_with_opening_file(file, file_name)) {
+		return false;
+	}
+	std::string test_str;
+	if (have_promlems_with_reading_data(file, test_str)) {
+		return false;
+	}
+	file.close();
+	std::vector<std::string> splited_test_str = split_string(test_str, ';');
+	if (splited_test_str.size() != 3) {
+		return false;
+	}
+	for (size_t i = 0; i < splited_test_str.size(); i++) {
+		if (!is_double_numeric(splited_test_str[i])) {
+			return false;
+		}
 	}
 	return true;
 }

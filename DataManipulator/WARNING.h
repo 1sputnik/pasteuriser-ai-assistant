@@ -27,6 +27,15 @@ bool is_double_numeric(std::string str);
 bool is_int_numeric(std::string str);
 
 
+std::vector<std::string> split_string(std::string str, char descriptor);
+
+size_t check_quantity_data_lines_in_file(std::ifstream& file, std::string file_name);
+
+bool check_OCDF_in_file(std::string file_name);
+
+//bool check_TDF_int_file(std::string file_name);
+
+
 void begin_loaging();
 
 void end_loading();

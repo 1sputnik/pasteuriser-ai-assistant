@@ -19,9 +19,6 @@ typedef OneCIDDataFormat OCDF;
 class TableDataFormat;
 typedef TableDataFormat TDF;
 
-bool is_double_numeric(string str);
-bool is_int_numeric(string str);
-
 
 class OneCIDDataFormat {
 public:
@@ -41,8 +38,6 @@ public:
 
 vector<OneCIDDataFormat> load_data(vector<OneCIDDataFormat> data, string file_name, size_t size = 0);
 void dump_data(vector<OneCIDDataFormat>& data, string file_name);
-
-bool check_OCDF_in_file(string file_name);
 
 
 class TableDataFormat {
