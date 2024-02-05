@@ -41,6 +41,27 @@ vector<OneCIDDataFormat> cut_quntity_data(vector<OneCIDDataFormat> data, size_t 
 	return cut_data;
 }
 
+vector<OneCIDDataFormat> cut_data_per_time(vector<OneCIDDataFormat> data, long long time_border, bool cut_trend) {
+	vector<OneCIDDataFormat> cut_data;
+
+	if (cut_trend) {
+		for (size_t i = data.size(); i >= 0; i--) {
+			if (data[i].time > time_border)
+				continue;
+			cut_data[i] = data[i];
+		}
+	}
+	else {
+		for (size_t i = 0; i < data.size(); i++) {
+			if (data[i].time < time_border)
+				continue;
+			cut_data[i] = data[i];
+		}
+	}
+
+	return cut_data;
+}
+
 vector<OneCIDDataFormat> parsing_data_per_cid(vector<OneCIDDataFormat> data, short cid) {
 	vector<OneCIDDataFormat> parsed_data;
 

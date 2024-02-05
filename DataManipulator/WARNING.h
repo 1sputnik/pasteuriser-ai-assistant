@@ -40,7 +40,7 @@ void begin_loaging();
 
 void end_loading();
 
-void msg_warning(std::string msg = "", short color = 14);
+void msg_warning(std::string msg = "", short color = 7);
 
 void enter_menu_warning();
 

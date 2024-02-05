@@ -6,11 +6,10 @@ void MainDataFormat_Menu();
 		void cut_percent_OCDF_data(vector<OCDF>& data);
 		void cut_quantity_OCDF_data(vector<OCDF>& data);
 		void right_time_OCDF(vector<OCDF>& data);
-		//void show_OCDF_data(vector<OCDF>& data);
+		void show_OCDF_data(vector<OCDF>& data);
 		void pars_OCDF_data_per_cid(vector<OCDF>& data);
 		void save_OCDF_data(vector<OCDF>& data);
-	void read_TDF_file(); 
-		void MainTDF_Menu(vector<TDF>& data);
+	void MainTDF_Menu();
 	void create_TDF_file();
 		void create_TDF_file_out_general_OCDF_file();
 		void create_TDF_file_out_six_OCDF_files();
@@ -31,7 +30,7 @@ int main()
 void MainDataFormat_Menu() {
 	map<char, function<void()>> menu{
 		make_pair('1', MainOCDF_Menu),
-		make_pair('2', read_TDF_file),
+		make_pair('2', MainTDF_Menu),
 		make_pair('3', create_TDF_file),
 		make_pair('4', show_info)
 	};
@@ -68,24 +67,23 @@ void MainDataFormat_Menu() {
 vector<OCDF> read_OCDF_file(string special_msg = "") {
 	vector<OCDF> data;
 
-	string load_file_path;
-	long long data_size;
-
 	while (true) {
 		system("cls");
 
 		std::cout << special_msg;
 
+		string load_file_path;
 		std::cout << "Введите имя файла для загрузки из него данных: ";
 		std::getline(std::cin, load_file_path);
 
-		std::cout << "Сколько данных необходимо загрузить (введите 0, если надо загрузить все данные): ";
+		long long data_size;
+		std::cout << "\nСколько данных необходимо загрузить (введите 0, если надо загрузить все данные): ";
 		if (!enter_int_numeric(data_size))
 			continue;
 
 		try {
 			if (check_OCDF_in_file(load_file_path)) {
-				data = load_data(data, load_file_path, data_size);
+				data = load_OCDF_data(load_file_path, data_size);
 				break;
 			}
 			else {
@@ -106,7 +104,7 @@ void MainOCDF_Menu() {
 		make_pair('1', cut_percent_OCDF_data),
 		make_pair('2', cut_quantity_OCDF_data),
 		make_pair('3', right_time_OCDF),
-		//make_pair('3', show_OCDF_data),
+		make_pair('4', show_OCDF_data),
 		make_pair('5', pars_OCDF_data_per_cid),
 		make_pair('6', save_OCDF_data)
 	};
@@ -218,6 +216,7 @@ void right_time_OCDF(vector<OCDF>& data) {
 		std::cout << "Введите необходимый диапозон между временными точками (0 - выход): ";
 		if (!enter_int_numeric(range))
 			continue;
+
 		if (range == 0) {
 			return;
 		}
@@ -230,6 +229,28 @@ void right_time_OCDF(vector<OCDF>& data) {
 
 		break;
 	}
+}
+
+void show_OCDF_data(vector<OCDF>& data) {
+	bool is_one_cid = true;
+
+	for (size_t i = 1; i < data.size(); i++) {
+		if (data[0].cid != data[i].cid) {
+			is_one_cid = false;
+			break;
+		}
+	}
+	
+	system ("cls");
+
+	if (is_one_cid) {
+		dump_data(data, "..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
+		system("python ..\\..\\..\\..\\PyVisualisation\\OCDF_OneCid_Visual.py ..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
+		std::cout << "Данные визуализирвоаны!\n\n" << "Чтобы выйти, закройте окно визуализации!\n";
+		DeleteFile("..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
+	}
+
+	return;
 }
 
 void pars_OCDF_data_per_cid(vector<OCDF>& data) {
@@ -271,19 +292,29 @@ void save_OCDF_data(vector<OCDF>& data) {
 
 // TDF menu --------------------------------------------------------------
 
-void read_TDF_file() {
-	map<unsigned char, bool> menu{
-		make_pair('y', true),
-		make_pair('n', false)
-	};
-
+vector<TDF> read_TDF_file(string special_msg = "") {
 	vector<TDF> data;
 
-	MainTDF_Menu(data);
+	while (true) {
+		system("cls");
+
+		std::cout << special_msg;
+
+		string load_file_path;
+		std::cout << "Введите имя файла для загрузки из него данных: ";
+		std::getline(std::cin, load_file_path);
+
+		long long data_size;
+		std::cout << "\nСколько данных необходимо загрузить (введите 0, если надо загрузить все данные): ";
+		if (!enter_int_numeric(data_size))
+			continue;
+	}
+
+	return data;
 }
 
-void MainTDF_Menu(vector<TDF>& data) {
-	std::cout << "ss";
+void MainTDF_Menu() {
+	return;
 }
 
 // CREATE TDF --------------------------------------------------------------
@@ -323,15 +354,49 @@ void create_TDF_file_out_general_OCDF_file() {
 	while (true) {
 		system("cls");
 
-		string load_file_path;
-		std::cout << "Введите имя файла для загрузки из него данных (введите 0, чтобы выйти): ";
-		std::getline(std::cin, load_file_path);
-		if (load_file_path == "0")
-			return;
+		// блок чтения данных
+
+		vector<OCDF> general_OCDF_data;
+		general_OCDF_data = read_OCDF_file("Создание TDF файла из общего OCDF файла со всеми сидами.\n\n");
+		msg_warning("");
+
 	}
 }
 
 void create_TDF_file_out_six_OCDF_files() {
+	vector<OCDF> first_cid_data;
+	vector<OCDF> second_cid_data;
+	vector<OCDF> third_cid_data;
+	vector<OCDF> fourth_cid_data;
+	vector<OCDF> fifth_cid_data;
+	vector<OCDF> sixth_cid_data;
+
+	// блок чтения данных из файлов
+	first_cid_data = read_OCDF_file("Чтение файла первого сида.\n\n");
+	second_cid_data = read_OCDF_file("Чтение файла второго сида.\n\n");
+	third_cid_data = read_OCDF_file("Чтение файла третьего сида.\n\n");
+	fourth_cid_data = read_OCDF_file("Чтение файла четвёртого сида.\n\n");
+	fifth_cid_data = read_OCDF_file("Чтение файла пятого сида.\n\n");
+	sixth_cid_data = read_OCDF_file("Чтение файла шестого сида.\n\n");
+
+	// блок обработки
+	long long range;
+	while (true) {
+		//// подблок выравнивания диапозонов по оси x данных
+		std::cout << "Введите необходимый диапозон между временными точками: ";
+		if (!enter_int_numeric(range))
+			continue;
+		if (range < 0) {
+			enter_invalid_data();
+			continue;
+		}
+	}
+
+
+		long long minimal_time = first_cid_data[0].time;
+	
+
+		// блок сборки TDF файла
 
 }
 

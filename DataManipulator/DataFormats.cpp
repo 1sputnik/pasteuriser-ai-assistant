@@ -33,10 +33,10 @@ void OneCIDDataFormat::operator=(OneCIDDataFormat& data) {
 	this->time = data.time;
 	this->value = data.value;
 }
-vector<OneCIDDataFormat> load_data(vector<OneCIDDataFormat> data, string file_name, size_t size) {
+vector<OneCIDDataFormat> load_OCDF_data(string file_name, size_t size) {
 	std::ifstream load_file;
 	OneCIDDataFormat temp_data;
-	data.clear();
+	vector<OneCIDDataFormat> data;
 	if (size == 0) {
 		size = check_quantity_data_lines_in_file(load_file, file_name);
 	}

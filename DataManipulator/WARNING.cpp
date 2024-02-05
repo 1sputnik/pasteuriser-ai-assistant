@@ -173,7 +173,7 @@ void end_loading() {
 void msg_warning(std::string msg, short color) {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, color);
-	std::cout << "\nВнимание! " << msg << " Ожидайте...";
+	std::cout << msg;
 	SetConsoleTextAttribute(hConsole, 7);
 }
 
