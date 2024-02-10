@@ -8,6 +8,7 @@ void MainDataFormat_Menu();
 		void right_time_OCDF(vector<OCDF>& data);
 		void show_OCDF_data(vector<OCDF>& data);
 		void pars_OCDF_data_per_cid(vector<OCDF>& data);
+		void add_more_data(vector<OCDF>& data);
 		void save_OCDF_data(vector<OCDF>& data);
 	void MainTDF_Menu();
 	void create_TDF_file();
@@ -106,7 +107,8 @@ void MainOCDF_Menu() {
 		make_pair('3', right_time_OCDF),
 		make_pair('4', show_OCDF_data),
 		make_pair('5', pars_OCDF_data_per_cid),
-		make_pair('6', save_OCDF_data)
+		make_pair('6', add_more_data),
+		make_pair('7', save_OCDF_data)
 	};
 
 	vector<OCDF> data;
@@ -127,7 +129,8 @@ void MainOCDF_Menu() {
 			<< "3 - выровнять диапазон по оси времени\n"
 			<< "4 - визуализировать данные\n"
 			<< "5 - распарсить данные по сиду\n"
-			<< "6 - сохранить данные в файл\n"
+			<< "6 - добавить новые данные\n"
+			<< "7 - сохранить данные в файл\n"
 			<< "0 - выход в главное меню\n"
 			<< "Введите пункт меню: ";
 
@@ -253,8 +256,6 @@ void show_OCDF_data(vector<OCDF>& data) {
 	}
 
 	DeleteFile("..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
-
-	return;
 }
 
 void pars_OCDF_data_per_cid(vector<OCDF>& data) {
@@ -277,6 +278,55 @@ void pars_OCDF_data_per_cid(vector<OCDF>& data) {
 	}
 }
 
+void add_more_data(vector<OCDF>& data) {
+	system("cls");
+
+	vector<OCDF> new_data;
+	new_data = read_OCDF_file("Данные какого файла необходимо добавить?\n\n");
+
+	system("cls");
+
+	msg_warning("Соединяем данные...");
+
+	vector<OCDF> all_data(data.size() + new_data.size());
+	for (size_t i = 0, j = 0, k = 0; k < all_data.size(); k++) {
+		if (i == data.size()) { // если закончились данные в исходном векторе
+			all_data[k] = new_data[j];
+			j++;
+			continue;
+		}
+		else if (j == new_data.size()) { // если закончились данные в новом векторе
+			all_data[k] = data[i];
+			i++;
+			continue;
+		}
+		else { // если данные ещё есть в исходном и новом векторах
+			if (data[i].time < new_data[j].time) { // если данные из исходного вектора временем раньше, чем данные из нового вектора
+				all_data[k] = data[i];
+				i++;
+				continue;
+			}
+			else if (data[i].time > new_data[j].time) { // если данные из нового вектора временем раньше, чем данные из исходного вектора
+				all_data[k] = new_data[j];
+				j++;
+				continue;
+			}
+			else { // если данные из нового вектора и исходного вектора имеют одинаковое время
+				all_data[k] = data[i];
+				i++;
+				k++;
+				all_data[k] = new_data[j];
+				j++;
+				continue;
+			}
+		}
+	}
+
+	data = all_data;
+
+	delete_msg("Соединяем данные...");
+}
+
 void save_OCDF_data(vector<OCDF>& data) {
 	system("cls");
 
@@ -291,7 +341,6 @@ void save_OCDF_data(vector<OCDF>& data) {
 	std::cout << "\nДанные успешно сохранены!\n\n";
 	SetConsoleTextAttribute(hConsole, 7);
 	system("pause");
-	return;
 }
 
 // TDF menu --------------------------------------------------------------

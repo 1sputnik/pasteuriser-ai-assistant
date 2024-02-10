@@ -177,6 +177,11 @@ void msg_warning(std::string msg, short color) {
 	SetConsoleTextAttribute(hConsole, 7);
 }
 
+void delete_msg(std::string msg) {
+	for (size_t i = 0; i < msg.length(); i++)
+		std::cout << "\b";
+}
+
 void enter_menu_warning() {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 12);

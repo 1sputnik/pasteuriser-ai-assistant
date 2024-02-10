@@ -42,6 +42,8 @@ void end_loading();
 
 void msg_warning(std::string msg = "", short color = 7);
 
+void delete_msg(std::string msg);
+
 void enter_menu_warning();
 
 void load_data_warning();
