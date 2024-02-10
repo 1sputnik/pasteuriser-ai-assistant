@@ -6,21 +6,18 @@ from ZoomPan import *
 def zoom_visualisation(all_x=[], all_y=[]):
     fig = figure()
 
-    x_border = 10000000
+    ax = fig.add_subplot(111, xlim=(all_x[0], all_x[len(all_x) - 1]), ylim=(min(all_y), max(all_y)), autoscale_on=False)
 
-    if x_border > all_x[0]:
-        if x_border > len(all_x):
-            x_border = len(all_x)
-        ax = fig.add_subplot(111, xlim=(all_x[0], x_border), ylim=(0, 200), autoscale_on=False)
+    ax.plot(all_x, all_y, color='b')
+    ax.set_ylabel(f"Данные сида")
+    ax.set_xlabel("Дискретное время в секундах: t,sec")
+    ax.grid(True)
 
-        ax.plot(all_x, all_y, color='b')
-        ax.grid(True)
-
-        scale = 1.1
-        zp = ZoomPan()
-        figZoom = zp.zoom_factory(ax, base_scale=scale)
-        figPan = zp.pan_factory(ax)
-        show()
+    scale = 1.1
+    zp = ZoomPan()
+    figZoom = zp.zoom_factory(ax, base_scale=scale)
+    figPan = zp.pan_factory(ax)
+    show()
 
 # for data storage
 all_target_value = []

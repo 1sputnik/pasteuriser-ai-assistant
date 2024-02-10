@@ -242,13 +242,17 @@ void show_OCDF_data(vector<OCDF>& data) {
 	}
 	
 	system ("cls");
+	dump_data(data, "..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
+	std::cout << "Данные визуализирвоаны!\n\n" << "Чтобы выйти в меню, закройте окно визуализации!\n";
 
 	if (is_one_cid) {
-		dump_data(data, "..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
 		system("python ..\\..\\..\\..\\PyVisualisation\\OCDF_OneCid_Visual.py ..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
-		std::cout << "Данные визуализирвоаны!\n\n" << "Чтобы выйти, закройте окно визуализации!\n";
-		DeleteFile("..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
 	}
+	else {
+		system("python ..\\..\\..\\..\\PyVisualisation\\OCDF_SixCids_Visual.py ..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
+	}
+
+	DeleteFile("..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
 
 	return;
 }
