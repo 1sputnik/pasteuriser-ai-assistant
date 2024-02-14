@@ -27,6 +27,8 @@ bool is_double_numeric(std::string str);
 bool is_int_numeric(std::string str);
 
 
+std::string extractLastNChars(std::string const& str, int n);
+
 std::vector<std::string> split_string(std::string str, char descriptor);
 
 size_t check_quantity_data_lines_in_file(std::ifstream& file, std::string file_name);
@@ -61,3 +63,5 @@ void enter_double_numeric_warning();
 void enter_point_menu_warning();
 
 void enter_invalid_data();
+
+void cids_warning();

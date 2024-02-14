@@ -48,16 +48,49 @@ vector<OneCIDDataFormat> cut_data_per_time(vector<OneCIDDataFormat> data, long l
 		for (size_t i = data.size(); i >= 0; i--) {
 			if (data[i].time > time_border)
 				continue;
-			cut_data[i] = data[i];
+			cut_data.insert(cut_data.begin(), data[i]);
+			if (cut_data.size() == 1) {
+				if (cut_data[0].time == time_border) {
+					continue;
+				}
+				else if (i == 0) {
+					if (std::abs(cut_data[0].time - time_border) > std::abs(data[i].time - time_border))
+						cut_data.insert(cut_data.begin(), data[i]);
+					else
+						cut_data.insert(cut_data.begin(), cut_data[0]);
+				}
+				else {
+					OCDF temp(data[0].cid, time_border, (time_border - data[i - 1].time) * ((data[i].value - data[i - 1].value)
+						/ (data[i].time - data[i - 1].time)) + data[i - 1].value);
+					cut_data.insert(cut_data.begin(), temp);
+				}
+			}
 		}
 	}
 	else {
 		for (size_t i = 0; i < data.size(); i++) {
 			if (data[i].time < time_border)
 				continue;
-			cut_data[i] = data[i];
+			cut_data.push_back(data[i]);
+			if (cut_data.size() == 1) {
+				if (cut_data[0].time == time_border) {
+					continue;
+				}
+				else if (i == 0) {
+					if (std::abs(cut_data[0].time - time_border) > std::abs(data[i].time - time_border))
+						cut_data.insert(cut_data.begin(), data[i]);
+					else
+						cut_data.insert(cut_data.begin(), cut_data[0]);
+				}
+				else {
+					OCDF temp(data[0].cid, time_border, (time_border - data[i - 1].time) * ((data[i].value - data[i - 1].value)
+						/ (data[i].time - data[i - 1].time)) + data[i - 1].value);
+					cut_data.insert(cut_data.begin(), temp);
+				}
+			}
 		}
 	}
+
 
 	return cut_data;
 }

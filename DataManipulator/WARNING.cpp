@@ -102,6 +102,14 @@ bool is_int_numeric(std::string str) {
 }
 
 
+std::string extractLastNChars(std::string const& str, int n) {
+	if (str.size() < n) {
+		return str;
+	}
+
+	return str.substr(str.size() - n);
+}
+
 std::vector<std::string> split_string(std::string str, char descriptor) {
 	std::vector<std::string> splited_string;
 	std::string buffer_string = "";
@@ -250,6 +258,14 @@ void enter_invalid_data() {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 12);
 	std::cerr << "\nОшибка ввода данных! Введённое число недопустимо!\n\n";
+	SetConsoleTextAttribute(hConsole, 7);
+	system("pause");
+}
+
+void cids_warning() {
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, 12);
+	std::cerr << "\nОшибка преобразования данных! Данные содержат не все сиды!\n\n";
 	SetConsoleTextAttribute(hConsole, 7);
 	system("pause");
 }

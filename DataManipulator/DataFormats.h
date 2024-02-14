@@ -38,7 +38,8 @@ public:
 
 vector<OneCIDDataFormat> load_OCDF_data(string file_name, size_t size = 0);
 void dump_data(vector<OneCIDDataFormat>& data, string file_name);
-
+vector<OneCIDDataFormat> binload_OCDF_data(string file_name, size_t size = 0);
+void bindump_data(vector<OneCIDDataFormat>& data, string file_name);
 
 class TableDataFormat {
 public:

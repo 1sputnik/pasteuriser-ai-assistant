@@ -9,11 +9,10 @@ void MainDataFormat_Menu();
 		void show_OCDF_data(vector<OCDF>& data);
 		void pars_OCDF_data_per_cid(vector<OCDF>& data);
 		void add_more_data(vector<OCDF>& data);
-		void save_OCDF_data(vector<OCDF>& data);
+		void save_OCDF_data_in_csv(vector<OCDF>& data);
+		void save_OCDF_data_in_bin(vector<OCDF>& data);
 	void MainTDF_Menu();
 	void create_TDF_file();
-		void create_TDF_file_out_general_OCDF_file();
-		void create_TDF_file_out_six_OCDF_files();
 	void show_info();
 
 int main()
@@ -83,6 +82,17 @@ vector<OCDF> read_OCDF_file(string special_msg = "") {
 			continue;
 
 		try {
+			if (extractLastNChars(load_file_path, 4) == ".bin") {
+				data = binload_OCDF_data(load_file_path, data_size);
+				break;
+			}
+		}
+		catch (...) {
+			load_data_warning();
+			data.clear();
+		}
+
+		try {
 			if (check_OCDF_in_file(load_file_path)) {
 				data = load_OCDF_data(load_file_path, data_size);
 				break;
@@ -108,7 +118,8 @@ void MainOCDF_Menu() {
 		make_pair('4', show_OCDF_data),
 		make_pair('5', pars_OCDF_data_per_cid),
 		make_pair('6', add_more_data),
-		make_pair('7', save_OCDF_data)
+		make_pair('7', save_OCDF_data_in_csv),
+		make_pair('8', save_OCDF_data_in_bin)
 	};
 
 	vector<OCDF> data;
@@ -327,7 +338,7 @@ void add_more_data(vector<OCDF>& data) {
 	delete_msg("Соединяем данные...");
 }
 
-void save_OCDF_data(vector<OCDF>& data) {
+void save_OCDF_data_in_csv(vector<OCDF>& data) {
 	system("cls");
 
 	string dump_file_path;
@@ -335,6 +346,24 @@ void save_OCDF_data(vector<OCDF>& data) {
 	std::getline(std::cin, dump_file_path);
 
 	dump_data(data, dump_file_path);
+
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, 10);
+	std::cout << "\nДанные успешно сохранены!\n\n";
+	SetConsoleTextAttribute(hConsole, 7);
+	system("pause");
+}
+
+void save_OCDF_data_in_bin(vector<OCDF>& data) {
+	system("cls");
+
+	string dump_file_path;
+	std::cout << "Введите имя файла для загрузки в него данных: ";
+	std::getline(std::cin, dump_file_path);
+
+	dump_file_path += ".bin";
+
+	bindump_data(data, dump_file_path);
 
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 10);
@@ -372,84 +401,82 @@ void MainTDF_Menu() {
 
 // CREATE TDF --------------------------------------------------------------
 
+bool find_cid(vector<OCDF>& data, short cid) {
+	for (size_t i = 0; i < data.size(); i++) {
+		if (data[i].cid == cid)
+			return true;
+	}
+	return false;
+}
+
+bool check_all_cids(vector<OCDF>& data) {
+	if (!find_cid(data, 1))
+		return false;
+	if (!find_cid(data, 2))
+		return false;
+	if (!find_cid(data, 3))
+		return false;
+	if (!find_cid(data, 4))
+		return false;
+	if (!find_cid(data, 5))
+		return false;
+	if (!find_cid(data, 6))
+		return false;
+	return true;
+}
+
 void create_TDF_file() {
-	map<unsigned char, function<void()>> menu{
-		make_pair('1', create_TDF_file_out_general_OCDF_file),
-		make_pair('2', create_TDF_file_out_six_OCDF_files)
-	};
+	// блок чтения файлов
+	vector<OCDF> general_OCDF_data;
+	general_OCDF_data = read_OCDF_file("Создание TDF файла из общего OCDF файла со всеми сидами.\n\n");
 
-	while (true) {
-		system("cls");
+	system("cls");
 
-		std::cout << "Выбрите формат файла, для создания файла формата TDF:\n"
-			<< "1 - создать TDF файл из общего OCDF фала со всеми сидами\n"
-			<< "2 - создать TDF файл из шести OCDF файлов разных сидов\n"
-			<< "0 - выход\n"
-			<< "Выберите пункт меню: ";
-
-		string answer;
-		if (!enter_menu_point(answer))
-			continue;
-
-		if (answer[0] == '0')
-			return;
-
-		try {
-			menu.at(answer[0])();
-		}
-		catch (...) {
-			enter_menu_warning();
-		}
+	// проверка на наличие всех сидов
+	std::cout << "Проверяем наличие всех сидов...";
+	if (!check_all_cids(general_OCDF_data)) {
+		cids_warning();
+		return;
 	}
-}
 
-void create_TDF_file_out_general_OCDF_file() {
-	while (true) {
-		system("cls");
+	system("cls");
 
-		// блок чтения данных
-
-		vector<OCDF> general_OCDF_data;
-		general_OCDF_data = read_OCDF_file("Создание TDF файла из общего OCDF файла со всеми сидами.\n\n");
-		msg_warning("");
-
-	}
-}
-
-void create_TDF_file_out_six_OCDF_files() {
+	// парсим данные
+	std::cout << "Парсим данные";
 	vector<OCDF> first_cid_data;
+	first_cid_data = parsing_data_per_cid(general_OCDF_data, 1);
 	vector<OCDF> second_cid_data;
+	second_cid_data = parsing_data_per_cid(general_OCDF_data, 2);
 	vector<OCDF> third_cid_data;
-	vector<OCDF> fourth_cid_data;
+	third_cid_data = parsing_data_per_cid(general_OCDF_data, 3);
+	vector<OCDF> forth_cid_data;
+	forth_cid_data = parsing_data_per_cid(general_OCDF_data, 4);
 	vector<OCDF> fifth_cid_data;
+	fifth_cid_data = parsing_data_per_cid(general_OCDF_data, 5);
 	vector<OCDF> sixth_cid_data;
+	sixth_cid_data = parsing_data_per_cid(general_OCDF_data, 6);
+	general_OCDF_data.clear();
 
-	// блок чтения данных из файлов
-	first_cid_data = read_OCDF_file("Чтение файла первого сида.\n\n");
-	second_cid_data = read_OCDF_file("Чтение файла второго сида.\n\n");
-	third_cid_data = read_OCDF_file("Чтение файла третьего сида.\n\n");
-	fourth_cid_data = read_OCDF_file("Чтение файла четвёртого сида.\n\n");
-	fifth_cid_data = read_OCDF_file("Чтение файла пятого сида.\n\n");
-	sixth_cid_data = read_OCDF_file("Чтение файла шестого сида.\n\n");
+	system("cls");
 
-	// блок обработки
-	long long range;
+	// вводим неббходимый диапазон данных относительно времени
 	while (true) {
-		//// подблок выравнивания диапозонов по оси x данных
+		long long range;
 		std::cout << "Введите необходимый диапозон между временными точками: ";
 		if (!enter_int_numeric(range))
 			continue;
-		if (range < 0) {
+
+		else if (range < 0) {
 			enter_invalid_data();
 			continue;
 		}
+
+		break;
 	}
 
+	// выравниваем диапазоны данных
+	std::cout << "Выравниваем диапазоны данных...";
 
-		long long minimal_time = first_cid_data[0].time;
-	
-
-		// блок сборки TDF файла
 
 }
 
