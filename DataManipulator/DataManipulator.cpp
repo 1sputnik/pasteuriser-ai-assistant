@@ -75,6 +75,9 @@ vector<OCDF> read_OCDF_file(string special_msg = "") {
 		string load_file_path;
 		std::cout << "Введите имя файла для загрузки из него данных: ";
 		std::getline(std::cin, load_file_path);
+		for (size_t k = load_file_path.find('\"'); k != load_file_path.npos; k = load_file_path.find('\"', k))
+			load_file_path.erase(k, 1);
+
 
 		long long data_size;
 		std::cout << "\nСколько данных необходимо загрузить (введите 0, если надо загрузить все данные): ";
@@ -86,14 +89,7 @@ vector<OCDF> read_OCDF_file(string special_msg = "") {
 				data = binload_OCDF_data(load_file_path, data_size);
 				break;
 			}
-		}
-		catch (...) {
-			load_data_warning();
-			data.clear();
-		}
-
-		try {
-			if (check_OCDF_in_file(load_file_path)) {
+			else if (check_OCDF_in_file(load_file_path)) {
 				data = load_OCDF_data(load_file_path, data_size);
 				break;
 			}
@@ -141,7 +137,8 @@ void MainOCDF_Menu() {
 			<< "4 - визуализировать данные\n"
 			<< "5 - распарсить данные по сиду\n"
 			<< "6 - добавить новые данные\n"
-			<< "7 - сохранить данные в файл\n"
+			<< "7 - сохранить данные в файл формата csv\n"
+			<< "8 - сохранить данные в бинарный файл\n"
 			<< "0 - выход в главное меню\n"
 			<< "Введите пункт меню: ";
 
@@ -336,6 +333,7 @@ void add_more_data(vector<OCDF>& data) {
 	data = all_data;
 
 	delete_msg("Соединяем данные...");
+	return;
 }
 
 void save_OCDF_data_in_csv(vector<OCDF>& data) {
@@ -344,6 +342,8 @@ void save_OCDF_data_in_csv(vector<OCDF>& data) {
 	string dump_file_path;
 	std::cout << "Введите имя файла для загрузки в него данных: ";
 	std::getline(std::cin, dump_file_path);
+	for (size_t k = dump_file_path.find('\"'); k != dump_file_path.npos; k = dump_file_path.find('\"', k))
+		dump_file_path.erase(k, 1);
 
 	dump_data(data, dump_file_path);
 
@@ -360,6 +360,8 @@ void save_OCDF_data_in_bin(vector<OCDF>& data) {
 	string dump_file_path;
 	std::cout << "Введите имя файла для загрузки в него данных: ";
 	std::getline(std::cin, dump_file_path);
+	for (size_t k = dump_file_path.find('\"'); k != dump_file_path.npos; k = dump_file_path.find('\"', k))
+		dump_file_path.erase(k, 1);
 
 	dump_file_path += ".bin";
 
@@ -385,6 +387,8 @@ vector<TDF> read_TDF_file(string special_msg = "") {
 		string load_file_path;
 		std::cout << "Введите имя файла для загрузки из него данных: ";
 		std::getline(std::cin, load_file_path);
+		for (size_t k = load_file_path.find('\"'); k != load_file_path.npos; k = load_file_path.find('\"', k))
+			load_file_path.erase(k, 1);
 
 		long long data_size;
 		std::cout << "\nСколько данных необходимо загрузить (введите 0, если надо загрузить все данные): ";
@@ -442,7 +446,7 @@ void create_TDF_file() {
 	system("cls");
 
 	// парсим данные
-	std::cout << "Парсим данные";
+	std::cout << "Парсим данные...";
 	vector<OCDF> first_cid_data;
 	first_cid_data = parsing_data_per_cid(general_OCDF_data, 1);
 	vector<OCDF> second_cid_data;
@@ -459,9 +463,9 @@ void create_TDF_file() {
 
 	system("cls");
 
-	// вводим неббходимый диапазон данных относительно времени
+	// вводим необходимый диапазон данных относительно времени
+	long long range;
 	while (true) {
-		long long range;
 		std::cout << "Введите необходимый диапозон между временными точками: ";
 		if (!enter_int_numeric(range))
 			continue;
@@ -475,9 +479,99 @@ void create_TDF_file() {
 	}
 
 	// выравниваем диапазоны данных
-	std::cout << "Выравниваем диапазоны данных...";
+	std::cout << "Определяем временные границы данных сидов...";
 
+	vector<int> first_elements_of_cids{ first_cid_data[0].time, second_cid_data[0].time, third_cid_data[0].time, 
+		forth_cid_data[0].time, fifth_cid_data[0].time, sixth_cid_data[0].time };
+	auto min_element = std::max_element(first_elements_of_cids.begin(), first_elements_of_cids.end());
+	int min_time_border = *min_element;
+	first_elements_of_cids.clear();
 
+	vector<int> last_elements_of_cids{ first_cid_data[first_cid_data.size() - 1].time, second_cid_data[second_cid_data.size() - 1].time, third_cid_data[third_cid_data.size() - 1].time,
+		forth_cid_data[forth_cid_data.size() - 1].time, fifth_cid_data[fifth_cid_data.size() - 1].time, sixth_cid_data[sixth_cid_data.size() - 1].time };
+	auto max_element = std::min_element(last_elements_of_cids.begin(), last_elements_of_cids.end());
+	int max_time_border = *max_element;
+	last_elements_of_cids.clear();
+
+	std::cout << "\b\b\b.\nВыравниваем диапазоны сидов по времени...";
+
+	first_cid_data = cut_data_per_time(first_cid_data, min_time_border, false, true);
+	first_cid_data = cut_data_per_time(first_cid_data, max_time_border, true, true);
+	first_cid_data = right_range(first_cid_data, range);
+
+	second_cid_data = cut_data_per_time(second_cid_data, min_time_border, false, true);
+	second_cid_data = cut_data_per_time(second_cid_data, max_time_border, true, true);
+	second_cid_data = right_range(second_cid_data, range);
+
+	third_cid_data = cut_data_per_time(third_cid_data, min_time_border, false, true);
+	third_cid_data = cut_data_per_time(third_cid_data, max_time_border, true, true);
+	third_cid_data = right_range(third_cid_data, range);
+
+	forth_cid_data = cut_data_per_time(forth_cid_data, min_time_border, false, true);
+	forth_cid_data = cut_data_per_time(forth_cid_data, max_time_border, true, true);
+	forth_cid_data = right_range(forth_cid_data, range);
+
+	fifth_cid_data = cut_data_per_time(fifth_cid_data, min_time_border, false, true);
+	fifth_cid_data = cut_data_per_time(fifth_cid_data, max_time_border, true, true);
+	fifth_cid_data = right_range(fifth_cid_data, range);
+
+	sixth_cid_data = cut_data_per_time(sixth_cid_data, min_time_border, false, true);
+	sixth_cid_data = cut_data_per_time(sixth_cid_data, max_time_border, true, true);
+	sixth_cid_data = right_range(sixth_cid_data, range);
+
+	vector<size_t> data_sizes{ first_cid_data.size(), second_cid_data.size(), third_cid_data.size(), forth_cid_data.size(), fifth_cid_data.size(), sixth_cid_data.size() };
+	auto min_size_iter = std::min_element(data_sizes.begin(), data_sizes.end());
+	size_t min_size = *min_size_iter;
+	data_sizes.clear();
+
+	first_cid_data.resize(min_size);
+	second_cid_data.resize(min_size);
+	third_cid_data.resize(min_size);
+	forth_cid_data.resize(min_size);
+	fifth_cid_data.resize(min_size);
+	sixth_cid_data.resize(min_size);
+
+	system("cls");
+
+	// Собираем TDF-последовательность
+	std::cout << "Собираем данные в TDF-формат...";
+
+	vector<TDF> data(first_cid_data.size());
+	for (size_t i = 0; i < data.size(); i++) {
+		TDF temp(first_cid_data[i].time, first_cid_data[i].value, second_cid_data[i].value, third_cid_data[i].value, forth_cid_data[i].value, fifth_cid_data[i].value, sixth_cid_data[i].value);
+		data[i] = temp;
+	}
+
+	system("cls");
+
+	// сохраняем TDF-последовательсноть
+	string dump_file_path;
+	std::cout << "Введите имя файла для загрузки в него данных: ";
+	std::getline(std::cin, dump_file_path);
+	for (size_t k = dump_file_path.find('\"'); k != dump_file_path.npos; k = dump_file_path.find('\"', k))
+		dump_file_path.erase(k, 1);
+
+	bool save_to_bin_format = false;
+	while (true) {
+		system("cls");
+
+		string answer;
+		std::cout << "В каком формате сохранить даныне (0 - .csv, 1 - .bin): ";
+		if (!enter_menu_point(answer))
+			continue;
+		if (!string_symbol_to_bool(answer, save_to_bin_format))
+			continue;
+
+		break;
+	}
+	
+	if (save_to_bin_format) {
+		dump_file_path += ".bin";
+		bindump_data(data, dump_file_path);
+	}
+	else {
+		dump_data(data, dump_file_path);
+	}
 }
 
 // INFO --------------------------------------------------------------

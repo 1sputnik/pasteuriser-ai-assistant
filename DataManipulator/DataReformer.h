@@ -4,7 +4,7 @@
 
 vector<OneCIDDataFormat> cut_percent_data(vector<OneCIDDataFormat> data, double cut_percent, bool cut_trend);
 vector<OneCIDDataFormat> cut_quntity_data(vector<OneCIDDataFormat> data, size_t cut_quantity, bool cut_trend);
-vector<OneCIDDataFormat> cut_data_per_time(vector<OneCIDDataFormat> data, long long time_border, bool cut_trend);
+vector<OneCIDDataFormat> cut_data_per_time(vector<OneCIDDataFormat> data, long long time_border, bool cut_trend, bool include_time_border_to_data = false);
 //vector<OneCIDDataFormat> cut_percent_data(vector<TableDataFormat> data, double cut_percent, bool cut_trend);
 //vector<OneCIDDataFormat> cut_quntity_data(vector<TableDataFormat> data, size_t cut_quantity, bool cut_trend);
 

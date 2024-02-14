@@ -41,56 +41,84 @@ vector<OneCIDDataFormat> cut_quntity_data(vector<OneCIDDataFormat> data, size_t 
 	return cut_data;
 }
 
-vector<OneCIDDataFormat> cut_data_per_time(vector<OneCIDDataFormat> data, long long time_border, bool cut_trend) {
+OneCIDDataFormat find_nearest_element_before_given(vector<OneCIDDataFormat> data, long long time_border) {
+	OneCIDDataFormat nearest_element = data[0];
+	for (size_t i = 1; i < data.size(); i++) {
+		if (data[i].time > time_border) {
+			return nearest_element;
+		}
+		else {
+			nearest_element = data[i];
+		}
+	}
+	return OneCIDDataFormat();
+}
+OneCIDDataFormat find_nearest_element_after_given(vector<OneCIDDataFormat> data, long long time_border) {
+	OneCIDDataFormat nearest_element = data[data.size() - 1];
+	for (size_t i = data.size() - 2; i > 0; i--) {
+		if (data[i].time < time_border) {
+			return nearest_element;
+		}
+		else {
+			nearest_element = data[i];
+		}
+	}
+	return OneCIDDataFormat();
+}
+vector<OneCIDDataFormat> cut_data_per_time(vector<OneCIDDataFormat> data, long long time_border, bool cut_trend, bool include_time_border_to_data) {
 	vector<OneCIDDataFormat> cut_data;
+	cut_data = data;
 
 	if (cut_trend) {
-		for (size_t i = data.size(); i >= 0; i--) {
-			if (data[i].time > time_border)
-				continue;
-			cut_data.insert(cut_data.begin(), data[i]);
-			if (cut_data.size() == 1) {
-				if (cut_data[0].time == time_border) {
-					continue;
-				}
-				else if (i == 0) {
-					if (std::abs(cut_data[0].time - time_border) > std::abs(data[i].time - time_border))
-						cut_data.insert(cut_data.begin(), data[i]);
-					else
-						cut_data.insert(cut_data.begin(), cut_data[0]);
+		while (true) {
+			auto removed_element = std::find_if(cut_data.begin(), cut_data.end(), [time_border](OneCIDDataFormat datum) { return datum.time > time_border; });
+			if (removed_element == cut_data.end())
+				break;
+			else
+				cut_data.erase(removed_element);
+		}
+		if (include_time_border_to_data) {
+			if (cut_data[cut_data.size() - 1].time == time_border) {
+				return cut_data;
+			}
+			else if (cut_data[cut_data.size() - 1].time < time_border) {
+				if (data[0].time > time_border) {
+					OneCIDDataFormat nearest_element = find_nearest_element_after_given(data, time_border);
+					OneCIDDataFormat temp(cut_data[cut_data.size() - 1].cid, time_border, float(time_border - cut_data[cut_data.size() - 1].time) * ((nearest_element.value - cut_data[cut_data.size() - 1].value)
+						/ (nearest_element.time - cut_data[cut_data.size() - 1].time)) + cut_data[cut_data.size() - 1].value);
+					cut_data.insert(cut_data.end(), temp);
 				}
 				else {
-					OCDF temp(data[0].cid, time_border, (time_border - data[i - 1].time) * ((data[i].value - data[i - 1].value)
-						/ (data[i].time - data[i - 1].time)) + data[i - 1].value);
-					cut_data.insert(cut_data.begin(), temp);
+					cut_data.insert(cut_data.end(), cut_data[cut_data.size() - 1]);
 				}
 			}
 		}
 	}
 	else {
-		for (size_t i = 0; i < data.size(); i++) {
-			if (data[i].time < time_border)
-				continue;
-			cut_data.push_back(data[i]);
-			if (cut_data.size() == 1) {
-				if (cut_data[0].time == time_border) {
-					continue;
-				}
-				else if (i == 0) {
-					if (std::abs(cut_data[0].time - time_border) > std::abs(data[i].time - time_border))
-						cut_data.insert(cut_data.begin(), data[i]);
-					else
-						cut_data.insert(cut_data.begin(), cut_data[0]);
+		while (true) {
+			auto removed_element = std::find_if(cut_data.begin(), cut_data.end(), [time_border](OneCIDDataFormat datum) { return datum.time < time_border; });
+			if (removed_element == cut_data.end())
+				break;
+			else
+				cut_data.erase(removed_element);
+		}
+		if (include_time_border_to_data) {
+			if (cut_data[0].time == time_border) {
+				return cut_data;
+			}
+			else if (cut_data[0].time > time_border) {
+				if (data[0].time < time_border) {
+					OneCIDDataFormat nearest_element = find_nearest_element_before_given(data, time_border);
+					OneCIDDataFormat temp(cut_data[0].cid, time_border, float(time_border - nearest_element.time) * ((cut_data[0].value - nearest_element.value)
+						/ (cut_data[0].time - nearest_element.time)) + nearest_element.value);
+					cut_data.insert(cut_data.begin(), temp);
 				}
 				else {
-					OCDF temp(data[0].cid, time_border, (time_border - data[i - 1].time) * ((data[i].value - data[i - 1].value)
-						/ (data[i].time - data[i - 1].time)) + data[i - 1].value);
-					cut_data.insert(cut_data.begin(), temp);
+					cut_data.insert(cut_data.begin(), cut_data[0]);
 				}
 			}
 		}
 	}
-
 
 	return cut_data;
 }
