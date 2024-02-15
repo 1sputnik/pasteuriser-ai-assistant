@@ -6,10 +6,13 @@
 #include <functional>
 #include <string>
 #include <filesystem>
-#include "DataFormats.h"
-#include "WARNING.h"
-#include "DataReformer.h"
-
+#include "../Common/DataFormats.h"
+#include "../Common/WARNING.h"
+#include "../Common/DataReader.h"
+#include "../Common/DataDumper.h"
+#include "../Common/DataReformer.h"
+#include "MainOCDFMenu.h"
+#include "TDFCreator.h"
 
 using std::function;
 using std::map;
