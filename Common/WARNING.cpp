@@ -134,7 +134,7 @@ size_t check_quantity_data_lines_in_file(std::ifstream& file, std::string file_n
 	size_t new_size = 0;
 	while (!file.eof()) {
 		std::getline(file, buffer_string);
-		if (buffer_string.length() > 2)
+		if (buffer_string.length() > 4)
 			new_size++;
 	}
 	file.close();
@@ -163,6 +163,27 @@ bool check_OCDF_in_file(std::string file_name) {
 	return true;
 }
 
+bool check_TDF_in_file(std::string file_name) {
+	std::ifstream file;
+	if (have_promlems_with_opening_file(file, file_name)) {
+		return false;
+	}
+	std::string test_str;
+	if (have_promlems_with_reading_data(file, test_str)) {
+		return false;
+	}
+	file.close();
+	std::vector<std::string> splited_test_str = split_string(test_str, ';');
+	if (splited_test_str.size() != 7) {
+		return false;
+	}
+	for (size_t i = 0; i < splited_test_str.size(); i++) {
+		if (!is_double_numeric(splited_test_str[i])) {
+			return false;
+		}
+	}
+	return true;
+}
 
 void begin_loaging() {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);

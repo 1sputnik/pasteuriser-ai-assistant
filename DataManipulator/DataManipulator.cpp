@@ -53,37 +53,6 @@ void MainDataFormat_Menu() {
 	}
 }
 
-// TDF menu --------------------------------------------------------------
-
-vector<TDF> read_TDF_file(string special_msg = "") {
-	vector<TDF> data;
-
-	while (true) {
-		system("cls");
-
-		std::cout << special_msg;
-
-		string load_file_path;
-		std::cout << "Введите имя файла для загрузки из него данных: ";
-		std::getline(std::cin, load_file_path);
-		for (size_t k = load_file_path.find('\"'); k != load_file_path.npos; k = load_file_path.find('\"', k))
-			load_file_path.erase(k, 1);
-
-		long long data_size;
-		std::cout << "\nСколько данных необходимо загрузить (введите 0, если надо загрузить все данные): ";
-		if (!enter_int_numeric(data_size))
-			continue;
-	}
-
-	return data;
-}
-
-void MainTDF_Menu() {
-	return;
-}
-
-// INFO --------------------------------------------------------------
-
 void show_info() {
 	system("cls");
 	std::cout << "DataManipulator - это модуль, который предназначен для работы с данными, их обработкой, компоновкой и так далее.\n\n"

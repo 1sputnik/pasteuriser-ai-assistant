@@ -35,7 +35,7 @@ size_t check_quantity_data_lines_in_file(std::ifstream& file, std::string file_n
 
 bool check_OCDF_in_file(std::string file_name);
 
-//bool check_TDF_int_file(std::string file_name);
+bool check_TDF_in_file(std::string file_name);
 
 
 void begin_loaging();
