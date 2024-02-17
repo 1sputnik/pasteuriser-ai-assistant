@@ -3,6 +3,7 @@
 #include <map>
 #include <functional>
 #include <filesystem>
+#include "MainOCDFMenu.h"
 #include "../Common/DataReformer.h"
 #include "../Common/DataFormats.h"
 #include "../Common/WARNING.h"
@@ -16,9 +17,9 @@ using std::make_pair;
 
 void MainTDF_Menu();
 void cut_percent_TDF_data(vector<TDF>& data);
-//void cut_quantity_TDF_data(vector<OCDF>& data);
-//void show_TDF_data(vector<OCDF>& data);
-//void pars_TDF_data_per_cid(vector<OCDF>& data);
-//void add_more_data(vector<OCDF>& data);
+void cut_quantity_TDF_data(vector<TDF>& data);
+//void show_TDF_data(vector<TDF>& data);
+void pars_TDF_data_per_cid(vector<TDF>& data);
+//void add_more_data(vector<TDF>& data);
 void save_TDF_data_in_csv(vector<TDF>& data);
 void save_TDF_data_in_bin(vector<TDF>& data);
