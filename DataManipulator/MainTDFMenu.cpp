@@ -4,6 +4,7 @@ void MainTDF_Menu() {
 	map<unsigned char, function<void(vector<TDF>& data)>> menu{
 		make_pair('1', cut_percent_TDF_data),
 		make_pair('2', cut_quantity_TDF_data),
+		make_pair('3', show_TDF_data),
 		make_pair('4', pars_TDF_data_per_cid),
 		make_pair('6', save_TDF_data_in_csv),
 		make_pair('7', save_TDF_data_in_bin)
@@ -102,6 +103,16 @@ void cut_quantity_TDF_data(vector<TDF>& data) {
 
 		break;
 	}
+}
+
+void show_TDF_data(vector<TDF>& data) {
+	system("cls");
+	dump_data(data, "..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
+	std::cout << "Данные визуализирвоаны!\n\n" << "Чтобы выйти в меню, закройте окно визуализации!\n";
+
+	system("python ..\\..\\..\\..\\PyVisualisation\\TDF_Visual.py ..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
+
+	DeleteFile("..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
 }
 
 void pars_TDF_data_per_cid(vector<TDF>& data) {

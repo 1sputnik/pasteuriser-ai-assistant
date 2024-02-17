@@ -123,6 +123,47 @@ vector<OneCIDDataFormat> cut_data_per_time(vector<OneCIDDataFormat> data, long l
 	return cut_data;
 }
 
+vector<TableDataFormat> cut_percent_data(vector<TableDataFormat> data, double cut_percent, bool cut_trend) {
+	vector<TableDataFormat> cut_data;
+
+	if (cut_trend) {
+		cut_data.resize(size_t(data.size() * cut_percent));
+		for (size_t i = 0; i < cut_data.size(); i++) {
+			cut_data[i] = data[data.size() * (1.0 - cut_percent) + i];
+		}
+	}
+	else {
+		cut_data.resize(size_t(data.size() * cut_percent));
+		for (size_t i = 0; i < cut_data.size(); i++) {
+			cut_data[i] = data[i];
+		}
+	}
+
+	return cut_data;
+}
+
+vector<TableDataFormat> cut_quntity_data(vector<TableDataFormat> data, size_t cut_quantity, bool cut_trend) {
+	vector<TableDataFormat> cut_data;
+
+	if (cut_quantity > data.size()) {
+		cut_quantity = data.size();
+	}
+	cut_data.resize(cut_quantity);
+
+	if (cut_trend) {
+		for (size_t i = 0; i < cut_data.size(); i++) {
+			cut_data[i] = data[data.size() - cut_quantity + i];
+		}
+	}
+	else {
+		for (size_t i = 0; i < cut_data.size(); i++) {
+			cut_data[i] = data[i];
+		}
+	}
+
+	return cut_data;
+}
+
 vector<OneCIDDataFormat> parsing_data_per_cid(vector<OneCIDDataFormat> data, short cid) {
 	vector<OneCIDDataFormat> parsed_data;
 
@@ -133,6 +174,44 @@ vector<OneCIDDataFormat> parsing_data_per_cid(vector<OneCIDDataFormat> data, sho
 
 	if (parsed_data.size() == 0)
 		return data;
+
+	return parsed_data;
+}
+
+vector<OneCIDDataFormat> parsing_data_per_cid(vector<TableDataFormat> data, short cid) {
+	vector<OneCIDDataFormat> parsed_data(data.size());
+
+	for (size_t i = 0; i < data.size(); i++) {
+		switch (cid)
+		{
+		case 1:
+			parsed_data.at(i) = OCDF(cid, data[i].time, data[i].cid_1_value);
+			break;
+
+		case 2:
+			parsed_data.at(i) = OCDF(cid, data[i].time, data[i].cid_2_value);
+			break;
+
+		case 3:
+			parsed_data.at(i) = OCDF(cid, data[i].time, data[i].cid_3_value);
+			break;
+
+		case 4: 
+			parsed_data.at(i) = OCDF(cid, data[i].time, data[i].cid_4_value);
+			break;
+
+		case 5:
+			parsed_data.at(i) = OCDF(cid, data[i].time, data[i].cid_5_value);
+			break;
+
+		case 6:
+			parsed_data.at(i) = OCDF(cid, data[i].time, data[i].cid_6_value);
+			break;
+
+		default:
+			break;
+		}
+	}
 
 	return parsed_data;
 }

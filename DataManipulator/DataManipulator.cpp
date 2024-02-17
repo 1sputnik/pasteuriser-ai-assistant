@@ -25,7 +25,7 @@ void MainDataFormat_Menu() {
 		make_pair('3', create_TDF_file),
 		make_pair('4', show_info)
 	};
-
+	
 	while (true) {
 		system("cls");
 
