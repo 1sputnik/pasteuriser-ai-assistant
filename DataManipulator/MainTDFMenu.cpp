@@ -156,6 +156,56 @@ void pars_TDF_data_per_cid(vector<TDF>& data) {
 	}
 }
 
+void add_more_data(vector<TDF>& data) {
+	system("cls");
+
+	vector<TDF> new_data;
+	new_data = read_TDF_file("Данные какого файла необходимо добавить?\n\n");
+
+	system("cls");
+
+	msg_warning("Соединяем данные...");
+
+	vector<TDF> all_data(data.size() + new_data.size());
+	for (size_t i = 0, j = 0, k = 0; k < all_data.size(); k++) {
+		if (i == data.size()) { // если закончились данные в исходном векторе
+			all_data[k] = new_data[j];
+			j++;
+			continue;
+		}
+		else if (j == new_data.size()) { // если закончились данные в новом векторе
+			all_data[k] = data[i];
+			i++;
+			continue;
+		}
+		else { // если данные ещё есть в исходном и новом векторах
+			if (data[i].time < new_data[j].time) { // если данные из исходного вектора временем раньше, чем данные из нового вектора
+				all_data[k] = data[i];
+				i++;
+				continue;
+			}
+			else if (data[i].time > new_data[j].time) { // если данные из нового вектора временем раньше, чем данные из исходного вектора
+				all_data[k] = new_data[j];
+				j++;
+				continue;
+			}
+			else { // если данные из нового вектора и исходного вектора имеют одинаковое время
+				all_data[k] = data[i];
+				i++;
+				k++;
+				all_data[k] = new_data[j];
+				j++;
+				continue;
+			}
+		}
+	}
+
+	data = all_data;
+
+	delete_msg("Соединяем данные...");
+	return;
+}
+
 void save_TDF_data_in_csv(vector<TDF>& data) {
 	system("cls");
 
