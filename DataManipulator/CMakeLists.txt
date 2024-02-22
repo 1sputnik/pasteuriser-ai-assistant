@@ -7,6 +7,8 @@ set(SOURCE_FILES
         DataManipulator.cpp
         MainOCDFMenu.h
         MainOCDFMenu.cpp
+        MainTDFMenu.h
+        MainTDFMenu.cpp
         TDFCreator.h
         TDFCreator.cpp
         ../Common/DataFormats.h
