@@ -18,23 +18,23 @@ void MainOCDF_Menu() {
 	while (true) {
 		system("cls");
 
-		std::cout << "Данные загружены\n"
-			<< "Формат данных: OCDF\n"
-			<< "Размерность данных: " << data.size() << "\n"
-			<< "Первая строка данных:\t\t" << data[0] << "\n"
-			<< "Последняя строка данных:\t" << data[data.size() - 1] << "\n\n";
+		std::cout << "Р”Р°РЅРЅС‹Рµ Р·Р°РіСЂСѓР¶РµРЅС‹\n"
+			<< "Р¤РѕСЂРјР°С‚ РґР°РЅРЅС‹С…: OCDF\n"
+			<< "Р Р°Р·РјРµСЂРЅРѕСЃС‚СЊ РґР°РЅРЅС‹С…: " << data.size() << "\n"
+			<< "РџРµСЂРІР°СЏ СЃС‚СЂРѕРєР° РґР°РЅРЅС‹С…:\t\t" << data[0] << "\n"
+			<< "РџРѕСЃР»РµРґРЅСЏСЏ СЃС‚СЂРѕРєР° РґР°РЅРЅС‹С…:\t" << data[data.size() - 1] << "\n\n";
 
-		std::cout << "Выберите формат данных:\n"
-			<< "1 - обрезать заданный процент данных\n"
-			<< "2 - обрезать заданное количество данных\n"
-			<< "3 - выровнять диапазон по оси времени\n"
-			<< "4 - визуализировать данные\n"
-			<< "5 - распарсить данные по сиду\n"
-			<< "6 - добавить новые данные\n"
-			<< "7 - сохранить данные в файл формата csv\n"
-			<< "8 - сохранить данные в бинарный файл\n"
-			<< "0 - выход в главное меню\n"
-			<< "Введите пункт меню: ";
+		std::cout << "Р’С‹Р±РµСЂРёС‚Рµ С„РѕСЂРјР°С‚ РґР°РЅРЅС‹С…:\n"
+			<< "1 - РѕР±СЂРµР·Р°С‚СЊ Р·Р°РґР°РЅРЅС‹Р№ РїСЂРѕС†РµРЅС‚ РґР°РЅРЅС‹С…\n"
+			<< "2 - РѕР±СЂРµР·Р°С‚СЊ Р·Р°РґР°РЅРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РґР°РЅРЅС‹С…\n"
+			<< "3 - РІС‹СЂРѕРІРЅСЏС‚СЊ РґРёР°РїР°Р·РѕРЅ РїРѕ РѕСЃРё РІСЂРµРјРµРЅРё\n"
+			<< "4 - РІРёР·СѓР°Р»РёР·РёСЂРѕРІР°С‚СЊ РґР°РЅРЅС‹Рµ\n"
+			<< "5 - СЂР°СЃРїР°СЂСЃРёС‚СЊ РґР°РЅРЅС‹Рµ РїРѕ СЃРёРґСѓ\n"
+			<< "6 - РґРѕР±Р°РІРёС‚СЊ РЅРѕРІС‹Рµ РґР°РЅРЅС‹Рµ\n"
+			<< "7 - СЃРѕС…СЂР°РЅРёС‚СЊ РґР°РЅРЅС‹Рµ РІ С„Р°Р№Р» С„РѕСЂРјР°С‚Р° csv\n"
+			<< "8 - СЃРѕС…СЂР°РЅРёС‚СЊ РґР°РЅРЅС‹Рµ РІ Р±РёРЅР°СЂРЅС‹Р№ С„Р°Р№Р»\n"
+			<< "0 - РІС‹С…РѕРґ РІ РіР»Р°РІРЅРѕРµ РјРµРЅСЋ\n"
+			<< "Р’РІРµРґРёС‚Рµ РїСѓРЅРєС‚ РјРµРЅСЋ: ";
 
 		string answer;
 		if (!enter_menu_point(answer))
@@ -57,7 +57,7 @@ void cut_percent_OCDF_data(vector<OCDF>& data) {
 		system("cls");
 
 		double cut_percent;
-		std::cout << "Введите процент данных, который нужно оставить: ";
+		std::cout << "Р’РІРµРґРёС‚Рµ РїСЂРѕС†РµРЅС‚ РґР°РЅРЅС‹С…, РєРѕС‚РѕСЂС‹Р№ РЅСѓР¶РЅРѕ РѕСЃС‚Р°РІРёС‚СЊ: ";
 		if (!enter_double_numeric(cut_percent, true))
 			continue;
 		if (cut_percent > 1.0 || cut_percent < 0.0) {
@@ -67,7 +67,7 @@ void cut_percent_OCDF_data(vector<OCDF>& data) {
 
 		bool cut_trend;
 		string answer;
-		std::cout << "Выберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
+		std::cout << "Р’С‹Р±РµСЂРёС‚Рµ СЃС‚РѕСЂРѕРЅСѓ РѕР±СЂРµР·РєРё (0 - СЃР»РµРІР° РЅР°РїСЂР°РІРѕ, 1 - СЃРїСЂР°РІРѕ РЅР°Р»РµРІРѕ): ";
 		if (!enter_menu_point(answer))
 			continue;
 
@@ -85,7 +85,7 @@ void cut_quantity_OCDF_data(vector<OCDF>& data) {
 		system("cls");
 
 		long long cut_quantity;
-		std::cout << "Введите количество данных, которое нужно оставить: ";
+		std::cout << "Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ РґР°РЅРЅС‹С…, РєРѕС‚РѕСЂРѕРµ РЅСѓР¶РЅРѕ РѕСЃС‚Р°РІРёС‚СЊ: ";
 		if (!enter_int_numeric(cut_quantity))
 			continue;
 		if (cut_quantity <= 0) {
@@ -95,7 +95,7 @@ void cut_quantity_OCDF_data(vector<OCDF>& data) {
 
 		bool cut_trend;
 		string answer;
-		std::cout << "Выберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
+		std::cout << "Р’С‹Р±РµСЂРёС‚Рµ СЃС‚РѕСЂРѕРЅСѓ РѕР±СЂРµР·РєРё (0 - СЃР»РµРІР° РЅР°РїСЂР°РІРѕ, 1 - СЃРїСЂР°РІРѕ РЅР°Р»РµРІРѕ): ";
 		if (!enter_menu_point(answer))
 			continue;
 
@@ -114,11 +114,11 @@ void right_time_OCDF(vector<OCDF>& data) {
 
 		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		SetConsoleTextAttribute(hConsole, 14);
-		std::cout << "Внимание! Данная операция предназначена для одного сида!\n\n";
+		std::cout << "Р’РЅРёРјР°РЅРёРµ! Р”Р°РЅРЅР°СЏ РѕРїРµСЂР°С†РёСЏ РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅР° РґР»СЏ РѕРґРЅРѕРіРѕ СЃРёРґР°!\n\n";
 		SetConsoleTextAttribute(hConsole, 7);
 
 		long long range;
-		std::cout << "Введите необходимый диапозон между временными точками (0 - выход): ";
+		std::cout << "Р’РІРµРґРёС‚Рµ РЅРµРѕР±С…РѕРґРёРјС‹Р№ РґРёР°РїРѕР·РѕРЅ РјРµР¶РґСѓ РІСЂРµРјРµРЅРЅС‹РјРё С‚РѕС‡РєР°РјРё (0 - РІС‹С…РѕРґ): ";
 		if (!enter_int_numeric(range))
 			continue;
 
@@ -148,7 +148,7 @@ void show_OCDF_data(vector<OCDF>& data) {
 
 	system("cls");
 	dump_data(data, "..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
-	std::cout << "Данные визуализирвоаны!\n\n" << "Чтобы выйти в меню, закройте окно визуализации!\n";
+	std::cout << "Р”Р°РЅРЅС‹Рµ РІРёР·СѓР°Р»РёР·РёСЂРІРѕР°РЅС‹!\n\n" << "Р§С‚РѕР±С‹ РІС‹Р№С‚Рё РІ РјРµРЅСЋ, Р·Р°РєСЂРѕР№С‚Рµ РѕРєРЅРѕ РІРёР·СѓР°Р»РёР·Р°С†РёРё!\n";
 
 	if (is_one_cid) {
 		system("python ..\\..\\..\\..\\PyVisualisation\\OCDF_OneCid_Visual.py ..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
@@ -165,7 +165,7 @@ void pars_OCDF_data_per_cid(vector<OCDF>& data) {
 		system("cls");
 
 		long long number;
-		std::cout << "Введите номер сида, который необходимо оставить: ";
+		std::cout << "Р’РІРµРґРёС‚Рµ РЅРѕРјРµСЂ СЃРёРґР°, РєРѕС‚РѕСЂС‹Р№ РЅРµРѕР±С…РѕРґРёРјРѕ РѕСЃС‚Р°РІРёС‚СЊ: ";
 		if (!enter_int_numeric(number))
 			continue;
 
@@ -184,36 +184,36 @@ void add_more_data(vector<OCDF>& data) {
 	system("cls");
 
 	vector<OCDF> new_data;
-	new_data = read_OCDF_file("Данные какого файла необходимо добавить?\n\n");
+	new_data = read_OCDF_file("Р”Р°РЅРЅС‹Рµ РєР°РєРѕРіРѕ С„Р°Р№Р»Р° РЅРµРѕР±С…РѕРґРёРјРѕ РґРѕР±Р°РІРёС‚СЊ?\n\n");
 
 	system("cls");
 
-	msg_warning("Соединяем данные...");
+	msg_warning("РЎРѕРµРґРёРЅСЏРµРј РґР°РЅРЅС‹Рµ...");
 
 	vector<OCDF> all_data(data.size() + new_data.size());
 	for (size_t i = 0, j = 0, k = 0; k < all_data.size(); k++) {
-		if (i == data.size()) { // если закончились данные в исходном векторе
+		if (i == data.size()) { // РµСЃР»Рё Р·Р°РєРѕРЅС‡РёР»РёСЃСЊ РґР°РЅРЅС‹Рµ РІ РёСЃС…РѕРґРЅРѕРј РІРµРєС‚РѕСЂРµ
 			all_data[k] = new_data[j];
 			j++;
 			continue;
 		}
-		else if (j == new_data.size()) { // если закончились данные в новом векторе
+		else if (j == new_data.size()) { // РµСЃР»Рё Р·Р°РєРѕРЅС‡РёР»РёСЃСЊ РґР°РЅРЅС‹Рµ РІ РЅРѕРІРѕРј РІРµРєС‚РѕСЂРµ
 			all_data[k] = data[i];
 			i++;
 			continue;
 		}
-		else { // если данные ещё есть в исходном и новом векторах
-			if (data[i].time < new_data[j].time) { // если данные из исходного вектора временем раньше, чем данные из нового вектора
+		else { // РµСЃР»Рё РґР°РЅРЅС‹Рµ РµС‰С‘ РµСЃС‚СЊ РІ РёСЃС…РѕРґРЅРѕРј Рё РЅРѕРІРѕРј РІРµРєС‚РѕСЂР°С…
+			if (data[i].time < new_data[j].time) { // РµСЃР»Рё РґР°РЅРЅС‹Рµ РёР· РёСЃС…РѕРґРЅРѕРіРѕ РІРµРєС‚РѕСЂР° РІСЂРµРјРµРЅРµРј СЂР°РЅСЊС€Рµ, С‡РµРј РґР°РЅРЅС‹Рµ РёР· РЅРѕРІРѕРіРѕ РІРµРєС‚РѕСЂР°
 				all_data[k] = data[i];
 				i++;
 				continue;
 			}
-			else if (data[i].time > new_data[j].time) { // если данные из нового вектора временем раньше, чем данные из исходного вектора
+			else if (data[i].time > new_data[j].time) { // РµСЃР»Рё РґР°РЅРЅС‹Рµ РёР· РЅРѕРІРѕРіРѕ РІРµРєС‚РѕСЂР° РІСЂРµРјРµРЅРµРј СЂР°РЅСЊС€Рµ, С‡РµРј РґР°РЅРЅС‹Рµ РёР· РёСЃС…РѕРґРЅРѕРіРѕ РІРµРєС‚РѕСЂР°
 				all_data[k] = new_data[j];
 				j++;
 				continue;
 			}
-			else { // если данные из нового вектора и исходного вектора имеют одинаковое время
+			else { // РµСЃР»Рё РґР°РЅРЅС‹Рµ РёР· РЅРѕРІРѕРіРѕ РІРµРєС‚РѕСЂР° Рё РёСЃС…РѕРґРЅРѕРіРѕ РІРµРєС‚РѕСЂР° РёРјРµСЋС‚ РѕРґРёРЅР°РєРѕРІРѕРµ РІСЂРµРјСЏ
 				all_data[k] = data[i];
 				i++;
 				k++;
@@ -226,7 +226,7 @@ void add_more_data(vector<OCDF>& data) {
 
 	data = all_data;
 
-	delete_msg("Соединяем данные...");
+	delete_msg("РЎРѕРµРґРёРЅСЏРµРј РґР°РЅРЅС‹Рµ...");
 	return;
 }
 
@@ -234,7 +234,7 @@ void save_OCDF_data_in_csv(vector<OCDF>& data) {
 	system("cls");
 
 	string dump_file_path;
-	std::cout << "Введите имя файла для загрузки в него данных: ";
+	std::cout << "Р’РІРµРґРёС‚Рµ РёРјСЏ С„Р°Р№Р»Р° РґР»СЏ Р·Р°РіСЂСѓР·РєРё РІ РЅРµРіРѕ РґР°РЅРЅС‹С…: ";
 	std::getline(std::cin, dump_file_path);
 	for (size_t k = dump_file_path.find('\"'); k != dump_file_path.npos; k = dump_file_path.find('\"', k))
 		dump_file_path.erase(k, 1);
@@ -243,7 +243,7 @@ void save_OCDF_data_in_csv(vector<OCDF>& data) {
 
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 10);
-	std::cout << "\nДанные успешно сохранены!\n\n";
+	std::cout << "\nР”Р°РЅРЅС‹Рµ СѓСЃРїРµС€РЅРѕ СЃРѕС…СЂР°РЅРµРЅС‹!\n\n";
 	SetConsoleTextAttribute(hConsole, 7);
 	system("pause");
 }
@@ -252,7 +252,7 @@ void save_OCDF_data_in_bin(vector<OCDF>& data) {
 	system("cls");
 
 	string dump_file_path;
-	std::cout << "Введите имя файла для загрузки в него данных: ";
+	std::cout << "Р’РІРµРґРёС‚Рµ РёРјСЏ С„Р°Р№Р»Р° РґР»СЏ Р·Р°РіСЂСѓР·РєРё РІ РЅРµРіРѕ РґР°РЅРЅС‹С…: ";
 	std::getline(std::cin, dump_file_path);
 	for (size_t k = dump_file_path.find('\"'); k != dump_file_path.npos; k = dump_file_path.find('\"', k))
 		dump_file_path.erase(k, 1);
@@ -263,7 +263,7 @@ void save_OCDF_data_in_bin(vector<OCDF>& data) {
 
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 10);
-	std::cout << "\nДанные успешно сохранены!\n\n";
+	std::cout << "\nР”Р°РЅРЅС‹Рµ СѓСЃРїРµС€РЅРѕ СЃРѕС…СЂР°РЅРµРЅС‹!\n\n";
 	SetConsoleTextAttribute(hConsole, 7);
 	system("pause");
 }

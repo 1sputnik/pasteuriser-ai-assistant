@@ -25,8 +25,8 @@ vector<OneCIDDataFormat> binload_OCDF_data(string file_name, size_t size) {
 	long long file_size = load_file.tellg();
 	load_file.seekg(0, load_file.beg);
 
-	/* встретил момент:
-	* OCDF состоит из полей short, llint и double, но...
+	/* РІСЃС‚СЂРµС‚РёР» РјРѕРјРµРЅС‚:
+	* OCDF СЃРѕСЃС‚РѕРёС‚ РёР· РїРѕР»РµР№ short, llint Рё double, РЅРѕ...
 	* sizeof(OCDF) != sizeof(short) + sizeof(long long int) + sizeof(double)
 	*/
 
@@ -62,14 +62,14 @@ vector<OCDF> read_OCDF_file(string special_msg) {
 		std::cout << special_msg;
 
 		string load_file_path;
-		std::cout << "Введите имя файла для загрузки из него данных: ";
+		std::cout << "Р’РІРµРґРёС‚Рµ РёРјСЏ С„Р°Р№Р»Р° РґР»СЏ Р·Р°РіСЂСѓР·РєРё РёР· РЅРµРіРѕ РґР°РЅРЅС‹С…: ";
 		std::getline(std::cin, load_file_path);
 		for (size_t k = load_file_path.find('\"'); k != load_file_path.npos; k = load_file_path.find('\"', k))
 			load_file_path.erase(k, 1);
 
 
 		long long data_size;
-		std::cout << "\nСколько данных необходимо загрузить (введите 0, если надо загрузить все данные): ";
+		std::cout << "\nРЎРєРѕР»СЊРєРѕ РґР°РЅРЅС‹С… РЅРµРѕР±С…РѕРґРёРјРѕ Р·Р°РіСЂСѓР·РёС‚СЊ (РІРІРµРґРёС‚Рµ 0, РµСЃР»Рё РЅР°РґРѕ Р·Р°РіСЂСѓР·РёС‚СЊ РІСЃРµ РґР°РЅРЅС‹Рµ): ";
 		if (!enter_int_numeric(data_size))
 			continue;
 
@@ -122,8 +122,8 @@ vector<TableDataFormat> binload_TDF_data(string file_name, size_t size) {
 	long long file_size = load_file.tellg();
 	load_file.seekg(0, load_file.beg);
 
-	/* встретил момент:
-	* OCDF состоит из полей short, llint и double, но...
+	/* РІСЃС‚СЂРµС‚РёР» РјРѕРјРµРЅС‚:
+	* OCDF СЃРѕСЃС‚РѕРёС‚ РёР· РїРѕР»РµР№ short, llint Рё double, РЅРѕ...
 	* sizeof(OCDF) != sizeof(short) + sizeof(long long int) + sizeof(double)
 	*/
 
@@ -163,13 +163,13 @@ vector<TableDataFormat> read_TDF_file(string special_msg) {
 		std::cout << special_msg;
 
 		string load_file_path;
-		std::cout << "Введите имя файла для загрузки из него данных: ";
+		std::cout << "Р’РІРµРґРёС‚Рµ РёРјСЏ С„Р°Р№Р»Р° РґР»СЏ Р·Р°РіСЂСѓР·РєРё РёР· РЅРµРіРѕ РґР°РЅРЅС‹С…: ";
 		std::getline(std::cin, load_file_path);
 		for (size_t k = load_file_path.find('\"'); k != load_file_path.npos; k = load_file_path.find('\"', k))
 			load_file_path.erase(k, 1);
 
 		long long data_size;
-		std::cout << "\nСколько данных необходимо загрузить (введите 0, если надо загрузить все данные): ";
+		std::cout << "\nРЎРєРѕР»СЊРєРѕ РґР°РЅРЅС‹С… РЅРµРѕР±С…РѕРґРёРјРѕ Р·Р°РіСЂСѓР·РёС‚СЊ (РІРІРµРґРёС‚Рµ 0, РµСЃР»Рё РЅР°РґРѕ Р·Р°РіСЂСѓР·РёС‚СЊ РІСЃРµ РґР°РЅРЅС‹Рµ): ";
 		if (!enter_int_numeric(data_size))
 			continue;
 

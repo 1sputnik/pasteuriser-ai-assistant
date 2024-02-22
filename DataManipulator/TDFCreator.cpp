@@ -25,14 +25,14 @@ bool check_all_cids(vector<OCDF>& data) {
 }
 
 void create_TDF_file() {
-	// блок чтения файлов
+	// Р±Р»РѕРє С‡С‚РµРЅРёСЏ С„Р°Р№Р»РѕРІ
 	vector<OCDF> general_OCDF_data;
-	general_OCDF_data = read_OCDF_file("Создание TDF файла из общего OCDF файла со всеми сидами.\n\n");
+	general_OCDF_data = read_OCDF_file("РЎРѕР·РґР°РЅРёРµ TDF С„Р°Р№Р»Р° РёР· РѕР±С‰РµРіРѕ OCDF С„Р°Р№Р»Р° СЃРѕ РІСЃРµРјРё СЃРёРґР°РјРё.\n\n");
 
 	system("cls");
 
-	// проверка на наличие всех сидов
-	std::cout << "Проверяем наличие всех сидов...";
+	// РїСЂРѕРІРµСЂРєР° РЅР° РЅР°Р»РёС‡РёРµ РІСЃРµС… СЃРёРґРѕРІ
+	std::cout << "РџСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ РІСЃРµС… СЃРёРґРѕРІ...";
 	if (!check_all_cids(general_OCDF_data)) {
 		cids_warning();
 		return;
@@ -40,8 +40,8 @@ void create_TDF_file() {
 
 	system("cls");
 
-	// парсим данные
-	std::cout << "Парсим данные...";
+	// РїР°СЂСЃРёРј РґР°РЅРЅС‹Рµ
+	std::cout << "РџР°СЂСЃРёРј РґР°РЅРЅС‹Рµ...";
 	vector<OCDF> first_cid_data;
 	first_cid_data = parsing_data_per_cid(general_OCDF_data, 1);
 	vector<OCDF> second_cid_data;
@@ -58,10 +58,10 @@ void create_TDF_file() {
 
 	system("cls");
 
-	// вводим необходимый диапазон данных относительно времени
+	// РІРІРѕРґРёРј РЅРµРѕР±С…РѕРґРёРјС‹Р№ РґРёР°РїР°Р·РѕРЅ РґР°РЅРЅС‹С… РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РІСЂРµРјРµРЅРё
 	long long range;
 	while (true) {
-		std::cout << "Введите необходимый диапозон между временными точками: ";
+		std::cout << "Р’РІРµРґРёС‚Рµ РЅРµРѕР±С…РѕРґРёРјС‹Р№ РґРёР°РїРѕР·РѕРЅ РјРµР¶РґСѓ РІСЂРµРјРµРЅРЅС‹РјРё С‚РѕС‡РєР°РјРё: ";
 		if (!enter_int_numeric(range))
 			continue;
 
@@ -73,8 +73,8 @@ void create_TDF_file() {
 		break;
 	}
 
-	// выравниваем диапазоны данных
-	std::cout << "Определяем временные границы данных сидов...";
+	// РІС‹СЂР°РІРЅРёРІР°РµРј РґРёР°РїР°Р·РѕРЅС‹ РґР°РЅРЅС‹С…
+	std::cout << "РћРїСЂРµРґРµР»СЏРµРј РІСЂРµРјРµРЅРЅС‹Рµ РіСЂР°РЅРёС†С‹ РґР°РЅРЅС‹С… СЃРёРґРѕРІ...";
 
 	vector<int> first_elements_of_cids{ first_cid_data[0].time, second_cid_data[0].time, third_cid_data[0].time,
 		forth_cid_data[0].time, fifth_cid_data[0].time, sixth_cid_data[0].time };
@@ -88,7 +88,7 @@ void create_TDF_file() {
 	int max_time_border = *max_element;
 	last_elements_of_cids.clear();
 
-	std::cout << "\b\b\b.\nВыравниваем диапазоны сидов по времени...";
+	std::cout << "\b\b\b.\nР’С‹СЂР°РІРЅРёРІР°РµРј РґРёР°РїР°Р·РѕРЅС‹ СЃРёРґРѕРІ РїРѕ РІСЂРµРјРµРЅРё...";
 
 	first_cid_data = cut_data_per_time(first_cid_data, min_time_border, false, true);
 	first_cid_data = cut_data_per_time(first_cid_data, max_time_border, true, true);
@@ -128,8 +128,8 @@ void create_TDF_file() {
 
 	system("cls");
 
-	// Собираем TDF-последовательность
-	std::cout << "Собираем данные в TDF-формат...";
+	// РЎРѕР±РёСЂР°РµРј TDF-РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ
+	std::cout << "РЎРѕР±РёСЂР°РµРј РґР°РЅРЅС‹Рµ РІ TDF-С„РѕСЂРјР°С‚...";
 
 	vector<TDF> data(first_cid_data.size());
 	for (size_t i = 0; i < data.size(); i++) {
@@ -139,9 +139,9 @@ void create_TDF_file() {
 
 	system("cls");
 
-	// сохраняем TDF-последовательсноть
+	// СЃРѕС…СЂР°РЅСЏРµРј TDF-РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊСЃРЅРѕС‚СЊ
 	string dump_file_path;
-	std::cout << "Введите имя файла для загрузки в него данных: ";
+	std::cout << "Р’РІРµРґРёС‚Рµ РёРјСЏ С„Р°Р№Р»Р° РґР»СЏ Р·Р°РіСЂСѓР·РєРё РІ РЅРµРіРѕ РґР°РЅРЅС‹С…: ";
 	std::getline(std::cin, dump_file_path);
 	for (size_t k = dump_file_path.find('\"'); k != dump_file_path.npos; k = dump_file_path.find('\"', k))
 		dump_file_path.erase(k, 1);
@@ -151,7 +151,7 @@ void create_TDF_file() {
 		system("cls");
 
 		string answer;
-		std::cout << "В каком формате сохранить даныне (0 - .csv, 1 - .bin): ";
+		std::cout << "Р’ РєР°РєРѕРј С„РѕСЂРјР°С‚Рµ СЃРѕС…СЂР°РЅРёС‚СЊ РґР°РЅС‹РЅРµ (0 - .csv, 1 - .bin): ";
 		if (!enter_menu_point(answer))
 			continue;
 		if (!string_symbol_to_bool(answer, save_to_bin_format))

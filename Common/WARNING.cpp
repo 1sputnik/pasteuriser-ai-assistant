@@ -188,7 +188,7 @@ bool check_TDF_in_file(std::string file_name) {
 void begin_loaging() {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 10);
-	std::cerr << "\nÇàãðóçêà, ïîæàëóéñòâà ïîäîæäèòå...\n\n";
+	std::cerr << "\nÐ—Ð°Ð³Ñ€ÑƒÐ·ÐºÐ°, Ð¿Ð¾Ð¶Ð°Ð»ÑƒÐ¹ÑÑ‚Ð²Ð° Ð¿Ð¾Ð´Ð¾Ð¶Ð´Ð¸Ñ‚Ðµ...\n\n";
 	SetConsoleTextAttribute(hConsole, 7);
 }
 
@@ -214,7 +214,7 @@ void delete_msg(std::string msg) {
 void enter_menu_warning() {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nÎøèáêà ââîäà! Íåâåðíûé ïóíêò ìåíþ!\n\n";
+	std::cerr << "\nÐžÑˆÐ¸Ð±ÐºÐ° Ð²Ð²Ð¾Ð´Ð°! ÐÐµÐ²ÐµÑ€Ð½Ñ‹Ð¹ Ð¿ÑƒÐ½ÐºÑ‚ Ð¼ÐµÐ½ÑŽ!\n\n";
 	SetConsoleTextAttribute(hConsole, 7);
 	system("pause");
 }
@@ -222,7 +222,7 @@ void enter_menu_warning() {
 void load_data_warning() {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nÎøèáêà çàãðóçêè äàííûõ! Íåâîçìîæíî ñ÷èòàòü äàííûå!\n\n";
+	std::cerr << "\nÐžÑˆÐ¸Ð±ÐºÐ° Ð·Ð°Ð³Ñ€ÑƒÐ·ÐºÐ¸ Ð´Ð°Ð½Ð½Ñ‹Ñ…! ÐÐµÐ²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ ÑÑ‡Ð¸Ñ‚Ð°Ñ‚ÑŒ Ð´Ð°Ð½Ð½Ñ‹Ðµ!\n\n";
 	SetConsoleTextAttribute(hConsole, 7);
 	system("pause");
 }
@@ -230,7 +230,7 @@ void load_data_warning() {
 void check_data_format_warining() {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nÎøèáêà çàãðóçêè äàííûõ! Íåâåðíûé ôîðìàò äàííûõ èëè íåâîçìîæíî ñ÷èòàòü ñòðîêó ñ äàííûìè!\n\n";
+	std::cerr << "\nÐžÑˆÐ¸Ð±ÐºÐ° Ð·Ð°Ð³Ñ€ÑƒÐ·ÐºÐ¸ Ð´Ð°Ð½Ð½Ñ‹Ñ…! ÐÐµÐ²ÐµÑ€Ð½Ñ‹Ð¹ Ñ„Ð¾Ñ€Ð¼Ð°Ñ‚ Ð´Ð°Ð½Ð½Ñ‹Ñ… Ð¸Ð»Ð¸ Ð½ÐµÐ²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ ÑÑ‡Ð¸Ñ‚Ð°Ñ‚ÑŒ ÑÑ‚Ñ€Ð¾ÐºÑƒ Ñ Ð´Ð°Ð½Ð½Ñ‹Ð¼Ð¸!\n\n";
 	SetConsoleTextAttribute(hConsole, 7);
 	system("pause");
 }
@@ -238,7 +238,7 @@ void check_data_format_warining() {
 void open_file_warning() {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nÎøèáêà çàãðóçêè äàííûõ! Íåâîçìîæíî îòêðûòü ôàéë!\n\n";
+	std::cerr << "\nÐžÑˆÐ¸Ð±ÐºÐ° Ð·Ð°Ð³Ñ€ÑƒÐ·ÐºÐ¸ Ð´Ð°Ð½Ð½Ñ‹Ñ…! ÐÐµÐ²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚ÑŒ Ñ„Ð°Ð¹Ð»!\n\n";
 	SetConsoleTextAttribute(hConsole, 7);
 	system("pause");
 }
@@ -246,7 +246,7 @@ void open_file_warning() {
 void overmuch_data_in_file_warning() {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nÎøèáêà çàãðóçêè äàííûõ! Ñëèøêîì ìíîãî äàííûõ!\n\n";
+	std::cerr << "\nÐžÑˆÐ¸Ð±ÐºÐ° Ð·Ð°Ð³Ñ€ÑƒÐ·ÐºÐ¸ Ð´Ð°Ð½Ð½Ñ‹Ñ…! Ð¡Ð»Ð¸ÑˆÐºÐ¾Ð¼ Ð¼Ð½Ð¾Ð³Ð¾ Ð´Ð°Ð½Ð½Ñ‹Ñ…!\n\n";
 	SetConsoleTextAttribute(hConsole, 7);
 	system("pause");
 }
@@ -254,7 +254,7 @@ void overmuch_data_in_file_warning() {
 void enter_int_numeric_warning() {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nÎøèáêà ââîäà äàííûõ! Ââåä¸ííîå çíà÷åíèå íå ÿâëÿåòñÿ öåëûì ÷èñëîì!\n\n";
+	std::cerr << "\nÐžÑˆÐ¸Ð±ÐºÐ° Ð²Ð²Ð¾Ð´Ð° Ð´Ð°Ð½Ð½Ñ‹Ñ…! Ð’Ð²ÐµÐ´Ñ‘Ð½Ð½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ Ð½Ðµ ÑÐ²Ð»ÑÐµÑ‚ÑÑ Ñ†ÐµÐ»Ñ‹Ð¼ Ñ‡Ð¸ÑÐ»Ð¾Ð¼!\n\n";
 	SetConsoleTextAttribute(hConsole, 7);
 	system("pause");
 }
@@ -262,7 +262,7 @@ void enter_int_numeric_warning() {
 void enter_double_numeric_warning() {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nÎøèáêà ââîäà äàííûõ! Ââåä¸ííîå çíà÷åíèå íå ÿâëÿåòñÿ äåéñòâèòåëüíûì ÷èñëîì!\n\n";
+	std::cerr << "\nÐžÑˆÐ¸Ð±ÐºÐ° Ð²Ð²Ð¾Ð´Ð° Ð´Ð°Ð½Ð½Ñ‹Ñ…! Ð’Ð²ÐµÐ´Ñ‘Ð½Ð½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ Ð½Ðµ ÑÐ²Ð»ÑÐµÑ‚ÑÑ Ð´ÐµÐ¹ÑÑ‚Ð²Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ñ‹Ð¼ Ñ‡Ð¸ÑÐ»Ð¾Ð¼!\n\n";
 	SetConsoleTextAttribute(hConsole, 7);
 	system("pause");
 }
@@ -270,7 +270,7 @@ void enter_double_numeric_warning() {
 void enter_point_menu_warning() {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nÎøèáêà ââîäà äàííûõ! Ââåäåíî ñëèøêîì ìíîãî ñèìâîëîâ!\n\n";
+	std::cerr << "\nÐžÑˆÐ¸Ð±ÐºÐ° Ð²Ð²Ð¾Ð´Ð° Ð´Ð°Ð½Ð½Ñ‹Ñ…! Ð’Ð²ÐµÐ´ÐµÐ½Ð¾ ÑÐ»Ð¸ÑˆÐºÐ¾Ð¼ Ð¼Ð½Ð¾Ð³Ð¾ ÑÐ¸Ð¼Ð²Ð¾Ð»Ð¾Ð²!\n\n";
 	SetConsoleTextAttribute(hConsole, 7);
 	system("pause");
 }
@@ -278,7 +278,7 @@ void enter_point_menu_warning() {
 void enter_invalid_data() {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nÎøèáêà ââîäà äàííûõ! Ââåä¸ííîå ÷èñëî íåäîïóñòèìî!\n\n";
+	std::cerr << "\nÐžÑˆÐ¸Ð±ÐºÐ° Ð²Ð²Ð¾Ð´Ð° Ð´Ð°Ð½Ð½Ñ‹Ñ…! Ð’Ð²ÐµÐ´Ñ‘Ð½Ð½Ð¾Ðµ Ñ‡Ð¸ÑÐ»Ð¾ Ð½ÐµÐ´Ð¾Ð¿ÑƒÑÑ‚Ð¸Ð¼Ð¾!\n\n";
 	SetConsoleTextAttribute(hConsole, 7);
 	system("pause");
 }
@@ -286,7 +286,7 @@ void enter_invalid_data() {
 void cids_warning() {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nÎøèáêà ïðåîáðàçîâàíèÿ äàííûõ! Äàííûå ñîäåðæàò íå âñå ñèäû!\n\n";
+	std::cerr << "\nÐžÑˆÐ¸Ð±ÐºÐ° Ð¿Ñ€ÐµÐ¾Ð±Ñ€Ð°Ð·Ð¾Ð²Ð°Ð½Ð¸Ñ Ð´Ð°Ð½Ð½Ñ‹Ñ…! Ð”Ð°Ð½Ð½Ñ‹Ðµ ÑÐ¾Ð´ÐµÑ€Ð¶Ð°Ñ‚ Ð½Ðµ Ð²ÑÐµ ÑÐ¸Ð´Ñ‹!\n\n";
 	SetConsoleTextAttribute(hConsole, 7);
 	system("pause");
 }

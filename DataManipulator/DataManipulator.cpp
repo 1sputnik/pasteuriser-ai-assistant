@@ -1,4 +1,4 @@
-﻿#include "DataManipulator.h"
+#include "DataManipulator.h"
 
 // иерархия меню
 void MainDataFormat_Menu(); 
