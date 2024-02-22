@@ -8,9 +8,8 @@ void show_info();
 
 int main()
 {
-	setlocale(LC_ALL, "Russian");
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 7);
+	SetConsoleCP(65001);
+	SetConsoleOutputCP(65001);
 
 	MainDataFormat_Menu();
 	return 0;
