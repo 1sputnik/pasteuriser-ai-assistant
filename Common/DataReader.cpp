@@ -25,11 +25,6 @@ vector<OneCIDDataFormat> binload_OCDF_data(string file_name, size_t size) {
 	long long file_size = load_file.tellg();
 	load_file.seekg(0, load_file.beg);
 
-	/* встретил момент:
-	* OCDF состоит из полей short, llint и double, но...
-	* sizeof(OCDF) != sizeof(short) + sizeof(long long int) + sizeof(double)
-	*/
-
 	OneCIDDataFormat temp;
 	long size_of_OCDF = sizeof(temp.cid) + sizeof(temp.time) + sizeof(temp.value);
 	if (file_size % size_of_OCDF != 0 || file_size == 0) {
@@ -83,11 +78,11 @@ vector<OCDF> read_OCDF_file(string special_msg) {
 				break;
 			}
 			else {
-				check_data_format_warining();
+				msg_warning("\nОшибка загрузки данных! Неверный формат данных или невозможно считать строку с данными!\n\n");
 			}
 		}
 		catch (...) {
-			load_data_warning();
+			msg_warning("\nОшибка загрузки данных! Невозможно считать данные!\n\n");
 			data.clear();
 		}
 	}
@@ -121,11 +116,6 @@ vector<TableDataFormat> binload_TDF_data(string file_name, size_t size) {
 	load_file.seekg(0, load_file.end);
 	long long file_size = load_file.tellg();
 	load_file.seekg(0, load_file.beg);
-
-	/* встретил момент:
-	* OCDF состоит из полей short, llint и double, но...
-	* sizeof(OCDF) != sizeof(short) + sizeof(long long int) + sizeof(double)
-	*/
 
 	TableDataFormat temp;
 	long size_of_TDF = sizeof(temp.time) + 6.0 * sizeof(temp.cid_1_value);
@@ -183,11 +173,11 @@ vector<TableDataFormat> read_TDF_file(string special_msg) {
 				break;
 			}
 			else {
-				check_data_format_warining();
+				msg_warning("\nОшибка загрузки данных! Неверный формат данных или невозможно считать строку с данными!\n\n");
 			}
 		}
 		catch (...) {
-			load_data_warning();
+			msg_warning("\nОшибка загрузки данных! Невозможно считать данные!\n\n");
 			data.clear();
 		}
 	}

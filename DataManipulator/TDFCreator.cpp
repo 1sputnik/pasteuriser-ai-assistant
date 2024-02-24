@@ -34,7 +34,7 @@ void create_TDF_file() {
 	// проверка на наличие всех сидов
 	std::cout << "Проверяем наличие всех сидов...";
 	if (!check_all_cids(general_OCDF_data)) {
-		cids_warning();
+		msg_warning("\nОшибка преобразования данных!Данные содержат не все сиды!\n\n");
 		return;
 	}
 
@@ -66,7 +66,7 @@ void create_TDF_file() {
 			continue;
 
 		else if (range < 0) {
-			enter_invalid_data();
+			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
 			continue;
 		}
 

@@ -34,7 +34,7 @@ bool have_promlems_with_reading_data(std::ifstream& file, std::string& str) {
 bool enter_menu_point(std::string& answer) {
 	std::getline(std::cin, answer);
 	if (answer.size() != 1) {
-		enter_point_menu_warning();
+		msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
 		return false;
 	}
 	return true;
@@ -47,7 +47,7 @@ bool enter_int_numeric(long long& numeric) {
 		numeric = std::stol(buffer);
 	}
 	else {
-		enter_int_numeric_warning();
+		msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом!\n\n");
 		return false;
 	}
 	return true;
@@ -62,7 +62,7 @@ bool enter_double_numeric(double& numeric, bool invers_descriptor) {
 		numeric = std::stod(buffer);
 	}
 	else {
-		enter_double_numeric_warning();
+		msg_warning("\nОшибка ввода данных! Введённое значение не является действительным числом!\n\n");
 		return false;
 	}
 	return true;
@@ -76,7 +76,7 @@ bool string_symbol_to_bool(std::string str, bool& answer) {
 		answer = 1;
 	}
 	else {
-		enter_invalid_data();
+		msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
 		return false;
 	}
 	return true;
@@ -185,108 +185,10 @@ bool check_TDF_in_file(std::string file_name) {
 	return true;
 }
 
-void begin_loaging() {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 10);
-	std::cerr << "\nЗагрузка, пожалуйства подождите...\n\n";
-	SetConsoleTextAttribute(hConsole, 7);
-}
-
-void end_loading() {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 10);
-	std::cerr << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b";
-	SetConsoleTextAttribute(hConsole, 7);
-}
 
 void msg_warning(std::string msg, short color) {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, color);
 	std::cout << msg;
 	SetConsoleTextAttribute(hConsole, 7);
-}
-
-void delete_msg(std::string msg) {
-	for (size_t i = 0; i < msg.length(); i++)
-		std::cout << "\b";
-}
-
-void enter_menu_warning() {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nОшибка ввода! Неверный пункт меню!\n\n";
-	SetConsoleTextAttribute(hConsole, 7);
-	system("pause");
-}
-
-void load_data_warning() {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nОшибка загрузки данных! Невозможно считать данные!\n\n";
-	SetConsoleTextAttribute(hConsole, 7);
-	system("pause");
-}
-
-void check_data_format_warining() {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nОшибка загрузки данных! Неверный формат данных или невозможно считать строку с данными!\n\n";
-	SetConsoleTextAttribute(hConsole, 7);
-	system("pause");
-}
-
-void open_file_warning() {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nОшибка загрузки данных! Невозможно открыть файл!\n\n";
-	SetConsoleTextAttribute(hConsole, 7);
-	system("pause");
-}
-
-void overmuch_data_in_file_warning() {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nОшибка загрузки данных! Слишком много данных!\n\n";
-	SetConsoleTextAttribute(hConsole, 7);
-	system("pause");
-}
-
-void enter_int_numeric_warning() {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nОшибка ввода данных! Введённое значение не является целым числом!\n\n";
-	SetConsoleTextAttribute(hConsole, 7);
-	system("pause");
-}
-
-void enter_double_numeric_warning() {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nОшибка ввода данных! Введённое значение не является действительным числом!\n\n";
-	SetConsoleTextAttribute(hConsole, 7);
-	system("pause");
-}
-
-void enter_point_menu_warning() {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nОшибка ввода данных! Введено слишком много символов!\n\n";
-	SetConsoleTextAttribute(hConsole, 7);
-	system("pause");
-}
-
-void enter_invalid_data() {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nОшибка ввода данных! Введённое число недопустимо!\n\n";
-	SetConsoleTextAttribute(hConsole, 7);
-	system("pause");
-}
-
-void cids_warning() {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 12);
-	std::cerr << "\nОшибка преобразования данных! Данные содержат не все сиды!\n\n";
-	SetConsoleTextAttribute(hConsole, 7);
-	system("pause");
 }

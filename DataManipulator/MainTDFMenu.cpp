@@ -44,7 +44,7 @@ void MainTDF_Menu() {
 			menu.at(answer[0])(data);
 		}
 		catch (...) {
-			enter_menu_warning();
+			msg_warning("\nОшибка ввода! Неверный пункт меню!\n\n");
 		}
 	}
 }
@@ -58,7 +58,7 @@ void cut_percent_TDF_data(vector<TDF>& data) {
 		if (!enter_double_numeric(cut_percent, true))
 			continue;
 		if (cut_percent > 1.0 || cut_percent < 0.0) {
-			enter_invalid_data();
+			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
 			continue;
 		}
 
@@ -86,7 +86,7 @@ void cut_quantity_TDF_data(vector<TDF>& data) {
 		if (!enter_int_numeric(cut_quantity))
 			continue;
 		if (cut_quantity <= 0) {
-			enter_invalid_data();
+			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
 			continue;
 		}
 
@@ -125,7 +125,7 @@ void pars_TDF_data_per_cid(vector<TDF>& data) {
 			continue;
 
 		if (number > 6 || number < 0) {
-			enter_invalid_data();
+			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
 			continue;
 		}
 
@@ -201,9 +201,6 @@ void add_more_data(vector<TDF>& data) {
 	}
 
 	data = all_data;
-
-	delete_msg("Соединяем данные...");
-	return;
 }
 
 void save_TDF_data_in_csv(vector<TDF>& data) {

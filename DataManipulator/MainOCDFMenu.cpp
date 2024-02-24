@@ -47,7 +47,7 @@ void MainOCDF_Menu() {
 			menu.at(answer[0])(data);
 		}
 		catch (...) {
-			enter_menu_warning();
+			msg_warning("\nОшибка ввода! Неверный пункт меню!\n\n");
 		}
 	}
 }
@@ -61,7 +61,7 @@ void cut_percent_OCDF_data(vector<OCDF>& data) {
 		if (!enter_double_numeric(cut_percent, true))
 			continue;
 		if (cut_percent > 1.0 || cut_percent < 0.0) {
-			enter_invalid_data();
+			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
 			continue;
 		}
 
@@ -89,7 +89,7 @@ void cut_quantity_OCDF_data(vector<OCDF>& data) {
 		if (!enter_int_numeric(cut_quantity))
 			continue;
 		if (cut_quantity <= 0) {
-			enter_invalid_data();
+			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
 			continue;
 		}
 
@@ -126,7 +126,7 @@ void right_time_OCDF(vector<OCDF>& data) {
 			return;
 		}
 		else if (range < 0) {
-			enter_invalid_data();
+			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
 			continue;
 		}
 
@@ -170,7 +170,7 @@ void pars_OCDF_data_per_cid(vector<OCDF>& data) {
 			continue;
 
 		if (number > 6 || number < 0) {
-			enter_invalid_data();
+			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
 			continue;
 		}
 
@@ -225,9 +225,6 @@ void add_more_data(vector<OCDF>& data) {
 	}
 
 	data = all_data;
-
-	delete_msg("Соединяем данные...");
-	return;
 }
 
 void save_OCDF_data_in_csv(vector<OCDF>& data) {
@@ -240,12 +237,6 @@ void save_OCDF_data_in_csv(vector<OCDF>& data) {
 		dump_file_path.erase(k, 1);
 
 	dump_data(data, dump_file_path);
-
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 10);
-	std::cout << "\nДанные успешно сохранены!\n\n";
-	SetConsoleTextAttribute(hConsole, 7);
-	system("pause");
 }
 
 void save_OCDF_data_in_bin(vector<OCDF>& data) {
@@ -260,10 +251,4 @@ void save_OCDF_data_in_bin(vector<OCDF>& data) {
 	dump_file_path += ".bin";
 
 	bindump_data(data, dump_file_path);
-
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 10);
-	std::cout << "\nДанные успешно сохранены!\n\n";
-	SetConsoleTextAttribute(hConsole, 7);
-	system("pause");
 }

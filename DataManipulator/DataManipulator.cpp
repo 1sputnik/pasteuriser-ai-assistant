@@ -8,8 +8,8 @@ void show_info();
 
 int main()
 {
-	SetConsoleCP(65001);
-	SetConsoleOutputCP(65001);
+	SetConsoleCP(CP_UTF8);
+	SetConsoleOutputCP(CP_UTF8);
 
 	MainDataFormat_Menu();
 	return 0;
@@ -47,7 +47,7 @@ void MainDataFormat_Menu() {
 			menu.at(answer[0])();
 		}
 		catch (...) {
-			enter_menu_warning();
+			msg_warning("\nОшибка ввода! Неверный пункт меню!\n\n");
 		}
 	}
 }

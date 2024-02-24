@@ -38,30 +38,4 @@ bool check_OCDF_in_file(std::string file_name);
 bool check_TDF_in_file(std::string file_name);
 
 
-void begin_loaging();
-
-void end_loading();
-
 void msg_warning(std::string msg = "", short color = 7);
-
-void delete_msg(std::string msg);
-
-void enter_menu_warning();
-
-void load_data_warning();
-
-void check_data_format_warining();
-
-void open_file_warning();
-
-void overmuch_data_in_file_warning();
-
-void enter_int_numeric_warning();
-
-void enter_double_numeric_warning();
-
-void enter_point_menu_warning();
-
-void enter_invalid_data();
-
-void cids_warning();
