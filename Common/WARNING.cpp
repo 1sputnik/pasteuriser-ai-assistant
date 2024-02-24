@@ -187,8 +187,12 @@ bool check_TDF_in_file(std::string file_name) {
 
 
 void msg_warning(std::string msg, short color) {
+#if defined(_WIN32) || defined(_WIN64)
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, color);
+#endif
 	std::cout << msg;
+#if defined(_WIN32) || defined(_WIN64)
 	SetConsoleTextAttribute(hConsole, 7);
+#endif
 }

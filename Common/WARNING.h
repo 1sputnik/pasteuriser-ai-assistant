@@ -1,6 +1,8 @@
 #pragma once
 
+#if defined(_WIN32) || defined(_WIN64)
 #include <Windows.h>
+#endif
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -38,4 +40,4 @@ bool check_OCDF_in_file(std::string file_name);
 bool check_TDF_in_file(std::string file_name);
 
 
-void msg_warning(std::string msg = "", short color = 7);
+void msg_warning(std::string msg = "\nВнимание! Что-то пошло не так!\n\n", short color = 7);
