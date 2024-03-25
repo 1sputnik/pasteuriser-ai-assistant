@@ -11,10 +11,12 @@ void MainTDF_Menu() {
 	};
 
 	vector<TDF> data;
-	data = read_TDF_file();
+	data = read_TDF_file("DataManipulator: работа с форматом TDF\n\n");
 
 	while (true) {
 		system("cls");
+
+		std::cout << "DataManipulator: работа с форматом TDF\n\n";
 
 		std::cout << "Данные загружены\n"
 			<< "Формат данных: TDF\n"
@@ -22,7 +24,7 @@ void MainTDF_Menu() {
 			<< "Первая строка данных:\t\t" << data[0] << "\n"
 			<< "Последняя строка данных:\t" << data[data.size() - 1] << "\n\n";
 
-		std::cout << "Выберите формат данных:\n"
+		std::cout << "Выберите пункт меню:\n"
 			<< "1 - обрезать заданный процент данных\n"
 			<< "2 - обрезать заданное количество данных\n"
 			<< "3 - визуализировать данные\n"
@@ -53,9 +55,11 @@ void cut_percent_TDF_data(vector<TDF>& data) {
 	while (true) {
 		system("cls");
 
+		std::cout << "DataManipulator: обрезка TDF-данных по заданному проценту\n\n";
+
 		double cut_percent;
-		std::cout << "Введите процент данных, который нужно оставить: ";
-		if (!enter_double_numeric(cut_percent, true))
+		std::cout << "Введите процент данных, который нужно оставить (число в диапазоне (0.0; 1.0)): ";
+		if (!enter_double_numeric(cut_percent, false))
 			continue;
 		if (cut_percent > 1.0 || cut_percent < 0.0) {
 			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
@@ -80,6 +84,8 @@ void cut_percent_TDF_data(vector<TDF>& data) {
 void cut_quantity_TDF_data(vector<TDF>& data) {
 	while (true) {
 		system("cls");
+
+		std::cout << "DataManipulator: обрезка TDF-данных по заданному количеству\n\n";
 
 		long long cut_quantity;
 		std::cout << "Введите количество данных, которое нужно оставить: ";
@@ -107,6 +113,9 @@ void cut_quantity_TDF_data(vector<TDF>& data) {
 
 void show_TDF_data(vector<TDF>& data) {
 	system("cls");
+
+	std::cout << "DataManipulator: визуализация TDF формата\n\n";
+
 	dump_data(data, "..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
 	std::cout << "Данные визуализирвоаны!\n\n" << "Чтобы выйти в меню, закройте окно визуализации!\n";
 
@@ -120,9 +129,14 @@ void pars_TDF_data_per_cid(vector<TDF>& data) {
 	while (true) {
 		system("cls");
 
-		std::cout << "Введите номер сида, который необходимо оставить: ";
+		std::cout << "DataManipulator: парсинг TDF формата по указанному сиду\n\n";
+
+		std::cout << "Введите номер сида, который необходимо оставить (0 - чтобы выйти): ";
 		if (!enter_int_numeric(number))
 			continue;
+
+		if (number == 0)
+			return;
 
 		if (number > 6 || number < 0) {
 			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
@@ -137,6 +151,8 @@ void pars_TDF_data_per_cid(vector<TDF>& data) {
 	bool save_to_bin_format = false;
 	while (true) {
 		system("cls");
+
+		std::cout << "DataManipulator: парсинг TDF формата по указанному сиду\n\n";
 
 		string answer;
 		std::cout << "В каком формате сохранить даныне (0 - .csv, 1 - .bin): ";
@@ -160,11 +176,13 @@ void add_more_data(vector<TDF>& data) {
 	system("cls");
 
 	vector<TDF> new_data;
-	new_data = read_TDF_file("Данные какого файла необходимо добавить?\n\n");
+	new_data = read_TDF_file("DataManipulator: добавление новых данных TDF формата\n\nДанные какого файла необходимо добавить?\n\n");
 
 	system("cls");
 
-	msg_warning("Соединяем данные...");
+	std::cout << "DataManipulator: добавление новых данных TDF формата\n\n";
+
+	std::cout << "Соединяем данные...";
 
 	vector<TDF> all_data(data.size() + new_data.size());
 	for (size_t i = 0, j = 0, k = 0; k < all_data.size(); k++) {
@@ -206,6 +224,8 @@ void add_more_data(vector<TDF>& data) {
 void save_TDF_data_in_csv(vector<TDF>& data) {
 	system("cls");
 
+	std::cout << "DataManipulator: сохранение данных TDF формата в текстовом режиме\n\n";
+
 	string dump_file_path;
 	std::cout << "Введите имя файла для загрузки в него данных: ";
 	std::getline(std::cin, dump_file_path);
@@ -213,16 +233,12 @@ void save_TDF_data_in_csv(vector<TDF>& data) {
 		dump_file_path.erase(k, 1);
 
 	dump_data(data, dump_file_path);
-
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 10);
-	std::cout << "\nДанные успешно сохранены!\n\n";
-	SetConsoleTextAttribute(hConsole, 7);
-	system("pause");
 }
 
 void save_TDF_data_in_bin(vector<TDF>& data) {
 	system("cls");
+
+	std::cout << "DataManipulator: сохранение данных TDF формата в бинарном режиме\n\n";
 
 	string dump_file_path;
 	std::cout << "Введите имя файла для загрузки в него данных: ";
@@ -233,10 +249,4 @@ void save_TDF_data_in_bin(vector<TDF>& data) {
 	dump_file_path += ".bin";
 
 	bindump_data(data, dump_file_path);
-
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 10);
-	std::cout << "\nДанные успешно сохранены!\n\n";
-	SetConsoleTextAttribute(hConsole, 7);
-	system("pause");
 }

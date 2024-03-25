@@ -3,8 +3,9 @@
 vector<OneCIDDataFormat> load_OCDF_data(string file_name, size_t size) {
 	std::ifstream load_file;
 	OneCIDDataFormat temp_data;
-	if (size == 0) {
-		size = check_quantity_data_lines_in_file(load_file, file_name);
+	size_t temp_size = check_quantity_data_lines_in_file(load_file, file_name);
+	if (size == 0 || size > temp_size) {
+		size = temp_size;
 	}
 	vector<OneCIDDataFormat> data(size);
 	load_file.open(file_name);
@@ -78,7 +79,7 @@ vector<OCDF> read_OCDF_file(string special_msg) {
 				break;
 			}
 			else {
-				msg_warning("\nОшибка загрузки данных! Неверный формат данных или невозможно считать строку с данными!\n\n");
+				msg_warning("\nОшибка загрузки данных! Неверный формат данных или невозможно считать данные необходимого формата!\n\n");
 			}
 		}
 		catch (...) {

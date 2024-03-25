@@ -5,6 +5,7 @@
 #include <functional>
 #include <string>
 #include <filesystem>
+#include <conio.h>
 #include "../Common/DataFormats.h"
 #include "../Common/WARNING.h"
 #include "../Common/DataReader.h"

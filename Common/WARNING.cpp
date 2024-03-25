@@ -1,4 +1,5 @@
 #include "WARNING.h"
+#include <conio.h>
 
 bool have_promlems_with_opening_file(std::ifstream& file, std::string file_name) {
 	try {
@@ -185,7 +186,6 @@ bool check_TDF_in_file(std::string file_name) {
 	return true;
 }
 
-
 void msg_warning(std::string msg, short color) {
 #if defined(_WIN32) || defined(_WIN64)
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -195,4 +195,6 @@ void msg_warning(std::string msg, short color) {
 #if defined(_WIN32) || defined(_WIN64)
 	SetConsoleTextAttribute(hConsole, 7);
 #endif
+	std::cout << "Для продолжения нажмите любую клавишу...\n\n";
+	_getch();
 }

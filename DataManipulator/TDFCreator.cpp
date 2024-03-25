@@ -27,9 +27,11 @@ bool check_all_cids(vector<OCDF>& data) {
 void create_TDF_file() {
 	// блок чтения файлов
 	vector<OCDF> general_OCDF_data;
-	general_OCDF_data = read_OCDF_file("Создание TDF файла из общего OCDF файла со всеми сидами.\n\n");
+	general_OCDF_data = read_OCDF_file("DataManipulator: Сборка TDF-файла из общего OCDF-файла со всеми сидами\n\n");
 
 	system("cls");
+
+	std::cout << "DataManipulator: Сборка TDF-файла из общего OCDF-файла со всеми сидами\n\n";
 
 	// проверка на наличие всех сидов
 	std::cout << "Проверяем наличие всех сидов...";
@@ -39,6 +41,8 @@ void create_TDF_file() {
 	}
 
 	system("cls");
+
+	std::cout << "DataManipulator: Сборка TDF-файла из общего OCDF-файла со всеми сидами\n\n";
 
 	// парсим данные
 	std::cout << "Парсим данные...";
@@ -56,7 +60,15 @@ void create_TDF_file() {
 	sixth_cid_data = parsing_data_per_cid(general_OCDF_data, 6);
 	general_OCDF_data.clear();
 
+	if (first_cid_data.size() < 2 || second_cid_data.size() < 2 ||
+		third_cid_data.size() < 2 || forth_cid_data.size() < 2 ||
+		fifth_cid_data.size() < 2 || sixth_cid_data.size() < 2) {
+		msg_warning("\nОшибка при сборке TDF-файла! Данных некоторого сида слишком мало, чтобы выполнить данную операцию!\n\n");
+	}
+
 	system("cls");
+
+	std::cout << "DataManipulator: Сборка TDF-файла из общего OCDF-файла со всеми сидами\n\n";
 
 	// вводим необходимый диапазон данных относительно времени
 	long long range;
@@ -128,6 +140,8 @@ void create_TDF_file() {
 
 	system("cls");
 
+	std::cout << "DataManipulator: Сборка TDF-файла из общего OCDF-файла со всеми сидами\n\n";
+
 	// Собираем TDF-последовательность
 	std::cout << "Собираем данные в TDF-формат...";
 
@@ -138,6 +152,8 @@ void create_TDF_file() {
 	}
 
 	system("cls");
+
+	std::cout << "DataManipulator: Сборка TDF-файла из общего OCDF-файла со всеми сидами\n\n";
 
 	// сохраняем TDF-последовательсноть
 	string dump_file_path;
