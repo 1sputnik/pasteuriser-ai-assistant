@@ -4,8 +4,6 @@
 #include <functional>
 #include <filesystem>
 #include "../Common/DataReformer.h"
-#include "../Common/DataFormats.h"
-#include "../Common/WARNING.h"
 #include "../Common/DataReader.h"
 #include "../Common/DataDumper.h"
 
@@ -17,6 +15,7 @@ using std::make_pair;
 void MainOCDF_Menu();
 void cut_percent_OCDF_data(vector<OCDF>& data);
 void cut_quantity_OCDF_data(vector<OCDF>& data);
+void cut_time_OCDF_data(vector<OCDF>& data);
 void right_time_OCDF(vector<OCDF>& data);
 void show_OCDF_data(vector<OCDF>& data);
 void pars_OCDF_data_per_cid(vector<OCDF>& data);

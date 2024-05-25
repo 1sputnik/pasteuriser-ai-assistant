@@ -4,12 +4,13 @@ void MainOCDF_Menu() {
 	map<unsigned char, function<void(vector<OCDF>& data)>> menu{
 		make_pair('1', cut_percent_OCDF_data),
 		make_pair('2', cut_quantity_OCDF_data),
-		make_pair('3', right_time_OCDF),
-		make_pair('4', show_OCDF_data),
-		make_pair('5', pars_OCDF_data_per_cid),
-		make_pair('6', add_more_data),
-		make_pair('7', save_OCDF_data_in_csv),
-		make_pair('8', save_OCDF_data_in_bin)
+		make_pair('3', cut_time_OCDF_data),
+		make_pair('4', right_time_OCDF),
+		make_pair('5', show_OCDF_data),
+		make_pair('6', pars_OCDF_data_per_cid),
+		make_pair('7', add_more_data),
+		make_pair('8', save_OCDF_data_in_csv),
+		make_pair('9', save_OCDF_data_in_bin)
 	};
 
 	vector<OCDF> data;
@@ -29,12 +30,13 @@ void MainOCDF_Menu() {
 		std::cout << "Выберите пункт меню:\n"
 			<< "1 - обрезать заданный процент данных\n"
 			<< "2 - обрезать заданное количество данных\n"
-			<< "3 - выровнять диапазон по оси времени\n"
-			<< "4 - визуализировать данные\n"
-			<< "5 - распарсить данные по сиду\n"
-			<< "6 - добавить новые данные\n"
-			<< "7 - сохранить данные в файл формата csv\n"
-			<< "8 - сохранить данные в бинарный файл\n"
+			<< "3 - обрезать относительно заданного момента времени\n"
+			<< "4 - выровнять диапазон по оси времени\n"
+			<< "5 - визуализировать данные\n"
+			<< "6 - распарсить данные по сиду\n"
+			<< "7 - добавить новые данные\n"
+			<< "8 - сохранить данные в файл формата csv\n"
+			<< "9 - сохранить данные в бинарный файл\n"
 			<< "0 - выход в главное меню\n"
 			<< "Введите пункт меню: ";
 
@@ -128,6 +130,43 @@ void cut_quantity_OCDF_data(vector<OCDF>& data) {
 	}
 }
 
+void cut_time_OCDF_data(vector<OCDF>& data) {
+	while (true) {
+		system("cls");
+
+		std::cout << "DataManipulator: обрезка OCDF-данных по заданному моменту времени\n\n";
+
+		long long cut_time;
+		std::cout << "Введите момент времени, которое будет являться границей обрезки: ";
+		if (!enter_int_numeric(cut_time))
+			continue;
+		if (cut_time <= 0) {
+			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
+			continue;
+		}
+
+		bool cut_trend;
+		string answer;
+		std::cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
+		if (!enter_menu_point(answer))
+			continue;
+
+		if (!string_symbol_to_bool(answer, cut_trend))
+			continue;
+
+		vector<OCDF> buffer_data = cut_data_per_time(data, cut_time, cut_trend);
+		if (buffer_data.size() == 0) {
+			msg_warning("\nОшибка выполнения операции! Результат выполенния операции есть пустая последовательность данных!\n\n");
+			return;
+		}
+		else {
+			data = buffer_data;
+		}
+
+		break;
+	}
+}
+
 void right_time_OCDF(vector<OCDF>& data) {
 	while (true) {
 		system("cls");
@@ -185,10 +224,10 @@ void show_OCDF_data(vector<OCDF>& data) {
 	std::cout << "Данные визуализирвоаны!\n\n" << "Чтобы выйти в меню, закройте окно визуализации!\n";
 
 	if (is_one_cid) {
-		system("python ..\\..\\..\\..\\PyVisualisation\\OCDF_OneCid_Visual.py ..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
+		system("py ..\\..\\..\\..\\PyVisualisation\\OCDF_OneCid_Visual.py ..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
 	}
 	else {
-		system("python ..\\..\\..\\..\\PyVisualisation\\OCDF_SixCids_Visual.py ..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
+		system("py ..\\..\\..\\..\\PyVisualisation\\OCDF_SixCids_Visual.py ..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
 	}
 
 	DeleteFile("..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");

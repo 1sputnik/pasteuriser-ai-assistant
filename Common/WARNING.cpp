@@ -44,11 +44,15 @@ bool enter_menu_point(std::string& answer) {
 bool enter_int_numeric(long long& numeric) {
 	std::string buffer;
 	std::getline(std::cin, buffer);
+	if (buffer == "") {
+		msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом или число отрицательное!\n\n");
+		return false;
+	}
 	if (is_int_numeric(buffer)) {
 		numeric = std::stol(buffer);
 	}
 	else {
-		msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом!\n\n");
+		msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом или число отрицательное!\n\n");
 		return false;
 	}
 	return true;

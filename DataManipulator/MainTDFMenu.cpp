@@ -4,8 +4,9 @@ void MainTDF_Menu() {
 	map<unsigned char, function<void(vector<TDF>& data)>> menu{
 		make_pair('1', cut_percent_TDF_data),
 		make_pair('2', cut_quantity_TDF_data),
-		make_pair('3', show_TDF_data),
-		make_pair('4', pars_TDF_data_per_cid),
+		make_pair('3', cut_time_TDF_data),
+		make_pair('4', show_TDF_data),
+		make_pair('5', pars_TDF_data_per_cid),
 		make_pair('6', save_TDF_data_in_csv),
 		make_pair('7', save_TDF_data_in_bin)
 	};
@@ -27,9 +28,9 @@ void MainTDF_Menu() {
 		std::cout << "Выберите пункт меню:\n"
 			<< "1 - обрезать заданный процент данных\n"
 			<< "2 - обрезать заданное количество данных\n"
-			<< "3 - визуализировать данные\n"
-			<< "4 - распарсить данные по сиду\n"
-			<< "5 - добавить новые данные\n"
+			<< "3 - обрезать относительно заданного момента времени\n"
+			<< "4 - визуализировать данные\n"
+			<< "5 - распарсить данные по сиду\n"
 			<< "6 - сохранить данные в файл формата csv\n"
 			<< "7 - сохранить данные в бинарный файл\n"
 			<< "0 - выход в главное меню\n"
@@ -111,6 +112,43 @@ void cut_quantity_TDF_data(vector<TDF>& data) {
 	}
 }
 
+void cut_time_TDF_data(vector<TDF>& data) {
+	while (true) {
+		system("cls");
+
+		std::cout << "DataManipulator: обрезка TDF-данных по заданному моменту времени\n\n";
+
+		long long cut_time;
+		std::cout << "Введите момент времени, который будет являться границей обрезки: ";
+		if (!enter_int_numeric(cut_time))
+			continue;
+		if (cut_time <= 0) {
+			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
+			continue;
+		}
+
+		bool cut_trend;
+		string answer;
+		std::cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
+		if (!enter_menu_point(answer))
+			continue;
+
+		if (!string_symbol_to_bool(answer, cut_trend))
+			continue;
+
+		vector<TDF> buffer_data = cut_data_per_time(data, cut_time, cut_trend);
+		if (buffer_data.size() == 0) {
+			msg_warning("\nОшибка выполнения операции! Результат выполенния операции есть пустая последовательность данных!\n\n");
+			return;
+		}
+		else {
+			data = buffer_data;
+		}
+
+		break;
+	}
+}
+
 void show_TDF_data(vector<TDF>& data) {
 	system("cls");
 
@@ -170,55 +208,6 @@ void pars_TDF_data_per_cid(vector<TDF>& data) {
 	else {
 		save_OCDF_data_in_csv(OCdata);
 	}
-}
-
-void add_more_data(vector<TDF>& data) {
-	system("cls");
-
-	vector<TDF> new_data;
-	new_data = read_TDF_file("DataManipulator: добавление новых данных TDF формата\n\nДанные какого файла необходимо добавить?\n\n");
-
-	system("cls");
-
-	std::cout << "DataManipulator: добавление новых данных TDF формата\n\n";
-
-	std::cout << "Соединяем данные...";
-
-	vector<TDF> all_data(data.size() + new_data.size());
-	for (size_t i = 0, j = 0, k = 0; k < all_data.size(); k++) {
-		if (i == data.size()) { // если закончились данные в исходном векторе
-			all_data[k] = new_data[j];
-			j++;
-			continue;
-		}
-		else if (j == new_data.size()) { // если закончились данные в новом векторе
-			all_data[k] = data[i];
-			i++;
-			continue;
-		}
-		else { // если данные ещё есть в исходном и новом векторах
-			if (data[i].time < new_data[j].time) { // если данные из исходного вектора временем раньше, чем данные из нового вектора
-				all_data[k] = data[i];
-				i++;
-				continue;
-			}
-			else if (data[i].time > new_data[j].time) { // если данные из нового вектора временем раньше, чем данные из исходного вектора
-				all_data[k] = new_data[j];
-				j++;
-				continue;
-			}
-			else { // если данные из нового вектора и исходного вектора имеют одинаковое время
-				all_data[k] = data[i];
-				i++;
-				k++;
-				all_data[k] = new_data[j];
-				j++;
-				continue;
-			}
-		}
-	}
-
-	data = all_data;
 }
 
 void save_TDF_data_in_csv(vector<TDF>& data) {

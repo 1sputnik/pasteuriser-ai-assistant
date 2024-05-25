@@ -1,10 +1,5 @@
 #pragma once
 
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <string>
-#include <algorithm>
 #include "WARNING.h"
 
 using std::vector;

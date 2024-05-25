@@ -1,12 +1,6 @@
 #pragma once
 
-#include <string>
-#include <fstream>
-#include <iostream>
-#include <vector>
-#include <algorithm>
 #include "DataFormats.h"
-#include "WARNING.h"
 
 vector<OneCIDDataFormat> load_OCDF_data(string file_name, size_t size = 0);
 

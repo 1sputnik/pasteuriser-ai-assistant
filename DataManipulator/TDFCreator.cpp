@@ -102,28 +102,28 @@ void create_TDF_file() {
 
 	std::cout << "\b\b\b.\nВыравниваем диапазоны сидов по времени...";
 
-	first_cid_data = cut_data_per_time(first_cid_data, min_time_border, false, true);
-	first_cid_data = cut_data_per_time(first_cid_data, max_time_border, true, true);
+	first_cid_data = cut_data_per_time(first_cid_data, min_time_border, true, true);
+	first_cid_data = cut_data_per_time(first_cid_data, max_time_border, false, true);
 	first_cid_data = right_range(first_cid_data, range);
 
-	second_cid_data = cut_data_per_time(second_cid_data, min_time_border, false, true);
-	second_cid_data = cut_data_per_time(second_cid_data, max_time_border, true, true);
+	second_cid_data = cut_data_per_time(second_cid_data, min_time_border, true, true);
+	second_cid_data = cut_data_per_time(second_cid_data, max_time_border, false, true);
 	second_cid_data = right_range(second_cid_data, range);
 
-	third_cid_data = cut_data_per_time(third_cid_data, min_time_border, false, true);
-	third_cid_data = cut_data_per_time(third_cid_data, max_time_border, true, true);
+	third_cid_data = cut_data_per_time(third_cid_data, min_time_border, true, true);
+	third_cid_data = cut_data_per_time(third_cid_data, max_time_border, false, true);
 	third_cid_data = right_range(third_cid_data, range);
 
-	forth_cid_data = cut_data_per_time(forth_cid_data, min_time_border, false, true);
-	forth_cid_data = cut_data_per_time(forth_cid_data, max_time_border, true, true);
+	forth_cid_data = cut_data_per_time(forth_cid_data, min_time_border, true, true);
+	forth_cid_data = cut_data_per_time(forth_cid_data, max_time_border, false, true);
 	forth_cid_data = right_range(forth_cid_data, range);
 
-	fifth_cid_data = cut_data_per_time(fifth_cid_data, min_time_border, false, true);
-	fifth_cid_data = cut_data_per_time(fifth_cid_data, max_time_border, true, true);
+	fifth_cid_data = cut_data_per_time(fifth_cid_data, min_time_border, true, true);
+	fifth_cid_data = cut_data_per_time(fifth_cid_data, max_time_border, false, true);
 	fifth_cid_data = right_range(fifth_cid_data, range);
 
-	sixth_cid_data = cut_data_per_time(sixth_cid_data, min_time_border, false, true);
-	sixth_cid_data = cut_data_per_time(sixth_cid_data, max_time_border, true, true);
+	sixth_cid_data = cut_data_per_time(sixth_cid_data, min_time_border, true, true);
+	sixth_cid_data = cut_data_per_time(sixth_cid_data, max_time_border, false, true);
 	sixth_cid_data = right_range(sixth_cid_data, range);
 
 	vector<size_t> data_sizes{ first_cid_data.size(), second_cid_data.size(), third_cid_data.size(), forth_cid_data.size(), fifth_cid_data.size(), sixth_cid_data.size() };
