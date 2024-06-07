@@ -9,8 +9,9 @@
 #include "../NeuroModels/TInVanilaLSTM.h"
 #include "../Common/DataDumper.h"
 #include "../Common/DataReader.h"
+#include "../Common/DataReformer.h"
 #include "../Common/DataFormats.h"
 #include "../Common/WARNING.h"
 
-void createOCDFModel();
-void loadOCDFModel();
+void createModel();
+void loadModel();

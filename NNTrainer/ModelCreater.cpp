@@ -5,24 +5,24 @@ using std::function;
 using std::map;
 using std::make_pair;
 
-void createOCDFVanilaLSTM();
-void createTInOCDFLSTM();
-void train_OCDF_model(OCDFNeuron* model);
-void save_OCDF_model(OCDFNeuron* model);
+void createVanilaLSTM();
+void createTInLSTM();
+void train_model(OCDFNeuron* model);
+void save_model(OCDFNeuron* model);
 char define_model_type_per_file_name(string file_name);
 char define_model_type_per_class_type(OCDFNeuron* file_name);
-void OCDFmodel_menu(OCDFNeuron* model);
+void model_menu(OCDFNeuron* model);
 
-void createOCDFModel() {
+void createModel() {
 	map<unsigned char, function<void()>> menu{
-		make_pair('1', createOCDFVanilaLSTM),
-		make_pair('2', createTInOCDFLSTM)
+		make_pair('1', createVanilaLSTM),
+		make_pair('2', createTInLSTM)
 	};
 
 	while (true) {
 		system("cls");
 
-		std::cout << "NNTrainer: Выбор OCDF модели\n\n";
+		std::cout << "NNTrainer: Выбор  модели\n\n";
 
 		std::cout << "Выберите тип нейронной сети:\n"
 			<< "1 - Стандартная LSTM с одним входом\n"
@@ -87,7 +87,7 @@ double enter_plus_real_numeric(std::string title_msg = "") {
 	return numeric;
 }
 
-void createOCDFVanilaLSTM() {
+void createVanilaLSTM() {
 	int input_range = enter_plus_integer_numeric("NNTrainer: Создание VanilaLSTM: ввод входной размерности\n\n");
 	int hidden_range = enter_plus_integer_numeric("NNTrainer: Создание VanilaLSTM: ввод скрытой размерности\n\n");
 	int output_range = enter_plus_integer_numeric("NNTrainer: Создание VanilaLSTM: ввод выходной размерности\n\n");
@@ -105,10 +105,10 @@ void createOCDFVanilaLSTM() {
 	voc_lstm->set_learning_rate(learning_rate);
 	voc_lstm->set_target_error(target_error);
 
-	OCDFmodel_menu(voc_lstm);
+	model_menu(voc_lstm);
 }
 
-void createTInOCDFLSTM() {
+void createTInLSTM() {
 	int input_range = enter_plus_integer_numeric("NNTrainer: Создание VanilaLSTM: ввод входной размерности\n\n");
 	int hidden_range = enter_plus_integer_numeric("NNTrainer: Создание VanilaLSTM: ввод скрытой размерности\n\n");
 	int output_range = enter_plus_integer_numeric("NNTrainer: Создание VanilaLSTM: ввод выходной размерности\n\n");
@@ -126,10 +126,10 @@ void createTInOCDFLSTM() {
 	twi_lstm->set_learning_rate(learning_rate);
 	twi_lstm->set_target_error(target_error);
 
-	OCDFmodel_menu(twi_lstm);
+	model_menu(twi_lstm);
 }
 
-void test_OCDF_model(OCDFNeuron* model) {
+void test_model(OCDFNeuron* model) {
 	system("cls");
 	vector<OCDF> data = read_OCDF_file("NNTrainer: Загрузка данных для тестирования модели\n\n");
 	system("cls");
@@ -144,7 +144,7 @@ void test_OCDF_model(OCDFNeuron* model) {
 
 		bool do_visual;
 		string answer;
-		std::cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
+		std::cout << "\nВизуализировать данные (0 - нет, 1 - да): ";
 		if (!enter_menu_point(answer))
 			continue;
 		if (!string_symbol_to_bool(answer, do_visual))
@@ -158,22 +158,37 @@ void test_OCDF_model(OCDFNeuron* model) {
 			std::cout << "Данные сохранены! Ожидайте визуализацию\n\n" 
 				<< "Чтобы выйти в меню, закройте окно визуализации!\n";
 
-			system("py PyVisualisation\\OCDFVanilaLSTM_Test.py PyVisualisation\\real_data.csv PyVisualisation\\predict_data.csv");
+			char class_type = define_model_type_per_class_type(model);
+			switch (class_type)
+			{
+			case 'o': system("py PyVisualisation\\VanilaLSTM_Test.py PyVisualisation\\real_data.csv PyVisualisation\\predict_data.csv"); break;
+			case 't': system("py PyVisualisation\\TInVanilaLSTM_Test.py PyVisualisation\\real_data.csv PyVisualisation\\predict_data.csv"); break;
+			default:
+				delete model;
+				msg_warning("\n\nОшибка определения модели! Невозможно определить тип модели!\n");
+				return;
+			}
+			system("pause");
 		}
 
 		return;
 	}
 }
 
-void train_OCDF_model(OCDFNeuron* model) {
+void train_model(OCDFNeuron* model) {
 	system("cls");
-	vector<OCDF> data = read_OCDF_file("NNTrainer: Загрузка данных для обучения OCDF модели\n\n");
+	vector<OCDF> data = read_OCDF_file("NNTrainer: Загрузка данных для обучения модели\n\n");
 	system("cls");
 
-	std::cout << "NNTrainer: Обучение модели под OCDF-данные\n\n";
+	std::cout << "NNTrainer: Обучение модели\n\n";
 
-	model->scaler.configure(data, 0.1, true);
-	model->scaler.set_scale(0, 1);
+	if (!model->configured_scaler) {
+		vector<OCDF> temp_data = parsing_data_per_cid(data, data[0].cid);
+		model->scaler.configure(temp_data, 0.01, true);
+		model->scaler.set_scale(0, 1);
+		model->configured_scaler = true;
+		temp_data.clear();
+	}
 
 	model->fit(data);
 }
@@ -187,7 +202,7 @@ char define_model_type_per_class_type(OCDFNeuron* model) {
 	return 'n';
 }
 
-void save_OCDF_model(OCDFNeuron* model) {
+void save_model(OCDFNeuron* model) {
 	system("cls");
 	std::cout << "NNTrainer: Сохранение модели\n\n";
 
@@ -220,7 +235,7 @@ char define_model_type_per_file_name(string file_name) {
 	return 'n';
 }
 
-void loadOCDFModel() {
+void loadModel() {
 	system("cls");
 	std::cout << "NNTrainer: Загрузка модели\n\n";
 
@@ -250,7 +265,7 @@ void loadOCDFModel() {
 	model->set_main_activator(additional_activator);
 	model->set_additional_activator(additional_activator);
 
-	OCDFmodel_menu(model);
+	model_menu(model);
 }
 
 void change_epochs(OCDFNeuron* model) {
@@ -268,11 +283,11 @@ void change_learning_rate(OCDFNeuron* model) {
 	model->set_learning_rate(learning_rate);
 }
 
-void OCDFmodel_menu(OCDFNeuron* model) {
+void model_menu(OCDFNeuron* model) {
 	map<unsigned char, function<void(OCDFNeuron* model)>> menu{
-		make_pair('1', train_OCDF_model),
-		make_pair('2', save_OCDF_model),
-		make_pair('3', test_OCDF_model),
+		make_pair('1', train_model),
+		make_pair('2', save_model),
+		make_pair('3', test_model),
 		make_pair('4', change_epochs),
 		make_pair('5', change_learning_rate),
 		make_pair('6', change_target_error)

@@ -46,12 +46,14 @@ public:
 };
 
 class OCDFNeuron : public Neuron {
-protected:
+protected:	
 	void check_one_cid(vector<OCDF>& data);
 
 	virtual void learn(vector<OCDF>& samples, vector<OCDF>& etalons) = 0;
 
 public:
+	bool configured_scaler = false;
+
 	OCDFNeuron(int input_range, int hidden_range, int output_range) : Neuron(input_range, hidden_range, output_range) {}
 	OCDFNeuron(int input_range, int hidden_range, int output_range, AbstAct* activator) : Neuron(input_range, hidden_range, output_range, activator) {}
 	OCDFNeuron(int input_range, int hidden_range, int output_range, AbstAct* main_act, AbstAct* additional_act) : Neuron(input_range, hidden_range, output_range, main_act, additional_act) {}

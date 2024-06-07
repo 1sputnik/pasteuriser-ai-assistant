@@ -2,6 +2,7 @@
 
 #include "NeuroSkeletons.h"
 #include <fstream>
+#include <string>
 #include "WeightFiller.h"
 
 class OCDFVanilaLSTM : public OCDFNeuron {
@@ -66,10 +67,8 @@ protected:
 
 
 	// функции для работы с будующим
-	virtual void create_temp_vectors_for_learning();
 	virtual void clear_temp_vectors_for_learning();
-	virtual void save_state(std::ofstream& state_file);
-	virtual void load_state(std::ifstream& state_file);
+	virtual void clear_futur_error();
 
 	// функции для работы с весами
 	virtual void create_weights();

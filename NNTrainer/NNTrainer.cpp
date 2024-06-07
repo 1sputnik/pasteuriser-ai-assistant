@@ -17,8 +17,8 @@ void show_info();
 
 void MainDataFormat_Menu() {
 	map<unsigned char, function<void()>> menu{
-		make_pair('1', loadOCDFModel),
-		make_pair('2', createOCDFModel),
+		make_pair('1', loadModel),
+		make_pair('2', createModel),
 		make_pair('3', show_info)
 	};
 

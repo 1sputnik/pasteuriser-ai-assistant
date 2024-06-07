@@ -39,7 +39,7 @@ vector<double> OCDFVanilaLSTM::forecast(vector<OCDF>& samples) {
 	for (size_t i = 0; i < this->output_range; i++) {
 		for (size_t j = 0; j < this->hidden_range; j++)
 			predicts[i] += W_y[j * output_range + i] * this->short_memory[j];
-		predicts[i] = this->main_activator->activate(predicts[i]);
+		predicts[i] = this->main_activator->activate(predicts[i] + B_y[i]);
 	}
 
 	return predicts;
@@ -122,7 +122,6 @@ void OCDFVanilaLSTM::fit(vector<OCDF>& data) {
 	scaler.scale(data);
 	long long work_size = data.size() - (this->input_range + this->output_range - 1);
 	this->select_memory_for_temp_weight();
-	this->create_temp_vectors_for_learning();
 	
 	prefinish = clock();
 	std::cout << (double)(prefinish - prestart) / CLOCKS_PER_SEC << " sec\n";
@@ -144,7 +143,6 @@ void OCDFVanilaLSTM::fit(vector<OCDF>& data) {
 			past_long_memory = long_memory;
 			past_short_memory = short_memory;
 			this->count_short_memory(samples);
-			this->save_state(save_state_file);
 			save_state_file.seekp(0);
 		}
 
@@ -154,7 +152,6 @@ void OCDFVanilaLSTM::fit(vector<OCDF>& data) {
 		for (int i = work_size - 1; i >= 0; i--) {
 			vector<OCDF> samples = sub_vector(data, input_range, i);
 			vector<OCDF> etalons = sub_vector(data, output_range, i + input_range);
-			this->load_state(load_state_file);
 			this->learn(samples, etalons);
 		}
 
@@ -185,10 +182,7 @@ vector<OCDF> OCDFVanilaLSTM::predict(vector<OCDF>& data) {
 
 	if (past_short_memory.size() == 0) {
 		past_short_memory = create_hollow_vector(this->hidden_range);
-		past_short_memory = short_memory;
-
 		past_long_memory = create_hollow_vector(this->hidden_range);
-		past_long_memory = long_memory;
 	}
 
 	bool out_flag = true;
@@ -198,6 +192,8 @@ vector<OCDF> OCDFVanilaLSTM::predict(vector<OCDF>& data) {
 			out_flag = false;
 		}
 		vector<OCDF> samples = sub_vector(data, this->input_range, i);
+		past_short_memory = short_memory;
+		past_long_memory = long_memory;
 		this->count_short_memory(samples);
 		vector<double> resalts = this->forecast(samples);
 		for (int j = 0; j < this->output_range; j++) {
@@ -303,17 +299,6 @@ void OCDFVanilaLSTM::load_model(std::string file_name) {
 	load_file.close();
 }
 
-void OCDFVanilaLSTM::create_temp_vectors_for_learning() {
-	de_dforgate = create_hollow_vector(hidden_range);
-	de_dinput = create_hollow_vector(hidden_range);
-	de_doutput = create_hollow_vector(hidden_range);
-	de_dstate = create_hollow_vector(hidden_range);
-	de_dlongmem = create_hollow_vector(hidden_range);
-	forgate_futur = create_hollow_vector(hidden_range);
-	past_short_memory = create_hollow_vector(hidden_range);
-	past_long_memory = create_hollow_vector(hidden_range); 
-}
-
 void OCDFVanilaLSTM::clear_temp_vectors_for_learning() {
 	this->de_dforgate.clear();
 	this->de_dinput.clear();
@@ -321,8 +306,15 @@ void OCDFVanilaLSTM::clear_temp_vectors_for_learning() {
 	this->de_dstate.clear();
 	this->forgate_futur.clear();
 	this->de_doutput.clear();
-	this->past_long_memory.clear();
-	this->past_short_memory.clear();
+}
+
+void OCDFVanilaLSTM::clear_futur_error() {
+	de_dforgate = create_hollow_vector(hidden_range);
+	de_dinput = create_hollow_vector(hidden_range);
+	de_doutput = create_hollow_vector(hidden_range);
+	de_dstate = create_hollow_vector(hidden_range);
+	de_dlongmem = create_hollow_vector(hidden_range);
+	forgate_futur = create_hollow_vector(hidden_range);
 }
 
 void OCDFVanilaLSTM::create_weights() {
@@ -373,6 +365,13 @@ void OCDFVanilaLSTM::select_memory_for_temp_weight() {
 
 	_W_y = create_hollow_vector(hidden_range * output_range);
 	_B_y = create_hollow_vector(output_range);
+
+	this->de_dforgate = create_hollow_vector(hidden_range);
+	this->de_dinput = create_hollow_vector(hidden_range);
+	this->de_dlongmem = create_hollow_vector(hidden_range);
+	this->de_dstate = create_hollow_vector(hidden_range);
+	this->forgate_futur = create_hollow_vector(hidden_range);
+	this->de_doutput = create_hollow_vector(hidden_range);
 }
 
 void OCDFVanilaLSTM::copy_weight() {
@@ -393,28 +392,13 @@ void OCDFVanilaLSTM::free_temp_weigth() {
 	_B_i.clear();	_B_f.clear();	_B_o.clear();	_B_g.clear();
 
 	_B_y.clear();	_W_y.clear();
-}
 
-void OCDFVanilaLSTM::save_state(std::ofstream& state_file) {
-	state_file.write((char*)&input_gate, sizeof(input_gate));
-	state_file.write((char*)&output_gate, sizeof(output_gate));
-	state_file.write((char*)&state_gate, sizeof(state_gate));
-	state_file.write((char*)&forgate_gate, sizeof(forgate_gate));
-	state_file.write((char*)&long_memory, sizeof(long_memory));
-	state_file.write((char*)&short_memory, sizeof(short_memory));
-	state_file.write((char*)&past_long_memory, sizeof(past_long_memory));
-	state_file.write((char*)&past_short_memory, sizeof(past_short_memory));
-}
-
-void OCDFVanilaLSTM::load_state(std::ifstream& state_file) {
-	state_file.read((char*)&input_gate, sizeof(input_gate));
-	state_file.read((char*)&output_gate, sizeof(output_gate));
-	state_file.read((char*)&state_gate, sizeof(state_gate));
-	state_file.read((char*)&forgate_gate, sizeof(forgate_gate));
-	state_file.read((char*)&long_memory, sizeof(long_memory));
-	state_file.read((char*)&short_memory, sizeof(short_memory));
-	state_file.read((char*)&past_long_memory, sizeof(past_long_memory));
-	state_file.read((char*)&past_short_memory, sizeof(past_short_memory));
+	de_dforgate.clear();
+	de_dinput.clear();
+	de_dlongmem.clear();
+	de_dstate.clear();
+	forgate_futur.clear();
+	de_doutput.clear();
 }
 
 OCDFVanilaLSTM::OCDFVanilaLSTM() : OCDFNeuron(1, 1 ,1) {}
@@ -432,5 +416,5 @@ OCDFVanilaLSTM::OCDFVanilaLSTM(int input_range, int hidden_range, int output_ran
 };
 
 std::string OCDFVanilaLSTM::get_class_name() {
-	return "OCDFVanilaLSTM";
+	return "VanilaLSTM";
 }
