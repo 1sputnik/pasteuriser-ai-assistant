@@ -304,7 +304,8 @@ void model_menu(OCDFNeuron* model) {
 			<< "Выходная размерность: " << model->get_output_range() << "\n"
 			<< "Количество эпох: " << model->get_epochs() << "\n"
 			<< "Скорость обучения: " << model->get_learning_rate() << "\n"
-			<< "Целевая ошибка: " << model->get_target_error() << "\n\n";
+			<< "Целевая ошибка: " << model->get_target_error() << "\n"
+			<< "Последняя ошибка сети: " << model->get_last_error() << "\n\n";
 
 		std::cout << "Выберите тип нейронной сети:\n"
 			<< "1 - Обучить сеть\n"

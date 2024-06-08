@@ -69,6 +69,10 @@ int Neuron::get_epochs() {
 	return this->epochs;
 }
 
+double Neuron::get_last_error() {
+	return this->e_predict;
+}
+
 void OCDFNeuron::check_one_cid(vector<OCDF>& data) {
 	for (size_t i = 1; i < data.size(); i++) {
 		if (data[0].cid != data[i].cid) {

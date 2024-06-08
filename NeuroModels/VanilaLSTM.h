@@ -76,7 +76,6 @@ protected:
 	virtual void copy_weight();
 	virtual void free_temp_weigth();
 
-	double e_predict;
 	virtual void count_short_memory(vector<OCDF>& samples);
 	virtual vector<double> forecast(vector<OCDF>& samples);
 	virtual void learn(vector<OCDF>& samples, vector<OCDF>& etalons) override;

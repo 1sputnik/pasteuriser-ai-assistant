@@ -17,6 +17,7 @@ protected:
 	int epochs;
 	double target_error = 0; 
 	double learning_rate = 1; 
+	double e_predict = -1;
 
 	AbstractActivator* main_activator = nullptr;
 	AbstractActivator* additional_activator = nullptr;
@@ -24,6 +25,7 @@ protected:
 	void set_ranges(int input_range, int hidden_range, int output_range);
 
 public:
+	bool configured_scaler = false;
 	Scaler scaler;
 
 	Neuron(int input_range, int hidden_range, int output_range);
@@ -39,6 +41,7 @@ public:
 	double get_learning_rate();
 	void set_epochs(int epochs);
 	int get_epochs();
+	double get_last_error();
 	void set_main_activator(AbstractActivator* activator);
 	void set_additional_activator(AbstractActivator* activator);
 
@@ -52,8 +55,6 @@ protected:
 	virtual void learn(vector<OCDF>& samples, vector<OCDF>& etalons) = 0;
 
 public:
-	bool configured_scaler = false;
-
 	OCDFNeuron(int input_range, int hidden_range, int output_range) : Neuron(input_range, hidden_range, output_range) {}
 	OCDFNeuron(int input_range, int hidden_range, int output_range, AbstAct* activator) : Neuron(input_range, hidden_range, output_range, activator) {}
 	OCDFNeuron(int input_range, int hidden_range, int output_range, AbstAct* main_act, AbstAct* additional_act) : Neuron(input_range, hidden_range, output_range, main_act, additional_act) {}

@@ -28,6 +28,8 @@ class TInOCDFVanilaLSTM : public OCDFVanilaLSTM {
 	virtual void select_memory_for_temp_weight() override;
 	virtual void copy_weight() override;
 	virtual void free_temp_weigth() override;
+	virtual void save_memore_after_fit();
+	virtual void clear_gates();
 
 	// для хранения временного значения ошибки на эпохе
 	double e_predict;
