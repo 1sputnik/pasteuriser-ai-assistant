@@ -65,10 +65,14 @@ protected:
 	double_vector past_long_memory; // предыдущее значение долгосрочной памяти
 	double_vector past_short_memory; // предыдущее значение краткосрочной памяти
 
+	// Для смещения по памяти
+	size_t memory_bias = 0;
 
 	// функции для работы с будующим
 	virtual void clear_temp_vectors_for_learning();
 	virtual void clear_futur_error();
+	virtual void save_memore_after_fit();
+	virtual void clear_gates();
 
 	// функции для работы с весами
 	virtual void create_weights();
@@ -76,6 +80,8 @@ protected:
 	virtual void copy_weight();
 	virtual void free_temp_weigth();
 
+	// функции для расчёта сети
+	virtual void count_gates(vector<OCDF>& samples);
 	virtual void count_short_memory(vector<OCDF>& samples);
 	virtual vector<double> forecast(vector<OCDF>& samples);
 	virtual void learn(vector<OCDF>& samples, vector<OCDF>& etalons) override;

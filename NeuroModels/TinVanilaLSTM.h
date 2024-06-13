@@ -18,25 +18,14 @@ class TInOCDFVanilaLSTM : public OCDFVanilaLSTM {
 	double_vector _V_g; // матрица весов врат стостояний для входных значения
 	double_vector _V_o; // матрица весов врат выхода для входных значения
 
-	double_vector U_y; 
-	double_vector _U_y; 
-
-	size_t memory_bias = 0;
-
 	// функции для работы с весами
 	virtual void create_weights() override;
 	virtual void select_memory_for_temp_weight() override;
 	virtual void copy_weight() override;
 	virtual void free_temp_weigth() override;
-	virtual void save_memore_after_fit();
-	virtual void clear_gates();
 
-	// для хранения временного значения ошибки на эпохе
-	double e_predict;
-
-	void count_short_memory(vector<OCDF>& samples);
-	void count_gates(vector<OCDF>& samples);
-	vector<double> forecast(vector<OCDF>& samples);
+	// функции расчёта и обучения сети
+	virtual void count_gates(vector<OCDF>& samples) override;
 	virtual void learn(vector<OCDF>& samples, vector<OCDF>& etalons) override;
 
 public:

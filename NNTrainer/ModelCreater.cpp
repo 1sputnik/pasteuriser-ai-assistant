@@ -262,7 +262,7 @@ void loadModel() {
 	AbstractActivator* main_activator = new Logistic();
 	AbstractActivator* additional_activator = new Tanh();
 
-	model->set_main_activator(additional_activator);
+	model->set_main_activator(main_activator);
 	model->set_additional_activator(additional_activator);
 
 	model_menu(model);
