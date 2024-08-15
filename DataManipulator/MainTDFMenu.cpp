@@ -221,6 +221,22 @@ void save_TDF_data_in_csv(vector<TDF>& data) {
 	for (size_t k = dump_file_path.find('\"'); k != dump_file_path.npos; k = dump_file_path.find('\"', k))
 		dump_file_path.erase(k, 1);
 
+	vector<string> reserved_formats = { ".tlstm", ".vlstm", ".lstm", ".bin" };
+	try {
+		for (size_t i = 0; i < reserved_formats.size(); i++)
+			if (dump_file_path.substr(dump_file_path.length() - reserved_formats[i].size(), reserved_formats[i].size()) == reserved_formats[i])
+				msg_warning("\nОшибка ввода пути! Введён зарезервирвоанный формат!\n\n");
+	}
+	catch (...) {
+		msg_warning("\nОшибка ввода пути! Не удалось сохранить данные по указанному пути!\n\n");
+		return;
+	}
+
+	if (dump_file_path.find('.') == dump_file_path.npos) {
+		msg_warning("\nОшибка ввода пути! Не удалось сохранить данные по указанному пути!\n\n");
+		return;
+	}
+
 	dump_data(data, dump_file_path);
 }
 
