@@ -1,10 +1,19 @@
 import sys
 from matplotlib.pyplot import figure, show
 from ZoomPan import *
+from CidInfo import *
 
 
 def zoom_visualisation(x=[], cid1_y=[], cid2_y=[], cid3_y=[], cid4_y=[], cid5_y=[], cid6_y=[]):
     fig = figure()
+
+    legend_list = []
+    legend_list.append(cids_info[int(1)])
+    legend_list.append(cids_info[int(2)])
+    legend_list.append(cids_info[int(3)])
+    legend_list.append(cids_info[int(4)])
+    legend_list.append(cids_info[int(5)])
+    legend_list.append(cids_info[int(6)])
 
     min_y = min(min(cid1_y), min(cid2_y), min(cid3_y), min(cid4_y), min(cid5_y), min(cid6_y))
     max_y = max(max(cid1_y), max(cid2_y), max(cid3_y), max(cid4_y), max(cid5_y), max(cid6_y))
@@ -17,6 +26,10 @@ def zoom_visualisation(x=[], cid1_y=[], cid2_y=[], cid3_y=[], cid4_y=[], cid5_y=
     ax.plot(x, cid4_y, color='orange')
     ax.plot(x, cid5_y, color='purple')
     ax.plot(x, cid6_y, color='black')
+    ax.set_title(f"Данные всех сидов")
+    ax.set_xlabel("Данные сидов")
+    ax.set_xlabel("Дискретное время, сек")
+    ax.legend(legend_list, loc="upper left")
     ax.grid(True)
 
     scale = 1.1
