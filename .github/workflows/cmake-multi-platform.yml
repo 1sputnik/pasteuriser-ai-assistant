@@ -16,35 +16,38 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config:
-        - {
-          name: "Windows Latest MS",
-          os: windows-latest,
-          cc: "cl",
-          cxx: "cl",
-          run_tests: "false" 
-        }
-        - {
-          name: "Windows Latest MinGW",
-          os: windows-latest,
-          cc: "gcc",
-          cxx: "g++",
-          run_tests: "false" 
-        }
-        - {
-          name: "Ubuntu Latest GCC",
-          os: ubuntu-latest,
-          cc: "gcc",
-          cxx: "g++",
-          run_tests: "false" 
-        }
-        - {
-          name: "Ubuntu Latest Clang",
-          os: ubuntu-latest,
-          cc: "clang",
-          cxx: "clang++",
-          run_tests: "false" 
-        }
+        os: [ubuntu-latest, windows-latest]
+        build_type: [Release]
+        c_compiler: [gcc, clang, cl]
+        cxx_compiler: [g++, clang++, cl]
+        include:
+          - name: "Windows Latest MS"
+            os: windows-latest
+            c_compiler: cl
+            cpp_compiler: cl
+            run_tests: "false"
+          - name: "Windows Latest MinGW"
+            os: windows-latest
+            c_compiler: gcc
+            cpp_compiler: g++
+            run_tests: "false"
+          - name: "Ubuntu Latest GCC"
+            os: ubuntu-latest
+            c_compiler: gcc
+            cpp_compiler: g++
+            run_tests: "false"
+          - name: "Ubuntu Latest Clang"
+            os: ubuntu-latest
+            c_compiler: clang
+            cpp_compiler: clang++
+            run_tests: "false"
+        exclude:
+          - os: windows-latest
+            c_compiler: gcc
+          - os: windows-latest
+            c_compiler: clang
+          - os: ubuntu-latest
+            c_compiler: cl
 
     steps:
     - uses: actions/checkout@v4
