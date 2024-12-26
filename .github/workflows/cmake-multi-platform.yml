@@ -13,29 +13,35 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        build_type: [Release]
-        c_compiler: [gcc, clang, cl]
-        include:
-          - os: windows-latest
-            c_compiler: cl
-            cpp_compiler: cl
-          - os: windows-latest
-            c_compiler: gcc
-            cpp_compiler: g++
-          - os: ubuntu-latest
-            c_compiler: gcc
-            cpp_compiler: g++
-          - os: ubuntu-latest
-            c_compiler: clang
-            cpp_compiler: clang++
-        exclude:
-          - os: windows-latest
-            c_compiler: gcc
-          - os: windows-latest
-            c_compiler: clang
-          - os: ubuntu-latest
-            c_compiler: cl
+        config:
+        - {
+            name: "Windows Latest MSVC",
+            artifact: "Windows-MSVC.7z",
+            os: windows-latest,
+            cc: "cl",
+            cxx: "cl",
+            environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars32.bat",
+            targets: "ptusa_main libptusa_main main_test main_perfomance_test",
+            run_tests: "true"
+          }
+        - {
+            name: "Windows Latest MinGW",
+            artifact: "Windows-MinGW.7z",
+            os: windows-latest,
+            cc: "gcc",
+            cxx: "g++",
+            targets: "ptusa_main libptusa_main",
+            run_tests: "false"
+          }
+        - {
+            name: "Ubuntu Latest GCC",
+            artifact: "Linux.7z",
+            os: ubuntu-latest,
+            cc: "gcc",
+            cxx: "g++",
+            targets: "ptusa_main libptusa_main main_test main_perfomance_test",
+            run_tests: "true"
+          }
 
     steps:
     - uses: actions/checkout@v4
