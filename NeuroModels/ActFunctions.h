@@ -367,7 +367,7 @@ typedef HyperbolicTangent Th;
 //
 //		while (value > max || value < min)
 //			value /= 10;
-//		// получить вещественное число
+//		// РїРѕР»СѓС‡РёС‚СЊ РІРµС‰РµСЃС‚РІРµРЅРЅРѕРµ С‡РёСЃР»Рѕ
 //		return value;
 //	
 //	}
