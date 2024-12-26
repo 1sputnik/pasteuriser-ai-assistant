@@ -3,7 +3,7 @@ name: CMake on multiple platforms
 on:
   push:
     branches: [ "master" ]
-  pull_request:
+  pull_request_target:
     branches: [ "master" ]
 
 jobs:
@@ -26,6 +26,13 @@ jobs:
           - os: ubuntu-latest
             c_compiler: clang
             cpp_compiler: clang++
+        exclude:
+          - os: windows-latest
+            c_compiler: gcc
+          - os: windows-latest
+            c_compiler: clang
+          - os: ubuntu-latest
+            c_compiler: cl
 
     steps:
     - uses: actions/checkout@v4
