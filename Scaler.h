@@ -3,16 +3,16 @@
 
 class Scaler {
 	// диапазон скейлинга
-	double max;
-	double min;
+	double max_scale;
+	double min_scale;
 
 	// максимальный и минимальный элемент скейлинга
 	double max_element;
 	double min_element;
 
 	// разница диапазонов
-	double d;
-	double D;
+	double range_scale;
+	double range_data;
 	void count_ranges();
 
 public:
