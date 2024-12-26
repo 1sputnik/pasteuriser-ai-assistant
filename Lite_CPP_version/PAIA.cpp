@@ -1,4 +1,4 @@
-﻿#include "PAIA.h"
+#include "PAIA.h"
 
 using namespace std;
 

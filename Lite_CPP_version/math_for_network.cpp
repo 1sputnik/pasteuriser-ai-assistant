@@ -1,6 +1,6 @@
 #include "math_for_network.h"
 
-// математические функции
+// РјР°С‚РµРјР°С‚РёС‡РµСЃРєРёРµ С„СѓРЅРєС†РёРё
 double sigm(double x) {
 	return 1.0 / (1.0 + exp(-x));
 }
@@ -13,10 +13,10 @@ double dif_tanh(double y) {
 	return 1.0 - y * y;
 }
 
-// вектора (одномерные массивы)
+// РІРµРєС‚РѕСЂР° (РѕРґРЅРѕРјРµСЂРЅС‹Рµ РјР°СЃСЃРёРІС‹)
 void randfill_vector(double*& arr, int size, double deep) {
-	// deep - сколько нулей будет в значении весов: value = 0.<deep><[0, rank - 1]>
-	double rank = 1000; // сколько знаков нам нужно при рандоме: [0, rank - 1]
+	// deep - СЃРєРѕР»СЊРєРѕ РЅСѓР»РµР№ Р±СѓРґРµС‚ РІ Р·РЅР°С‡РµРЅРёРё РІРµСЃРѕРІ: value = 0.<deep><[0, rank - 1]>
+	double rank = 1000; // СЃРєРѕР»СЊРєРѕ Р·РЅР°РєРѕРІ РЅР°Рј РЅСѓР¶РЅРѕ РїСЂРё СЂР°РЅРґРѕРјРµ: [0, rank - 1]
 	for (size_t i = 0; i < size; i++)
 		arr[i] = double((rand() % (2 * int(rank) + 1)) - int(rank)) / (deep * rank);
 }
@@ -41,7 +41,7 @@ double* create_input_vector(DataVector& data, int cut_border, int bias) {
 	return input_vector;
 };
 
-// матрицы (двумерные массивы)
+// РјР°С‚СЂРёС†С‹ (РґРІСѓРјРµСЂРЅС‹Рµ РјР°СЃСЃРёРІС‹)
 void create_empty_matrix(double**& arr, size_t rows, size_t colls) {
 	arr = new double* [rows];
 	for (size_t i = 0; i < rows; i++)
@@ -49,8 +49,8 @@ void create_empty_matrix(double**& arr, size_t rows, size_t colls) {
 }
 
 void randfill_matrix(double**& arr, size_t rows, size_t colls, double deep) {
-	// deep - сколько нулей будет в значении весов: value = 0.<deep><[0, rank -1]>
-	double rank = 1000; // сколько знаков нам нужно при рандоме: [0, rank - 1]
+	// deep - СЃРєРѕР»СЊРєРѕ РЅСѓР»РµР№ Р±СѓРґРµС‚ РІ Р·РЅР°С‡РµРЅРёРё РІРµСЃРѕРІ: value = 0.<deep><[0, rank -1]>
+	double rank = 1000; // СЃРєРѕР»СЊРєРѕ Р·РЅР°РєРѕРІ РЅР°Рј РЅСѓР¶РЅРѕ РїСЂРё СЂР°РЅРґРѕРјРµ: [0, rank - 1]
 	for (size_t i = 0; i < rows; i++)
 		randfill_vector(arr[i], colls, deep);
 }

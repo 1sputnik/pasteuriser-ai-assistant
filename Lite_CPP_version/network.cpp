@@ -64,20 +64,20 @@ void LSTM::clear_futur() {
 }
 
 void LSTM::train(double* x, double* y_real, size_t k) {
-	// ----- расчёт модели -----
-	// создаём вентили и рассчитываем их
+	// ----- СЂР°СЃС‡С‘С‚ РјРѕРґРµР»Рё -----
+	// СЃРѕР·РґР°С‘Рј РІРµРЅС‚РёР»Рё Рё СЂР°СЃСЃС‡РёС‚С‹РІР°РµРј РёС…
 	double* forgate_gate = new double[this->hidden_range] {0};
 	double* input_gate = new double[this->hidden_range] {0};
 	double* output_gate = new double[this->hidden_range] {0};
 	double* state_gate = new double[this->hidden_range] {0};
 	calculate_gates(forgate_gate, x, input_gate, output_gate, state_gate, k);
 
-	// выполяем предсказания
+	// РІС‹РїРѕР»СЏРµРј РїСЂРµРґСЃРєР°Р·Р°РЅРёСЏ
 	double* y_predict = calculate_output(k);
 	double error = calculate_error(y_predict, y_real);
 	predict_error += error / double(output_range);
 
-	// ----- градиентный спуск -----
+	// ----- РіСЂР°РґРёРµРЅС‚РЅС‹Р№ СЃРїСѓСЃРє -----
 	double error_presition = 0.00000001;
 	if (fabs(error / double(output_range)) > error_presition) {
 		double* de_dy = new double[this->output_range];
@@ -119,7 +119,7 @@ void LSTM::train(double* x, double* y_real, size_t k) {
 				this->W_y[j][i] -= this->learning_rate * de_dy[j] * h[k + 1][i];
 		}
 
-		// завершение функции
+		// Р·Р°РІРµСЂС€РµРЅРёРµ С„СѓРЅРєС†РёРё
 		copy_vector(de_dF_future, de_dF, this->hidden_range);
 		copy_vector(de_dO_future, de_dO, this->hidden_range);
 		copy_vector(de_dI_future, de_dI, this->hidden_range);
@@ -144,7 +144,7 @@ void LSTM::train(double* x, double* y_real, size_t k) {
 	}
 	copy_vector(forgate_future, forgate_gate, this->hidden_range);
 
-	// очищаем память, выделенную на вентили сети
+	// РѕС‡РёС‰Р°РµРј РїР°РјСЏС‚СЊ, РІС‹РґРµР»РµРЅРЅСѓСЋ РЅР° РІРµРЅС‚РёР»Рё СЃРµС‚Рё
 	delete[] forgate_gate;
 	delete[] input_gate;
 	delete[] state_gate;
@@ -157,7 +157,7 @@ double* LSTM::calculate_output(const size_t k)
 	for (size_t i = 0; i < this->output_range; i++) {
 		for (size_t j = 0; j < this->hidden_range; j++)
 			y_predict[i] += _W_y[i][j] * h[k + 1][j];
-		y_predict[i] = sigm(y_predict[i]); // приводим предсказание к необходимой форме
+		y_predict[i] = sigm(y_predict[i]); // РїСЂРёРІРѕРґРёРј РїСЂРµРґСЃРєР°Р·Р°РЅРёРµ Рє РЅРµРѕР±С…РѕРґРёРјРѕР№ С„РѕСЂРјРµ
 	}
 	return y_predict;
 }
@@ -173,7 +173,7 @@ double LSTM::calculate_error(double* y_predict, double* y_real)
 
 void LSTM::calculate_gates(double*& forgate_gate, double*& x, double*& input_gate, double*& output_gate, double*& state_gate, const size_t k)
 {
-	// расчёт модели LSTM
+	// СЂР°СЃС‡С‘С‚ РјРѕРґРµР»Рё LSTM
 	for (int i = 0; i < this->hidden_range; i++) {
 		for (int j = 0; j < this->input_range; j++) {
 			forgate_gate[i] += _W_f[i][j] * x[j];
@@ -195,93 +195,93 @@ void LSTM::calculate_gates(double*& forgate_gate, double*& x, double*& input_gat
 }
 
 void LSTM::fit(DataVector& train_data, double target_error, long long batch_size) {
-	// создаём и конфигурируем скейлер
+	// СЃРѕР·РґР°С‘Рј Рё РєРѕРЅС„РёРіСѓСЂРёСЂСѓРµРј СЃРєРµР№Р»РµСЂ
 	Scaler scaler;
 	auto max_element = train_data.get_max_element();
 	auto min_element = train_data.get_min_element();
 	auto average_value = train_data.get_average_value();
  	scaler.configure(max_element.value + fabs(average_value) / 3, min_element.value - fabs(average_value) / 3);
 
-	// скейлим входные данные
+	// СЃРєРµР№Р»РёРј РІС…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ
 	scaler.scale(train_data);
 
-	// для сбора мусора
+	// РґР»СЏ СЃР±РѕСЂР° РјСѓСЃРѕСЂР°
 	double* garbage_catcher = nullptr;
 
-	// подготовка к обучению
-	size_t work_size = train_data.get_size() - (this->input_range + this->output_range - 1); // допустимая размерность для работы
-	double** x = new double* [work_size]; // матрица входных цепочек для каждой итерации
-	double** y_real = new double* [work_size]; // вектор реальных значений каждой итерации
-	C = new double* [work_size + 1]; // + 1 для хранеия значений C[t + 1] (следующих значений)
+	// РїРѕРґРіРѕС‚РѕРІРєР° Рє РѕР±СѓС‡РµРЅРёСЋ
+	size_t work_size = train_data.get_size() - (this->input_range + this->output_range - 1); // РґРѕРїСѓСЃС‚РёРјР°СЏ СЂР°Р·РјРµСЂРЅРѕСЃС‚СЊ РґР»СЏ СЂР°Р±РѕС‚С‹
+	double** x = new double* [work_size]; // РјР°С‚СЂРёС†Р° РІС…РѕРґРЅС‹С… С†РµРїРѕС‡РµРє РґР»СЏ РєР°Р¶РґРѕР№ РёС‚РµСЂР°С†РёРё
+	double** y_real = new double* [work_size]; // РІРµРєС‚РѕСЂ СЂРµР°Р»СЊРЅС‹С… Р·РЅР°С‡РµРЅРёР№ РєР°Р¶РґРѕР№ РёС‚РµСЂР°С†РёРё
+	C = new double* [work_size + 1]; // + 1 РґР»СЏ С…СЂР°РЅРµРёСЏ Р·РЅР°С‡РµРЅРёР№ C[t + 1] (СЃР»РµРґСѓСЋС‰РёС… Р·РЅР°С‡РµРЅРёР№)
 	h = new double* [work_size + 1];
-	for (size_t i = 0; i <= work_size; i++) { // орагнизуем начальную долгосрочную и краткосрочную память
+	for (size_t i = 0; i <= work_size; i++) { // РѕСЂР°РіРЅРёР·СѓРµРј РЅР°С‡Р°Р»СЊРЅСѓСЋ РґРѕР»РіРѕСЃСЂРѕС‡РЅСѓСЋ Рё РєСЂР°С‚РєРѕСЃСЂРѕС‡РЅСѓСЋ РїР°РјСЏС‚СЊ
 		C[i] = new double[this->hidden_range] {0};
 		h[i] = new double[this->hidden_range] {0};
 	}
 
-	// настраиваем групповое обучение
+	// РЅР°СЃС‚СЂР°РёРІР°РµРј РіСЂСѓРїРїРѕРІРѕРµ РѕР±СѓС‡РµРЅРёРµ
 	if (batch_size <= 0 || batch_size > work_size)
 		batch_size = work_size;
-	long long batch_interator; // чтобы знать, сколько пачек подали
+	long long batch_interator; // С‡С‚РѕР±С‹ Р·РЅР°С‚СЊ, СЃРєРѕР»СЊРєРѕ РїР°С‡РµРє РїРѕРґР°Р»Рё
 
-	// выделяем память под промежуточные веса
+	// РІС‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ РїРѕРґ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅС‹Рµ РІРµСЃР°
 	select_memory_for_temp_weight();
 
 #ifdef ErrorInfo
-	// создаём файл ошибок
+	// СЃРѕР·РґР°С‘Рј С„Р°Р№Р» РѕС€РёР±РѕРє
 	std::ofstream error_file;
 	error_file.open("Error.csv");
 #endif // ErrorInfo
 
-	// обучение сети
+	// РѕР±СѓС‡РµРЅРёРµ СЃРµС‚Рё
 	for (size_t i = 0; i < this->epochs; i++) {
 		std::cout << "epoch = " << i + 1 << "/" << this->epochs << " ";
 		std::clock_t start, finish;
 		start = clock();
 
-		// сохряняем текущие значения весов
+		// СЃРѕС…СЂСЏРЅСЏРµРј С‚РµРєСѓС‰РёРµ Р·РЅР°С‡РµРЅРёСЏ РІРµСЃРѕРІ
 		copy_weight();
 
-		// обнуляем среднюю квадратичную ошибку эпохи предсказаний и итератор подачи пачек
+		// РѕР±РЅСѓР»СЏРµРј СЃСЂРµРґРЅСЋСЋ РєРІР°РґСЂР°С‚РёС‡РЅСѓСЋ РѕС€РёР±РєСѓ СЌРїРѕС…Рё РїСЂРµРґСЃРєР°Р·Р°РЅРёР№ Рё РёС‚РµСЂР°С‚РѕСЂ РїРѕРґР°С‡Рё РїР°С‡РµРє
 		predict_error = 0;
 		batch_interator = 0;
 
-		// формируем входные цепочки и их соотвесттвующие реальные значения, с которыми будет проводиться сравнение предсказаний
+		// С„РѕСЂРјРёСЂСѓРµРј РІС…РѕРґРЅС‹Рµ С†РµРїРѕС‡РєРё Рё РёС… СЃРѕРѕС‚РІРµСЃС‚С‚РІСѓСЋС‰РёРµ СЂРµР°Р»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ, СЃ РєРѕС‚РѕСЂС‹РјРё Р±СѓРґРµС‚ РїСЂРѕРІРѕРґРёС‚СЊСЃСЏ СЃСЂР°РІРЅРµРЅРёРµ РїСЂРµРґСЃРєР°Р·Р°РЅРёР№
 		for (int j = 0; j < work_size; j++) {
 			x[j] = create_input_vector(train_data, this->input_range, j);
 			y_real[j] = create_input_vector(train_data, this->output_range, j + this->input_range);
 		}
 		
 		while (batch_size * batch_interator < work_size) {
-			// прогонозируем, чтобы получить значения памяти на каждой итерации 
+			// РїСЂРѕРіРѕРЅРѕР·РёСЂСѓРµРј, С‡С‚РѕР±С‹ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ РїР°РјСЏС‚Рё РЅР° РєР°Р¶РґРѕР№ РёС‚РµСЂР°С†РёРё 
 			for (size_t j = batch_size * batch_interator; j < batch_size * (batch_interator + 1) && j < work_size; j++) {
-				garbage_catcher = forecast(x[j], j); // этот цикл нужен, чтобы расчитать каждые вектора C и h для каждой итерации 
+				garbage_catcher = forecast(x[j], j); // СЌС‚РѕС‚ С†РёРєР» РЅСѓР¶РµРЅ, С‡С‚РѕР±С‹ СЂР°СЃС‡РёС‚Р°С‚СЊ РєР°Р¶РґС‹Рµ РІРµРєС‚РѕСЂР° C Рё h РґР»СЏ РєР°Р¶РґРѕР№ РёС‚РµСЂР°С†РёРё 
 				delete[] garbage_catcher;
 			}
 
-			// обозначим, что подали одну пачку 
+			// РѕР±РѕР·РЅР°С‡РёРј, С‡С‚Рѕ РїРѕРґР°Р»Рё РѕРґРЅСѓ РїР°С‡РєСѓ 
 			batch_interator++;
 
-			// защитим от выхода за границы массива
+			// Р·Р°С‰РёС‚РёРј РѕС‚ РІС‹С…РѕРґР° Р·Р° РіСЂР°РЅРёС†С‹ РјР°СЃСЃРёРІР°
 			long long j;
 			if (batch_size * batch_interator > work_size)
 				j = work_size - 1;
 			else
 				j = batch_size * batch_interator - 1;
 
-			// обучаем сеть
+			// РѕР±СѓС‡Р°РµРј СЃРµС‚СЊ
 			for (j; j >= batch_size * (batch_interator - 1); j--) {
-				train(x[j], y_real[j], j); // метод обратного распространения во времени		
-				delete[] x[j]; // удаление для дальнейшего обновления
+				train(x[j], y_real[j], j); // РјРµС‚РѕРґ РѕР±СЂР°С‚РЅРѕРіРѕ СЂР°СЃРїСЂРѕСЃС‚СЂР°РЅРµРЅРёСЏ РІРѕ РІСЂРµРјРµРЅРё		
+				delete[] x[j]; // СѓРґР°Р»РµРЅРёРµ РґР»СЏ РґР°Р»СЊРЅРµР№С€РµРіРѕ РѕР±РЅРѕРІР»РµРЅРёСЏ
 				delete[] y_real[j];
 			}
 
-			// обнуляем ошибки по будущему
+			// РѕР±РЅСѓР»СЏРµРј РѕС€РёР±РєРё РїРѕ Р±СѓРґСѓС‰РµРјСѓ
 			this->clear_futur();
 		}
 
 #ifdef ErrorInfo
-		// записываем результаты ошибки в файл
+		// Р·Р°РїРёСЃС‹РІР°РµРј СЂРµР·СѓР»СЊС‚Р°С‚С‹ РѕС€РёР±РєРё РІ С„Р°Р№Р»
 		error_file << i << ";" << predict_error << "\n";
 #endif // ErrorInfo
 
@@ -294,15 +294,15 @@ void LSTM::fit(DataVector& train_data, double target_error, long long batch_size
 	}
 
 #ifdef ErrorInfo
-	// закрываем поток работы с файлом ошибок
+	// Р·Р°РєСЂС‹РІР°РµРј РїРѕС‚РѕРє СЂР°Р±РѕС‚С‹ СЃ С„Р°Р№Р»РѕРј РѕС€РёР±РѕРє
 	error_file.close();
 #endif // ErrorInfo
 
-	// сохраняем память сети после последнего её расчёта при обучении
+	// СЃРѕС…СЂР°РЅСЏРµРј РїР°РјСЏС‚СЊ СЃРµС‚Рё РїРѕСЃР»Рµ РїРѕСЃР»РµРґРЅРµРіРѕ РµС‘ СЂР°СЃС‡С‘С‚Р° РїСЂРё РѕР±СѓС‡РµРЅРёРё
 	copy_vector(last_C_from_train, C[work_size], this->hidden_range);
 	copy_vector(last_h_from_train, h[work_size], this->hidden_range);
 
-	// очищаем память
+	// РѕС‡РёС‰Р°РµРј РїР°РјСЏС‚СЊ
 	free_temp_weigth();
 	for (int i = 0; i <= work_size; i++) {
 		delete[] C[i];
@@ -313,12 +313,12 @@ void LSTM::fit(DataVector& train_data, double target_error, long long batch_size
 	delete[] x;
 	delete[] y_real;
 
-	// восстанавливаем данные
+	// РІРѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµРј РґР°РЅРЅС‹Рµ
 	scaler.unscale(train_data);
 }
 
 double* LSTM::forecast(double* x, size_t k) {
-	// создаём вентили и расчитываем модель сети
+	// СЃРѕР·РґР°С‘Рј РІРµРЅС‚РёР»Рё Рё СЂР°СЃС‡РёС‚С‹РІР°РµРј РјРѕРґРµР»СЊ СЃРµС‚Рё
 	double* forgate_gate = new double[this->hidden_range] {0};
 	double* input_gate = new double[this->hidden_range] {0};
 	double* output_gate = new double[this->hidden_range] {0};
@@ -340,42 +340,42 @@ double* LSTM::forecast(double* x, size_t k) {
 		input_gate[i] = sigm(input_gate[i]); 
 		output_gate[i] = sigm(output_gate[i]);
 		state_gate[i] = tanh(state_gate[i]);
-		// расчитываем новую долгосрочную память
+		// СЂР°СЃС‡РёС‚С‹РІР°РµРј РЅРѕРІСѓСЋ РґРѕР»РіРѕСЃСЂРѕС‡РЅСѓСЋ РїР°РјСЏС‚СЊ
 		C[k + 1][i] = forgate_gate[i] * C[k][i] + input_gate[i] * state_gate[i];
-		// расчитываем новую краткосрочную память
+		// СЂР°СЃС‡РёС‚С‹РІР°РµРј РЅРѕРІСѓСЋ РєСЂР°С‚РєРѕСЃСЂРѕС‡РЅСѓСЋ РїР°РјСЏС‚СЊ
 		h[k + 1][i] = output_gate[i] * tanh(C[k + 1][i]);
 	}
 
-	// очищаем память, выделенную на вентили сети
+	// РѕС‡РёС‰Р°РµРј РїР°РјСЏС‚СЊ, РІС‹РґРµР»РµРЅРЅСѓСЋ РЅР° РІРµРЅС‚РёР»Рё СЃРµС‚Рё
 	delete[] forgate_gate;
 	delete[] input_gate;
 	delete[] state_gate;
 	delete[] output_gate;
 
-	// возвращаем предстказание сети
+	// РІРѕР·РІСЂР°С‰Р°РµРј РїСЂРµРґСЃС‚РєР°Р·Р°РЅРёРµ СЃРµС‚Рё
 	return calculate_output(k);
 }
 
 void LSTM::predict(DataVector& test_data) {
-	// создаём и конфигурируем скейлер
+	// СЃРѕР·РґР°С‘Рј Рё РєРѕРЅС„РёРіСѓСЂРёСЂСѓРµРј СЃРєРµР№Р»РµСЂ
 	Scaler scaler;
 	auto max_element = test_data.get_max_element();
 	auto min_element = test_data.get_min_element();
 	auto average_value = test_data.get_average_value();
 	scaler.configure(max_element.value + fabs(average_value) / 3, min_element.value - fabs(average_value) / 3);
 
-	// скейлим входные данные
+	// СЃРєРµР№Р»РёРј РІС…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ
 	scaler.scale(test_data);
 
-	// предполагается, что расстояние между точками по оси Х равное, поэтому вычисляем его
+	// РїСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, С‡С‚Рѕ СЂР°СЃСЃС‚РѕСЏРЅРёРµ РјРµР¶РґСѓ С‚РѕС‡РєР°РјРё РїРѕ РѕСЃРё РҐ СЂР°РІРЅРѕРµ, РїРѕСЌС‚РѕРјСѓ РІС‹С‡РёСЃР»СЏРµРј РµРіРѕ
 	size_t dist = test_data.count_distance();
 	
-	// создаём временный вектор с увелеченный на output_range памятью
+	// СЃРѕР·РґР°С‘Рј РІСЂРµРјРµРЅРЅС‹Р№ РІРµРєС‚РѕСЂ СЃ СѓРІРµР»РµС‡РµРЅРЅС‹Р№ РЅР° output_range РїР°РјСЏС‚СЊСЋ
 	DataVector temp(1);
 	temp = test_data;
 	temp.resize(test_data.get_size() + this->output_range);
 
-	// создаём долгосрочную и краткосрочную память
+	// СЃРѕР·РґР°С‘Рј РґРѕР»РіРѕСЃСЂРѕС‡РЅСѓСЋ Рё РєСЂР°С‚РєРѕСЃСЂРѕС‡РЅСѓСЋ РїР°РјСЏС‚СЊ
 	C = new double* [2];
 	h = new double* [2];
 	C[0] = nullptr;
@@ -388,7 +388,7 @@ void LSTM::predict(DataVector& test_data) {
 	select_memory_for_temp_weight();
 	copy_weight();
 
-	// выполняем предсказания
+	// РІС‹РїРѕР»РЅСЏРµРј РїСЂРµРґСЃРєР°Р·Р°РЅРёСЏ
 	double* x = nullptr;
 	double* y_predict = nullptr;
 	bool out_falg = true;
@@ -411,10 +411,10 @@ void LSTM::predict(DataVector& test_data) {
 		delete[] y_predict;
 	}
 
-	// сохраняем результаты предсказаний как реальные данные
+	// СЃРѕС…СЂР°РЅСЏРµРј СЂРµР·СѓР»СЊС‚Р°С‚С‹ РїСЂРµРґСЃРєР°Р·Р°РЅРёР№ РєР°Рє СЂРµР°Р»СЊРЅС‹Рµ РґР°РЅРЅС‹Рµ
 	test_data = temp;
 
-	// очищаем долгосрочную и краткосрочную память
+	// РѕС‡РёС‰Р°РµРј РґРѕР»РіРѕСЃСЂРѕС‡РЅСѓСЋ Рё РєСЂР°С‚РєРѕСЃСЂРѕС‡РЅСѓСЋ РїР°РјСЏС‚СЊ
 	delete[] C[1];
 	delete[] C[0];
 	delete[] C;
@@ -425,7 +425,7 @@ void LSTM::predict(DataVector& test_data) {
 
 	free_temp_weigth();
 
-	// востанавливаем значиня из промежутка [0, 1] в нормальный промежуток
+	// РІРѕСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р·РЅР°С‡РёРЅСЏ РёР· РїСЂРѕРјРµР¶СѓС‚РєР° [0, 1] РІ РЅРѕСЂРјР°Р»СЊРЅС‹Р№ РїСЂРѕРјРµР¶СѓС‚РѕРє
 	scaler.unscale(test_data);
 }
 
@@ -433,7 +433,7 @@ LSTM::LSTM(double learning_rate, unint16 epochs, unint16 input_range, unint16 hi
 	this->hidden_range = hidden_range;
 	this->output_range = output_range;
 
-	// параметрые, представляющие память сети
+	// РїР°СЂР°РјРµС‚СЂС‹Рµ, РїСЂРµРґСЃС‚Р°РІР»СЏСЋС‰РёРµ РїР°РјСЏС‚СЊ СЃРµС‚Рё
 	de_dF_future = new double[this->hidden_range] {0};
 	de_dO_future = new double[this->hidden_range] {0};
 	de_dG_future = new double[this->hidden_range] {0};
@@ -441,7 +441,7 @@ LSTM::LSTM(double learning_rate, unint16 epochs, unint16 input_range, unint16 hi
 	de_dC_future = new double[this->hidden_range] {0};
 	forgate_future = new double[this->hidden_range] {0};
 
-	// веса 
+	// РІРµСЃР° 
 	int deep = 10; 
 	create_random_matrix(W_f, hidden_range, input_range, deep);
 	create_random_matrix(W_i, hidden_range, input_range, deep);
@@ -457,7 +457,7 @@ LSTM::LSTM(double learning_rate, unint16 epochs, unint16 input_range, unint16 hi
 }
 
 LSTM::~LSTM() {
-	// параметрые, представляющие память сети
+	// РїР°СЂР°РјРµС‚СЂС‹Рµ, РїСЂРµРґСЃС‚Р°РІР»СЏСЋС‰РёРµ РїР°РјСЏС‚СЊ СЃРµС‚Рё
 	delete[] de_dF_future;
 	delete[] de_dO_future;
 	delete[] de_dI_future;
@@ -465,7 +465,7 @@ LSTM::~LSTM() {
 	delete[] de_dC_future;
 	delete[] forgate_future;
 
-	// веса 
+	// РІРµСЃР° 
 	delete_matrix(W_f, hidden_range);
 	delete_matrix(W_i, hidden_range);
 	delete_matrix(W_g, hidden_range);
@@ -509,7 +509,7 @@ void load_model(LSTM& lstm, string file_name) {
 		exit(0);
 	}
 
-	// параметры
+	// РїР°СЂР°РјРµС‚СЂС‹
 	work_file.read((char*)&lstm.learning_rate, sizeof(double));
 	work_file.read((char*)&lstm.predict_error, sizeof(double));
 	work_file.read((char*)&lstm.epochs, sizeof(unint16));
@@ -552,12 +552,12 @@ void dump_model(LSTM& lstm, string file_name) {
 	result_file.write((char*)&lstm.hidden_range, sizeof(lstm.hidden_range));
 	result_file.write((char*)&lstm.output_range, sizeof(lstm.output_range));
 
-	// параметры
+	// РїР°СЂР°РјРµС‚СЂС‹
 	result_file.write((char*)&lstm.learning_rate, sizeof(lstm.learning_rate));
 	result_file.write((char*)&lstm.predict_error, sizeof(lstm.predict_error));
 	result_file.write((char*)&lstm.epochs, sizeof(lstm.epochs));
 
-	// веса и память 
+	// РІРµСЃР° Рё РїР°РјСЏС‚СЊ 
 	for (size_t i = 0; i < lstm.hidden_range; i++) {
 		for (size_t j = 0; j < lstm.hidden_range; j++) {
 			result_file.write((char*)&lstm.U_f[i][j], sizeof(lstm.U_f[i][j]));

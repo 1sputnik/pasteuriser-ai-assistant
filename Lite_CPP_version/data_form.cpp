@@ -1,4 +1,4 @@
-﻿#include "data_form.h"
+#include "data_form.h"
 
 std::ostream& operator<<(std::ostream& os, const DATA& data) {
 	os << data.cid << ";" << data.time << ";" << data.value << "\n";
