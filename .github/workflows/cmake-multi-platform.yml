@@ -8,13 +8,12 @@ on:
   pull_request:
     branches: [ "master" ]
 
-env:
-  BUILD_TYPE: Release
 
 jobs:
   build:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
+    if: ${{ (github.repository == '1sputnik/pasteuriser-ai-assistant') && ( (github.event_name == 'push') || (github.event_name == 'schedule') || (github.event_name == 'merge_group') || ((github.event_name == 'pull_request_target') )) }}
     strategy:
       fail-fast: false
       matrix:
