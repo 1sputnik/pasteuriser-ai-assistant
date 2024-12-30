@@ -2,17 +2,17 @@
 #include "data_reform.h"
 
 class Scaler {
-	// диапазон скейлинга
-	double max;
-	double min;
+	// РґРёР°РїР°Р·РѕРЅ СЃРєРµР№Р»РёРЅРіР°
+	double max_scale;
+	double min_scale;
 
-	// максимальный и минимальный элемент скейлинга
+	// РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ Рё РјРёРЅРёРјР°Р»СЊРЅС‹Р№ СЌР»РµРјРµРЅС‚ СЃРєРµР№Р»РёРЅРіР°
 	double max_element;
 	double min_element;
 
-	// разница диапазонов
-	double d;
-	double D;
+	// СЂР°Р·РЅРёС†Р° РґРёР°РїР°Р·РѕРЅРѕРІ
+	double range_scale;
+	double range_data;
 	void count_ranges();
 
 public:
