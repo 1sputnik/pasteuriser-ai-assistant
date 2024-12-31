@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.8)
 
-project ("NNTrainer")
+set(CMAKE_CXX_STANDARD 23)
+
+project (NNTrainer VERSION 2024.12.31.1)
 
 set(SOURCE_FILES
         NNTrainer.h
@@ -33,6 +35,3 @@ set(SOURCE_FILES
 
 add_executable (NNTrainer ${SOURCE_FILES})
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET NNTrainer PROPERTY CXX_STANDARD 20)
-endif()
