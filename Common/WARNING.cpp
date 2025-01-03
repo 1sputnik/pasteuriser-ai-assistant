@@ -1,36 +1,6 @@
 #include "WARNING.h"
 #include <conio.h>
 
-bool have_promlems_with_opening_file(std::ifstream& file, std::string file_name) {
-	try {
-		file.open(file_name);
-	}
-	catch (...) {
-		if (file.is_open())
-			file.close();
-		return true;
-	}
-	if (!file.is_open()) {
-		return true;
-	}
-	return false;
-}
-
-bool have_promlems_with_reading_data(std::ifstream& file, std::string& str) {
-	try {
-		std::getline(file, str);
-	}
-	catch (...) {
-		file.close();
-		return true;
-	}
-	if (str == "") {
-		file.close();
-		return true;
-	}
-	return false;
-}
-
 
 bool enter_menu_point(std::string& answer) {
 	std::getline(std::cin, answer);
@@ -156,11 +126,24 @@ size_t check_quantity_data_lines_in_file(std::ifstream& file, std::string file_n
 
 bool check_OCDF_in_file(std::string file_name) {
 	std::ifstream file;
-	if (have_promlems_with_opening_file(file, file_name)) {
+	try {
+		file.open(file_name);
+	}
+	catch (...) {
+		if (file.is_open())
+			file.close();
 		return false;
 	}
 	std::string test_str;
-	if (have_promlems_with_reading_data(file, test_str)) {
+	try {
+		std::getline(file, test_str);
+	}
+	catch (...) {
+		file.close();
+		return false;
+	}
+	if (test_str == "") {
+		file.close();
 		return false;
 	}
 	file.close();
@@ -178,11 +161,24 @@ bool check_OCDF_in_file(std::string file_name) {
 
 bool check_TDF_in_file(std::string file_name) {
 	std::ifstream file;
-	if (have_promlems_with_opening_file(file, file_name)) {
+	try {
+		file.open(file_name);
+	}
+	catch (...) {
+		if (file.is_open())
+			file.close();
 		return false;
 	}
 	std::string test_str;
-	if (have_promlems_with_reading_data(file, test_str)) {
+	try {
+		std::getline(file, test_str);
+	}
+	catch (...) {
+		file.close();
+		return false;
+	}
+	if (test_str == "") {
+		file.close();
 		return false;
 	}
 	file.close();

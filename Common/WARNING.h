@@ -10,11 +10,6 @@
 #include <algorithm>
 
 
-bool have_promlems_with_opening_file(std::ifstream& file, std::string file_name);
-
-bool have_promlems_with_reading_data(std::ifstream& file, std::string& str);
-
-
 bool enter_menu_point(std::string& answer);
 
 bool enter_int_numeric(long long& numeric);
