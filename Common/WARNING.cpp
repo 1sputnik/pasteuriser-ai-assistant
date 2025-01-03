@@ -74,11 +74,15 @@ bool enter_double_numeric(double& numeric, bool invers_descriptor) {
 }
 
 bool string_symbol_to_bool(std::string str, bool& answer) {
-	if (str[0] == '0') {
-		answer = 0;
+	if (str.length() != 1) {
+		msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
+		return false;
 	}
-	else if (str[0] == '1') {
-		answer = 1;
+	else if (str == "0") {
+		answer = false;
+	}
+	else if (str == "1") {
+		answer = true;
 	}
 	else {
 		msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
@@ -89,6 +93,9 @@ bool string_symbol_to_bool(std::string str, bool& answer) {
 
 
 bool is_double_numeric(std::string str) {
+	if (str.length() == 0) {
+		return false;
+	}
 	std::vector<char> numerics{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0' };
 	for (size_t i = 0; i < str.size(); i++) {
 		if (std::find(numerics.begin(), numerics.end(), str[i]) == numerics.end())
@@ -98,6 +105,9 @@ bool is_double_numeric(std::string str) {
 }
 
 bool is_int_numeric(std::string str) {
+	if (str.length() == 0) {
+		return false;
+	}
 	std::vector<char> numerics{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
 	for (size_t i = 0; i < str.size(); i++) {
 		if (std::find(numerics.begin(), numerics.end(), str[i]) == numerics.end())
@@ -108,7 +118,7 @@ bool is_int_numeric(std::string str) {
 
 
 std::string extractLastNChars(std::string const& str, int n) {
-	if (str.size() < n) {
+	if (str.size() <= n) {
 		return str;
 	}
 
@@ -127,9 +137,7 @@ std::vector<std::string> split_string(std::string str, char descriptor) {
 			buffer_string += str[i];
 		}
 	}
-	if (buffer_string.size() != 0) {
-		splited_string.push_back(buffer_string);
-	}
+	splited_string.push_back(buffer_string);
 	return splited_string;
 }
 
