@@ -13,10 +13,26 @@ set(PAIATests_SRC
         PAIATests.cpp
    )
 
+set(Common_SRC
+        ../Common/DataFormats.h
+        ../Common/DataFormats.cpp
+        ../Common/WARNING.h
+        ../Common/WARNING.cpp
+        ../Common/DataReformer.h
+        ../Common/DataReformer.cpp
+        ../Common/DataReader.h
+        ../Common/DataReader.cpp
+        ../Common/DataDumper.h
+        ../Common/DataDumper.cpp
+
+        Common.Tests/DataFormats.Tests.h
+        Common.Tests/DataFormats.Tests.cpp
+    )
+
 enable_testing()
 
 add_subdirectory(Deps/googletest)
 
-add_executable(PAIATests ${PAIATests_SRC})
+add_executable(PAIATests ${PAIATests_SRC} ${Common_SRC})
 
 target_link_libraries(PAIATests gtest_main gmock_main)
