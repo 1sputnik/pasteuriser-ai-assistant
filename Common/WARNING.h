@@ -23,6 +23,8 @@ bool is_double_numeric(std::string str);
 
 bool is_int_numeric(std::string str);
 
+bool is_target_format_data(std::string str);
+
 
 std::string extractLastNChars(std::string const& str, int n);
 

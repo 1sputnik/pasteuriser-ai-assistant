@@ -28,8 +28,7 @@ TEST(Common_StrConverter, String_Symbol_To_Bool) {
 	EXPECT_FALSE(string_symbol_to_bool(zero_one_str, test));
 
 	std::string zero = "0";
-	result = string_symbol_to_bool(zero, test);
-	EXPECT_TRUE(result);
+	EXPECT_TRUE(string_symbol_to_bool(zero, test));
 	EXPECT_FALSE(test);
 
 	std::string one = "1";

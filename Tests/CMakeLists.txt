@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.8) # задаём версию CMake
+﻿cmake_minimum_required (VERSION 3.0) # задаём версию CMake
 
 set(CMAKE_CXX_STANDARD 23) # устанавливаем стандарт языка С++
 
@@ -9,13 +9,13 @@ set(CMAKE_CXX_FLAGS_DEBUG "/MTd") # устанавливаем MultiThread сб�
 project (PAIATests VERSION 2025.01.03.1) # создаём проект и его версию
 
 # указываем файлы, которые будут подключены к проекту
-set(PAIATests_SRC
+file(GLOB PAIATests_SRC CONFIGURE_DEPENDS
         PAIATests.h
         PAIATests.cpp
         includes.h
-   )
+    )
 
-set(Common_SRC
+file(GLOB Common_SRC CONFIGURE_DEPENDS
         ../Common/DataFormats.h
         ../Common/DataFormats.cpp
         ../Common/WARNING.h
@@ -33,6 +33,10 @@ set(Common_SRC
         Common.Tests/DataReader.Tests.cpp
         Common.Tests/Warning.Tests.h
         Common.Tests/Warning.Tests.cpp
+        Common.Tests/DataReformer.Tests.h
+        Common.Tests/DataReformer.Tests.cpp
+        Common.Tests/DataDumper.Tests.h
+        Common.Tests/DataDumper.Tests.cpp
     )
 
 enable_testing() # "включаем" тесты
@@ -51,3 +55,19 @@ target_link_libraries(PAIATests gtest_main gmock_main) # подключаем б
 
 target_link_libraries(PAIATests subhook) # подключаем библиотеки фрейворка subhook, чтобы не прописывать пути вручную
 
+# задаём список файлов, которые нужны для тестирования 
+set(FILES_FOR_TESTS
+    TestFiles/Corrupted.ocdf.csv
+    TestFiles/Holey.ocdf.csv
+    TestFiles/One_Line.ocdf.csv
+    TestFiles/Void.csv
+    TestFiles/Invalid.csv
+    TestFiles/Rigth.ocdf.csv
+    TestFiles/Rigth.ocdf.bin
+    TestFiles/TestData.ocdf.bin
+    )
+
+# копируем все файлы с данными и моделями нейронных сетей в папку с exe
+foreach(file_name IN LISTS FILES_FOR_TESTS)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${file_name} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+endforeach()

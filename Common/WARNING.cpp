@@ -86,6 +86,18 @@ bool is_int_numeric(std::string str) {
 	return true;
 }
 
+bool is_target_format_data(std::string str) {
+	if (str.length() == 0) {
+		return false;
+	}
+	std::vector<char> numerics{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', ';', '\n', '\r'};
+	for (size_t i = 0; i < str.size(); i++) {
+		if (std::find(numerics.begin(), numerics.end(), str[i]) == numerics.end())
+			return false;
+	}
+	return true;
+}
+
 
 std::string extractLastNChars(std::string const& str, int n) {
 	if (str.size() <= n) {
@@ -130,8 +142,7 @@ bool check_OCDF_in_file(std::string file_name) {
 		file.open(file_name);
 	}
 	catch (...) {
-		if (file.is_open())
-			file.close();
+		file.close();
 		return false;
 	}
 	std::string test_str;
@@ -165,8 +176,7 @@ bool check_TDF_in_file(std::string file_name) {
 		file.open(file_name);
 	}
 	catch (...) {
-		if (file.is_open())
-			file.close();
+		file.close();
 		return false;
 	}
 	std::string test_str;

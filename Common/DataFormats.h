@@ -51,5 +51,3 @@ public:
 
 	void operator=(const TableDataFormat& data);
 };
-
-//void load_data(TableDataFormat*& data, string file_name);
