@@ -2,9 +2,9 @@
 
 set(CMAKE_CXX_STANDARD 23)
 
-project (DataManipulator VERSION 2024.12.31.1)
+project (DataManipulator VERSION 2025.01.09.2)
 
-set(SOURCE_FILES
+set(DM_FILES
         DataManipulator.h
         DataManipulator.cpp
         MainOCDFMenu.h
@@ -13,17 +13,13 @@ set(SOURCE_FILES
         MainTDFMenu.cpp
         TDFCreator.h
         TDFCreator.cpp
-        ../Common/DataFormats.h
-        ../Common/DataFormats.cpp
-        ../Common/WARNING.h
-        ../Common/WARNING.cpp
-        ../Common/DataReformer.h
-        ../Common/DataReformer.cpp
-        ../Common/DataReader.h
-        ../Common/DataReader.cpp
-        ../Common/DataDumper.h
-        ../Common/DataDumper.cpp
-        )
+        DMIncludes.h
+)
 
-add_executable (DataManipulator ${SOURCE_FILES})
+file(GLOB Common_Files CONFIGURE_DEPENDS
+    	    ../Common/*.cpp
+            ../Common/*.h
+)
+
+add_executable (DataManipulator ${Common_Files} ${DM_FILES})
 

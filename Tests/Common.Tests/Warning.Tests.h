@@ -1,4 +1,3 @@
 #pragma once
 
-#include "../includes.h"
-#include "../../Common/WARNING.h"
+#include "StrConverter.Tests.h"

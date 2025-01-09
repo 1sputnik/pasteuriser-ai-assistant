@@ -6,7 +6,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "/MT") # устанавливаем MultiThread сб
 
 set(CMAKE_CXX_FLAGS_DEBUG "/MTd") # устанавливаем MultiThread сборку для дебагера (чтобы работали submodules)
 
-project (PAIATests VERSION 2025.01.03.1) # создаём проект и его версию
+project (PAIATests VERSION 2025.01.09.1) # создаём проект и его версию
 
 # указываем файлы, которые будут подключены к проекту
 file(GLOB PAIATests_SRC CONFIGURE_DEPENDS
@@ -16,27 +16,11 @@ file(GLOB PAIATests_SRC CONFIGURE_DEPENDS
     )
 
 file(GLOB Common_SRC CONFIGURE_DEPENDS
-        ../Common/DataFormats.h
-        ../Common/DataFormats.cpp
-        ../Common/WARNING.h
-        ../Common/WARNING.cpp
-        ../Common/DataReformer.h
-        ../Common/DataReformer.cpp
-        ../Common/DataReader.h
-        ../Common/DataReader.cpp
-        ../Common/DataDumper.h
-        ../Common/DataDumper.cpp
+        Common.Tests/*.h
+        Common.Tests/*.cpp
 
-        Common.Tests/DataFormats.Tests.h
-        Common.Tests/DataFormats.Tests.cpp
-        Common.Tests/DataReader.Tests.h
-        Common.Tests/DataReader.Tests.cpp
-        Common.Tests/Warning.Tests.h
-        Common.Tests/Warning.Tests.cpp
-        Common.Tests/DataReformer.Tests.h
-        Common.Tests/DataReformer.Tests.cpp
-        Common.Tests/DataDumper.Tests.h
-        Common.Tests/DataDumper.Tests.cpp
+        ../Common/*.cpp
+        ../Common/*.h
     )
 
 enable_testing() # "включаем" тесты
@@ -65,6 +49,9 @@ set(FILES_FOR_TESTS
     TestFiles/Rigth.ocdf.csv
     TestFiles/Rigth.ocdf.bin
     TestFiles/TestData.ocdf.bin
+    TestFiles/Rigth.tdf.bin
+    TestFiles/Rigth.tdf.csv
+    TestFiles/TestData.tdf.bin
     )
 
 # копируем все файлы с данными и моделями нейронных сетей в папку с exe

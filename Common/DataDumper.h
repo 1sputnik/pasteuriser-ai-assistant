@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DataFormats.h"
+#include "DataReader.h"
 
 void dump_data(vector<OneCIDDataFormat>& data, string file_name);
 

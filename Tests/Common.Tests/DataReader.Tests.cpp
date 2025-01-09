@@ -50,7 +50,7 @@ TEST(Common_DataReader, OCDF_Read_One_Line) {
 	EXPECT_EQ(ocdfvec.size(), 1);
 }
 
-TEST(Common_DataReader, OCDF_Read_Right_Data_All) {
+TEST(Common_DataReader, OCDF_Read_Right_Data) {
 	vector<OCDF> ocdfvec;
 	string file_name = "Rigth.ocdf.csv";
 
@@ -110,4 +110,43 @@ TEST(Common_DataReader, OCDF_BinRead_Right_Data) {
 	int magic_size = 0;
 	ocdfvec = binload_OCDF_data(file_name, magic_size);
 	EXPECT_EQ(ocdfvec.size(), 100);
+}
+
+TEST(Common_DataReader, TDF_Read_Void) {
+	vector<TDF> tdfvec;
+	string file_name = "Void.csv";
+
+	int full_size = 0;
+	tdfvec = load_TDF_data(file_name, full_size);
+
+	EXPECT_EQ(tdfvec.size(), 0);
+}
+
+TEST(Common_DataReader, TDF_Read_Right_Data) {
+	vector<TDF> tdfvec;
+	string file_name = "Rigth.tdf.csv";
+
+	int full_size = 100;
+	tdfvec = load_TDF_data(file_name, full_size);
+
+	ASSERT_EQ(tdfvec.size(), 100);
+	EXPECT_EQ(tdfvec[99].time, 66419791);
+
+	int half_size = 50;
+	tdfvec = load_TDF_data(file_name, half_size);
+
+	ASSERT_EQ(tdfvec.size(), 50);
+	EXPECT_EQ(tdfvec[49].time, 66419541);
+
+	int over_size = 10000;
+	tdfvec = load_TDF_data(file_name, over_size);
+	EXPECT_EQ(tdfvec.size(), 100);
+
+	int milli_size = 1;
+	tdfvec = load_TDF_data(file_name, milli_size);
+	EXPECT_EQ(tdfvec.size(), 1);
+
+	int magic_size = 0;
+	tdfvec = load_TDF_data(file_name, magic_size);
+	EXPECT_EQ(tdfvec.size(), 100);
 }

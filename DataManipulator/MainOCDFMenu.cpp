@@ -41,8 +41,12 @@ void MainOCDF_Menu() {
 			<< "Введите пункт меню: ";
 
 		string answer;
-		if (!enter_menu_point(answer))
+		std::getline(std::cin, answer);
+
+		if (!is_menu_point(answer)) {
+			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
 			continue;
+		}
 
 		if (answer[0] == '0')
 			return;
@@ -74,11 +78,17 @@ void cut_percent_OCDF_data(vector<OCDF>& data) {
 		bool cut_trend;
 		string answer;
 		std::cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
-		if (!enter_menu_point(answer))
-			continue;
+		std::getline(std::cin, answer);
 
-		if (!string_symbol_to_bool(answer, cut_trend))
+		if (!is_menu_point(answer)) {
+			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
 			continue;
+		}
+
+		if (!string_to_bool(answer, cut_trend)) {
+			msg_warning("\nОшибка ввода данных! Введённо недопустимое значение или слишком много символов!\n");
+			continue;
+		}
 
 		vector<OCDF> buffer_data = cut_percent_data(data, cut_percent, cut_trend);
 		if (buffer_data.size() == 0) {
@@ -111,11 +121,17 @@ void cut_quantity_OCDF_data(vector<OCDF>& data) {
 		bool cut_trend;
 		string answer;
 		std::cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
-		if (!enter_menu_point(answer))
-			continue;
+		std::getline(std::cin, answer);
 
-		if (!string_symbol_to_bool(answer, cut_trend))
+		if (!is_menu_point(answer)) {
+			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
 			continue;
+		}
+
+		if (!string_to_bool(answer, cut_trend)) {
+			msg_warning("\nОшибка ввода данных! Введённо недопустимое значение или слишком много символов!\n");
+			continue;
+		}
 
 		vector<OCDF> buffer_data = cut_percent_data(data, cut_quantity, cut_trend);
 		if (buffer_data.size() == 0) {
@@ -148,11 +164,17 @@ void cut_time_OCDF_data(vector<OCDF>& data) {
 		bool cut_trend;
 		string answer;
 		std::cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
-		if (!enter_menu_point(answer))
-			continue;
+		std::getline(std::cin, answer);
 
-		if (!string_symbol_to_bool(answer, cut_trend))
+		if (!is_menu_point(answer)) {
+			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
 			continue;
+		}
+
+		if (!string_to_bool(answer, cut_trend)) {
+			msg_warning("\nОшибка ввода данных! Введённо недопустимое значение или слишком много символов!\n");
+			continue;
+		}
 
 		vector<OCDF> buffer_data = cut_data_per_time(data, cut_time, cut_trend);
 		if (buffer_data.size() == 0) {

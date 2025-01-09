@@ -2,10 +2,6 @@
 
 #include "WARNING.h"
 
-using std::vector;
-using std::string;
-using std::find;
-
 typedef long long int llint;
 
 class OneCIDDataFormat;

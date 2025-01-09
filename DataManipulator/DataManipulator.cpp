@@ -39,8 +39,12 @@ void MainDataFormat_Menu() {
 			<< "Введите пункт меню: ";
 		
 		string answer;
-		if (!enter_menu_point(answer))
+		std::getline(std::cin, answer);
+
+		if (!is_menu_point(answer)) {
+			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
 			continue;
+		}
 
 		if (answer[0] == '0')
 			return;

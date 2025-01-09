@@ -168,10 +168,17 @@ void create_TDF_file() {
 
 		string answer;
 		std::cout << "В каком формате сохранить даныне (0 - .csv, 1 - .bin): ";
-		if (!enter_menu_point(answer))
+		std::getline(std::cin, answer);
+
+		if (!is_menu_point(answer)) {
+			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
 			continue;
-		if (!string_symbol_to_bool(answer, save_to_bin_format))
+		}
+
+		if (!string_to_bool(answer, save_to_bin_format)) {
+			msg_warning("\nОшибка ввода данных! Введённо недопустимое значение или слишком много символов!\n");
 			continue;
+		}
 
 		break;
 	}

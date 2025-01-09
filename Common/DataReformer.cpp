@@ -1,6 +1,6 @@
 #include "DataReformer.h"
 
-vector<OneCIDDataFormat> cut_percent_data(vector<OneCIDDataFormat> data, double cut_percent, bool cut_trend) {
+vector<OneCIDDataFormat> cut_percent_data(vector<OneCIDDataFormat>& data, double cut_percent, bool cut_trend) {
 	vector<OneCIDDataFormat> cut_data;
 
 	if (cut_percent > 1.0 || cut_percent * data.size() > data.size()) {
@@ -25,7 +25,7 @@ vector<OneCIDDataFormat> cut_percent_data(vector<OneCIDDataFormat> data, double 
 	return cut_data;
 }
 
-vector<OneCIDDataFormat> cut_quntity_data(vector<OneCIDDataFormat> data, size_t cut_quantity, bool cut_trend) {
+vector<OneCIDDataFormat> cut_quntity_data(vector<OneCIDDataFormat>& data, size_t cut_quantity, bool cut_trend) {
 	vector<OneCIDDataFormat> cut_data;
 
 	if (cut_quantity > data.size()) {
@@ -47,7 +47,7 @@ vector<OneCIDDataFormat> cut_quntity_data(vector<OneCIDDataFormat> data, size_t 
 	return cut_data;
 }
 
-vector<OneCIDDataFormat> cut_data_per_time(vector<OneCIDDataFormat> data, long long time_border, bool cut_trend, bool include_time_border) {
+vector<OneCIDDataFormat> cut_data_per_time(vector<OneCIDDataFormat>& data, long long time_border, bool cut_trend, bool include_time_border) {
 	vector<OneCIDDataFormat> cut_data;
 	cut_data = data;
 
@@ -95,7 +95,7 @@ vector<OneCIDDataFormat> cut_data_per_time(vector<OneCIDDataFormat> data, long l
 	return cut_data;
 }
 
-vector<TableDataFormat> cut_percent_data(vector<TableDataFormat> data, double cut_percent, bool cut_trend) {
+vector<TableDataFormat> cut_percent_data(vector<TableDataFormat>& data, double cut_percent, bool cut_trend) {
 	vector<TableDataFormat> cut_data;
 
 	if (cut_percent > 1.0 || cut_percent * data.size() > data.size()) {
@@ -120,7 +120,7 @@ vector<TableDataFormat> cut_percent_data(vector<TableDataFormat> data, double cu
 	return cut_data;
 }
 
-vector<TableDataFormat> cut_quntity_data(vector<TableDataFormat> data, size_t cut_quantity, bool cut_trend) {
+vector<TableDataFormat> cut_quntity_data(vector<TableDataFormat>& data, size_t cut_quantity, bool cut_trend) {
 	vector<TableDataFormat> cut_data;
 
 	if (cut_quantity > data.size()) {
@@ -142,35 +142,55 @@ vector<TableDataFormat> cut_quntity_data(vector<TableDataFormat> data, size_t cu
 	return cut_data;
 }
 
-vector<TableDataFormat> cut_data_per_time(vector<TableDataFormat> data, long long time_border, bool cut_trend) {
+vector<TableDataFormat> cut_data_per_time(vector<TableDataFormat>& data, long long time_border, bool cut_trend, bool include_time_border) {
 	vector<TableDataFormat> cut_data;
-
-	auto it = std::find_if(begin(data), end(data), [time_border](TDF datum) {
-			return (datum.time >= time_border);
-		});
-
-	int index = it - data.begin();
-
-	if (index == data.size() - 1)
-		return cut_data;
+	cut_data = data;
 
 	if (cut_trend) {
-		cut_data.resize(data.size() - index);
-		for (size_t i = 0; i < cut_data.size(); i++) {
-			cut_data[i] = data[index + i];
+		if (include_time_border) {
+			while (true) {
+				auto removed_element = std::find_if(cut_data.begin(), cut_data.end(), [time_border](TableDataFormat datum) { return datum.time < time_border; });
+				if (removed_element == cut_data.end())
+					break;
+				else
+					cut_data.erase(removed_element);
+			}
+		}
+		else {
+			while (true) {
+				auto removed_element = std::find_if(cut_data.begin(), cut_data.end(), [time_border](TableDataFormat datum) { return datum.time <= time_border; });
+				if (removed_element == cut_data.end())
+					break;
+				else
+					cut_data.erase(removed_element);
+			}
 		}
 	}
 	else {
-		cut_data.resize(index);
-		for (size_t i = 0; i < cut_data.size(); i++) {
-			cut_data[i] = data[i];
+		if (include_time_border) {
+			while (true) {
+				auto removed_element = std::find_if(cut_data.begin(), cut_data.end(), [time_border](TableDataFormat datum) { return datum.time > time_border; });
+				if (removed_element == cut_data.end())
+					break;
+				else
+					cut_data.erase(removed_element);
+			}
+		}
+		else {
+			while (true) {
+				auto removed_element = std::find_if(cut_data.begin(), cut_data.end(), [time_border](TableDataFormat datum) { return datum.time >= time_border; });
+				if (removed_element == cut_data.end())
+					break;
+				else
+					cut_data.erase(removed_element);
+			}
 		}
 	}
 
 	return cut_data;
 }
 
-vector<OneCIDDataFormat> parsing_data_per_cid(vector<OneCIDDataFormat> data, short cid) {
+vector<OneCIDDataFormat> parsing_data_per_cid(vector<OneCIDDataFormat>& data, short cid) {
 	vector<OneCIDDataFormat> parsed_data;
 
 	for (size_t i = 0; i < data.size(); i++) {
@@ -178,13 +198,10 @@ vector<OneCIDDataFormat> parsing_data_per_cid(vector<OneCIDDataFormat> data, sho
 			parsed_data.push_back(data[i]);
 	}
 
-	if (parsed_data.size() == 0)
-		return data;
-
 	return parsed_data;
 }
 
-vector<OneCIDDataFormat> parsing_data_per_cid(vector<TableDataFormat> data, short cid) {
+vector<OneCIDDataFormat> parsing_data_per_cid(vector<TableDataFormat>& data, short cid) {
 	vector<OneCIDDataFormat> parsed_data(data.size());
 
 	for (size_t i = 0; i < data.size(); i++) {
@@ -237,7 +254,7 @@ long long find_max_element_before_border(vector<OneCIDDataFormat>& data, size_t 
 	else
 		return i;
 }
-vector<OneCIDDataFormat> right_range(vector<OneCIDDataFormat> data, size_t range) {
+vector<OneCIDDataFormat> right_range(vector<OneCIDDataFormat>& data, size_t range) {
 	size_t intervals = size_t((data[data.size() - 1].time - data[0].time) / range);
 	vector<OneCIDDataFormat> right_data;
 	right_data.resize(intervals);

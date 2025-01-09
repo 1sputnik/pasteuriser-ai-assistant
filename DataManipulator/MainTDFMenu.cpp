@@ -37,8 +37,11 @@ void MainTDF_Menu() {
 			<< "Введите пункт меню: ";
 
 		string answer;
-		if (!enter_menu_point(answer))
+		std::getline(std::cin, answer);
+		if (!is_menu_point(answer)) {
+			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
 			continue;
+		}
 
 		if (answer[0] == '0')
 			return;
@@ -63,18 +66,23 @@ void cut_percent_TDF_data(vector<TDF>& data) {
 		if (!enter_double_numeric(cut_percent, false))
 			continue;
 		if (cut_percent > 1.0 || cut_percent < 0.0) {
-			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
+			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n");
 			continue;
 		}
 
 		bool cut_trend;
 		string answer;
 		std::cout << "Выберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
-		if (!enter_menu_point(answer))
+		std::getline(std::cin, answer);
+		if (!is_menu_point(answer)) {
+			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n");
 			continue;
+		}
 
-		if (!string_symbol_to_bool(answer, cut_trend))
+		if (!string_to_bool(answer, cut_trend)) {
+			msg_warning("\nОшибка ввода данных! Введённо недопустимое значение или слишком много символов!\n");
 			continue;
+		}
 
 		data = cut_percent_data(data, cut_percent, cut_trend);
 
@@ -100,11 +108,16 @@ void cut_quantity_TDF_data(vector<TDF>& data) {
 		bool cut_trend;
 		string answer;
 		std::cout << "Выберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
-		if (!enter_menu_point(answer))
+		std::getline(std::cin, answer);
+		if (!is_menu_point(answer)) {
+			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
 			continue;
+		}
 
-		if (!string_symbol_to_bool(answer, cut_trend))
+		if (!string_to_bool(answer, cut_trend)) {
+			msg_warning("\nОшибка ввода данных! Введённо недопустимое значение или слишком много символов!\n");
 			continue;
+		}
 
 		data = cut_quntity_data(data, cut_quantity, cut_trend);
 
@@ -130,11 +143,16 @@ void cut_time_TDF_data(vector<TDF>& data) {
 		bool cut_trend;
 		string answer;
 		std::cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
-		if (!enter_menu_point(answer))
+		std::getline(std::cin, answer);
+		if (!is_menu_point(answer)) {
+			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
 			continue;
+		}
 
-		if (!string_symbol_to_bool(answer, cut_trend))
+		if (!string_to_bool(answer, cut_trend)) {
+			msg_warning("\nОшибка ввода данных! Введённо недопустимое значение или слишком много символов!\n");
 			continue;
+		}
 
 		vector<TDF> buffer_data = cut_data_per_time(data, cut_time, cut_trend);
 		if (buffer_data.size() == 0) {
@@ -177,7 +195,7 @@ void pars_TDF_data_per_cid(vector<TDF>& data) {
 			return;
 
 		if (number > 6 || number < 0) {
-			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
+			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n");
 			continue;
 		}
 
@@ -194,10 +212,17 @@ void pars_TDF_data_per_cid(vector<TDF>& data) {
 
 		string answer;
 		std::cout << "В каком формате сохранить даныне (0 - .csv, 1 - .bin): ";
-		if (!enter_menu_point(answer))
+		std::getline(std::cin, answer);
+
+		if (!is_menu_point(answer)) {
+			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n");
 			continue;
-		if (!string_symbol_to_bool(answer, save_to_bin_format))
+		}
+
+		if (!string_to_bool(answer, save_to_bin_format)) {
+			msg_warning("\nОшибка ввода данных! Введённо недопустимое значение или слишком много символов!\n");
 			continue;
+		}
 
 		break;
 	}
