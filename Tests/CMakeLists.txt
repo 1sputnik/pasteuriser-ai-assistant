@@ -42,7 +42,9 @@ target_link_libraries(PAIATests subhook) # подключаем библиоте
 # задаём список файлов, которые нужны для тестирования 
 set(FILES_FOR_TESTS
     TestFiles/Corrupted.ocdf.csv
+    TestFiles/Corrupted.tdf.csv
     TestFiles/Holey.ocdf.csv
+    TestFiles/Holey.tdf.csv
     TestFiles/One_Line.ocdf.csv
     TestFiles/One_Line.tdf.csv
     TestFiles/Void.csv

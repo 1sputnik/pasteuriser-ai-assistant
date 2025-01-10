@@ -19,7 +19,7 @@ bool string_to_double(string str, double& numeric, bool invers_descriptor) {
 	return false;
 }
 
-bool string_to_integer(string str, long long& numeric) {
+bool string_to_integer(string str, int& numeric) {
 	if (str.length() > 9) {
 		return false;
 	}

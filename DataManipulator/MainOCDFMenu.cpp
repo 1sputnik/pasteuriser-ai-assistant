@@ -113,7 +113,7 @@ void cut_quantity_OCDF_data(vector<OCDF>& data) {
 
 		std::cout << "DataManipulator: обрезка OCDF-данных по заданному количеству\n\n";
 
-		long long cut_quantity;
+		int cut_quantity;
 		std::cout << "Введите количество данных, которое нужно оставить: ";
 		string answer;
 		getline(cin, answer);
@@ -161,7 +161,7 @@ void cut_time_OCDF_data(vector<OCDF>& data) {
 
 		std::cout << "DataManipulator: обрезка OCDF-данных по заданному моменту времени\n\n";
 
-		long long cut_time;
+		int cut_time;
 		std::cout << "Введите момент времени, которое будет являться границей обрезки: ";
 		string answer;
 		getline(cin, answer);
@@ -211,7 +211,7 @@ void right_time_OCDF(vector<OCDF>& data) {
 
 		std::cout << "Внимание! Данная операция предназначена для одного сида!\n\n";
 
-		long long range;
+		int range;
 		std::cout << "Введите необходимый диапозон между временными точками (0 - выход): ";
 		string answer;
 		getline(cin, answer);
@@ -279,7 +279,7 @@ void pars_OCDF_data_per_cid(vector<OCDF>& data) {
 
 		std::cout << "DataManipulator: парсинг OCDF формата по указанному сиду\n\n";
 
-		long long number;
+		int number;
 		std::cout << "Введите номер сида, который необходимо оставить (0 - чтобы выйти): ";
 		string answer;
 		getline(cin, answer);

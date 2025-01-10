@@ -71,7 +71,7 @@ void create_TDF_file() {
 	std::cout << "DataManipulator: Сборка TDF-файла из общего OCDF-файла со всеми сидами\n\n";
 
 	// вводим необходимый диапазон данных относительно времени
-	long long range;
+	int range;
 	while (true) {
 		std::cout << "Введите необходимый диапозон между временными точками: ";
 		string answer;

@@ -117,7 +117,7 @@ TEST(Common_StrConverter, String_To_Bool) {
 }
 
 TEST(Common_StrConverter, String_To_Integer) {
-	long long result;
+	int result;
 
 	std::string invalid_str = "hello";
 	EXPECT_FALSE(string_to_integer(invalid_str, result));

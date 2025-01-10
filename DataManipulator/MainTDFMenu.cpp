@@ -101,7 +101,7 @@ void cut_quantity_TDF_data(vector<TDF>& data) {
 
 		std::cout << "DataManipulator: обрезка TDF-данных по заданному количеству\n\n";
 
-		long long cut_quantity;
+		int cut_quantity;
 		std::cout << "Введите количество данных, которое нужно оставить: ";
 		string answer;
 		getline(cin, answer);
@@ -141,7 +141,7 @@ void cut_time_TDF_data(vector<TDF>& data) {
 
 		std::cout << "DataManipulator: обрезка TDF-данных по заданному моменту времени\n\n";
 
-		long long cut_time;
+		int cut_time;
 		std::cout << "Введите момент времени, который будет являться границей обрезки: ";
 		string answer;
 		getline(cin, answer);
@@ -196,7 +196,7 @@ void show_TDF_data(vector<TDF>& data) {
 }
 
 void pars_TDF_data_per_cid(vector<TDF>& data) {
-	long long number;
+	int number;
 	while (true) {
 		system("cls");
 

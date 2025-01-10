@@ -25,6 +25,7 @@ vector<OneCIDDataFormat> load_OCDF_data(string file_name, size_t size) {
 	load_file.open(file_name, std::ios::in);
 	string line;
 	vector<string> values;
+	double temp_val;
 	try {
 		for (size_t i = 0; !load_file.eof() && i < size; i++) {
 			getline(load_file, line);
@@ -34,9 +35,11 @@ vector<OneCIDDataFormat> load_OCDF_data(string file_name, size_t size) {
 			else
 				throw std::invalid_argument("Invalid data format");
 			if (values.size() == 3) {
-				temp_data.cid = stoi(values[0]);
-				temp_data.time = stoi(values[1]);
-				temp_data.value = stof(values[2]);
+				if (!string_to_integer(values[0], temp_data.time) ||
+					!string_to_integer(values[1], temp_data.time) ||
+					!string_to_double(values[2], temp_val))
+					throw std::invalid_argument("Invalid data format");
+				temp_data.value = temp_val;
 				data.at(i) = temp_data;
 			}
 			else
@@ -103,7 +106,7 @@ vector<OCDF> read_OCDF_file(string special_msg) {
 			load_file_path.erase(k, 1);
 
 
-		long long data_size;
+		int data_size;
 		std::cout << "\nСколько данных необходимо загрузить (введите 0, если надо загрузить все данные): ";
 		string answer;
 		getline(cin, answer);
@@ -220,7 +223,7 @@ vector<TableDataFormat> read_TDF_file(string special_msg) {
 		for (size_t k = load_file_path.find('\"'); k != load_file_path.npos; k = load_file_path.find('\"', k))
 			load_file_path.erase(k, 1);
 
-		long long data_size;
+		int data_size;
 		std::cout << "\nСколько данных необходимо загрузить (введите 0, если надо загрузить все данные): ";
 		string answer;
 		getline(cin, answer);

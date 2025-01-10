@@ -112,14 +112,25 @@ TEST(Common_DataReader, OCDF_BinRead_Right_Data) {
 	EXPECT_EQ(ocdfvec.size(), 100);
 }
 
-TEST(Common_DataReader, TDF_Read_Invalid) {
-	vector<TDF> ocdfvec;
-	string file_name = "Invalid.csv";
+
+TEST(Common_DataReader, TDF_Read_Void) {
+	vector<TDF> tdfvec;
+	string file_name = "Void.csv";
 
 	int full_size = 0;
-	ocdfvec = load_TDF_data(file_name, full_size);
+	tdfvec = load_TDF_data(file_name, full_size);
 
-	EXPECT_EQ(ocdfvec.size(), 0);
+	EXPECT_EQ(tdfvec.size(), 0);
+}
+
+TEST(Common_DataReader, TDF_Read_Corrupted) {
+	vector<TDF> tdfvec;
+	string file_name = "Corrupted.ocdf.csv";
+
+	int full_size = 0;
+	tdfvec = load_TDF_data(file_name, full_size);
+
+	EXPECT_EQ(tdfvec.size(), 0);
 }
 
 TEST(Common_DataReader, TDF_Read_Holey) {
@@ -132,14 +143,24 @@ TEST(Common_DataReader, TDF_Read_Holey) {
 	EXPECT_EQ(tdfvec.size(), 0);
 }
 
-TEST(Common_DataReader, TDF_Read_Void) {
-	vector<TDF> tdfvec;
-	string file_name = "Void.csv";
+TEST(Common_DataReader, TDF_Read_Invalid) {
+	vector<TDF> ocdfvec;
+	string file_name = "Invalid.csv";
 
 	int full_size = 0;
+	ocdfvec = load_TDF_data(file_name, full_size);
+
+	EXPECT_EQ(ocdfvec.size(), 0);
+}
+
+TEST(Common_DataReader, TDF_Read_One_Line) {
+	vector<TDF> tdfvec;
+	string file_name = "One_Line.tdf.csv";
+
+	int full_size = 100;
 	tdfvec = load_TDF_data(file_name, full_size);
 
-	EXPECT_EQ(tdfvec.size(), 0);
+	EXPECT_EQ(tdfvec.size(), 1);
 }
 
 TEST(Common_DataReader, TDF_Read_Right_Data) {
@@ -168,5 +189,32 @@ TEST(Common_DataReader, TDF_Read_Right_Data) {
 
 	int magic_size = 0;
 	tdfvec = load_TDF_data(file_name, magic_size);
+	EXPECT_EQ(tdfvec.size(), 100);
+}
+
+TEST(Common_DataReader, TDF_BinRead_Right_Data) {
+	vector<TDF> tdfvec;
+	string file_name = "Rigth.tdf.bin";
+
+	int full_size = 100;
+	tdfvec = binload_TDF_data(file_name, full_size);
+
+	ASSERT_EQ(tdfvec.size(), 100);
+
+	int half_size = 50;
+	tdfvec = binload_TDF_data(file_name, half_size);
+
+	ASSERT_EQ(tdfvec.size(), 50);
+
+	int over_size = 10000;
+	tdfvec = binload_TDF_data(file_name, over_size);
+	EXPECT_EQ(tdfvec.size(), 100);
+
+	int milli_size = 1;
+	tdfvec = binload_TDF_data(file_name, milli_size);
+	EXPECT_EQ(tdfvec.size(), 1);
+
+	int magic_size = 0;
+	tdfvec = binload_TDF_data(file_name, magic_size);
 	EXPECT_EQ(tdfvec.size(), 100);
 }

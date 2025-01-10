@@ -4,7 +4,7 @@
 
 bool string_to_double(string str, double& numeric, bool invers_descriptor = false);
 
-bool string_to_integer(string str, long long& numeric);
+bool string_to_integer(string str, int& numeric);
 
 bool string_to_bool(string str, bool& answer);
 
