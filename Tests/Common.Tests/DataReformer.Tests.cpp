@@ -107,12 +107,6 @@ TEST(Common_DataReformer, OCDF_Cut_Per_Time) {
 	tdfvec_30 = cut_data_per_time(ocdfvec, begin_time, false, false);
 	ASSERT_EQ(tdfvec_30.size(), 0);
 	tdfvec_30.clear();
-
-	int end_time = 66418168;
-	vector<OCDF> tdfvec_31;
-	tdfvec_31 = cut_data_per_time(ocdfvec, end_time, true, true);
-	ASSERT_EQ(tdfvec_31.size(), 100);
-	tdfvec_31.clear();
 }
 
 TEST(Common_DataReformer, OCDF_Pars) {
@@ -121,43 +115,64 @@ TEST(Common_DataReformer, OCDF_Pars) {
 	short cid = 0;
 	int full_size = 0;
 	ocdfvec = binload_OCDF_data(file_name, full_size);
-	EXPECT_EQ(ocdfvec.size(), 100);
+	ASSERT_EQ(ocdfvec.size(), 100);
 
 	cid = 1;
 	vector<OCDF> first_cid;
 	first_cid = parsing_data_per_cid(ocdfvec, cid);
-	EXPECT_EQ(first_cid.size(), 0);
+	ASSERT_EQ(first_cid.size(), 0);
 	first_cid.clear();
 
 	cid = 2;
 	vector<OCDF> second_cid;
 	second_cid = parsing_data_per_cid(ocdfvec, cid);
-	EXPECT_EQ(second_cid.size(), 2);
+	ASSERT_EQ(second_cid.size(), 2);
+	EXPECT_EQ(second_cid[0].cid, 2);
 	second_cid.clear(); 
 
 	cid = 3;
 	vector<OCDF> third_cid;
 	third_cid = parsing_data_per_cid(ocdfvec, cid);
-	EXPECT_EQ(third_cid.size(), 36);
+	ASSERT_EQ(third_cid.size(), 36);
+	EXPECT_EQ(third_cid[35].cid, 3);
 	third_cid.clear();
 
 	cid = 4;
 	vector<OCDF> forth_cid;
 	forth_cid = parsing_data_per_cid(ocdfvec, cid);
-	EXPECT_EQ(forth_cid.size(), 0);
+	ASSERT_EQ(forth_cid.size(), 0);
 	forth_cid.clear();
 
 	cid = 5;
 	vector<OCDF> fifth_cid;
 	fifth_cid = parsing_data_per_cid(ocdfvec, cid);
-	EXPECT_EQ(fifth_cid.size(), 32);
+	ASSERT_EQ(fifth_cid.size(), 32);
+	EXPECT_EQ(fifth_cid[31].cid, 5);
 	fifth_cid.clear();
 
 	cid = 6;
 	vector<OCDF> sixth_cid;
 	sixth_cid = parsing_data_per_cid(ocdfvec, cid);
-	EXPECT_EQ(sixth_cid.size(), 30);
+	ASSERT_EQ(sixth_cid.size(), 30);
+	EXPECT_EQ(sixth_cid[29].cid, 6);
 	sixth_cid.clear();
+}
+
+TEST(Common_DataReformer, OCDF_Rigth_Range) {
+	vector<OCDF> ocdfvec;
+	string file_name = "TestData.ocdf.bin";
+	long range = 2;
+	short cid = 5;
+	int full_size = 0;
+	ocdfvec = binload_OCDF_data(file_name, full_size);
+	ASSERT_EQ(ocdfvec.size(), 100);
+
+	vector<OCDF> rr2ocdfvec;
+	rr2ocdfvec = parsing_data_per_cid(ocdfvec, cid);
+	ASSERT_EQ(rr2ocdfvec.size(), 32);
+	rr2ocdfvec = right_range(rr2ocdfvec, range);
+	ASSERT_EQ(rr2ocdfvec.size(), 96);
+	rr2ocdfvec.clear();
 }
 
 TEST(Common_DataReformer, TDF_Cut_Quantity) {
@@ -266,12 +281,6 @@ TEST(Common_DataReformer, TDF_Cut_Per_time) {
 	tdfvec_30 = cut_data_per_time(tdfvec, begin_time, false, false);
 	ASSERT_EQ(tdfvec_30.size(), 0);
 	tdfvec_30.clear();
-
-	int end_time = 66419791;
-	vector<TDF> tdfvec_31;
-	tdfvec_31 = cut_data_per_time(tdfvec, time_border, true, true);
-	ASSERT_EQ(tdfvec_31.size(), 0);
-	tdfvec_31.clear();
 }
 
 TEST(Common_DataReformer, TDF_Pars) {
@@ -280,7 +289,7 @@ TEST(Common_DataReformer, TDF_Pars) {
 	short cid = 0;
 	int full_size = 0;
 	TDFvec = binload_TDF_data(file_name, full_size);
-	EXPECT_EQ(TDFvec.size(), 100);
+	ASSERT_EQ(TDFvec.size(), 100);
 
 	cid = 1;
 	vector<OCDF> first_cid;

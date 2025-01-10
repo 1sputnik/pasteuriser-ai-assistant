@@ -63,16 +63,21 @@ void cut_percent_TDF_data(vector<TDF>& data) {
 
 		double cut_percent;
 		std::cout << "Введите процент данных, который нужно оставить (число в диапазоне (0.0; 1.0)): ";
-		if (!enter_double_numeric(cut_percent, false))
+		string answer;
+		std::getline(std::cin, answer);
+		if (!string_to_double(answer, cut_percent, false)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является действительным числом!\n\n");
 			continue;
+		}
+
 		if (cut_percent > 1.0 || cut_percent < 0.0) {
 			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n");
 			continue;
 		}
 
 		bool cut_trend;
-		string answer;
 		std::cout << "Выберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
+		answer.clear();
 		std::getline(std::cin, answer);
 		if (!is_menu_point(answer)) {
 			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n");
@@ -98,15 +103,20 @@ void cut_quantity_TDF_data(vector<TDF>& data) {
 
 		long long cut_quantity;
 		std::cout << "Введите количество данных, которое нужно оставить: ";
-		if (!enter_int_numeric(cut_quantity))
+		string answer;
+		getline(cin, answer);
+		if (!string_to_integer(answer, cut_quantity)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом или число отрицательное!\n");
 			continue;
+		}
+
 		if (cut_quantity <= 0) {
 			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
 			continue;
 		}
 
 		bool cut_trend;
-		string answer;
+		answer.clear();
 		std::cout << "Выберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
 		std::getline(std::cin, answer);
 		if (!is_menu_point(answer)) {
@@ -133,15 +143,20 @@ void cut_time_TDF_data(vector<TDF>& data) {
 
 		long long cut_time;
 		std::cout << "Введите момент времени, который будет являться границей обрезки: ";
-		if (!enter_int_numeric(cut_time))
+		string answer;
+		getline(cin, answer);
+		if (!string_to_integer(answer, cut_time)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом или число отрицательное!\n");
 			continue;
+		}
+
 		if (cut_time <= 0) {
 			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
 			continue;
 		}
 
 		bool cut_trend;
-		string answer;
+		answer.clear();
 		std::cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
 		std::getline(std::cin, answer);
 		if (!is_menu_point(answer)) {
@@ -188,8 +203,12 @@ void pars_TDF_data_per_cid(vector<TDF>& data) {
 		std::cout << "DataManipulator: парсинг TDF формата по указанному сиду\n\n";
 
 		std::cout << "Введите номер сида, который необходимо оставить (0 - чтобы выйти): ";
-		if (!enter_int_numeric(number))
+		string answer;
+		getline(cin, answer);
+		if (!string_to_integer(answer, number)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом или число отрицательное!\n");
 			continue;
+		}
 
 		if (number == 0)
 			return;

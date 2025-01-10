@@ -68,18 +68,22 @@ void cut_percent_OCDF_data(vector<OCDF>& data) {
 
 		double cut_percent;
 		std::cout << "Введите процент данных, который нужно оставить (число в диапазоне (0.0; 1.0)): ";
-		if (!enter_double_numeric(cut_percent, false))
+		string answer;
+		std::getline(std::cin, answer);
+		if (!string_to_double(answer, cut_percent, false)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является действительным числом!\n\n");
 			continue;
+		}
+
 		if (cut_percent > 1.0 || cut_percent < 0.0) {
 			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
 			continue;
 		}
 
 		bool cut_trend;
-		string answer;
 		std::cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
+		answer.clear();
 		std::getline(std::cin, answer);
-
 		if (!is_menu_point(answer)) {
 			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
 			continue;
@@ -111,15 +115,20 @@ void cut_quantity_OCDF_data(vector<OCDF>& data) {
 
 		long long cut_quantity;
 		std::cout << "Введите количество данных, которое нужно оставить: ";
-		if (!enter_int_numeric(cut_quantity))
+		string answer;
+		getline(cin, answer);
+		if (!string_to_integer(answer, cut_quantity)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом или число отрицательное!\n");
 			continue;
+		}
+
 		if (cut_quantity <= 0) {
 			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
 			continue;
 		}
 
 		bool cut_trend;
-		string answer;
+		answer.clear();
 		std::cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
 		std::getline(std::cin, answer);
 
@@ -154,15 +163,20 @@ void cut_time_OCDF_data(vector<OCDF>& data) {
 
 		long long cut_time;
 		std::cout << "Введите момент времени, которое будет являться границей обрезки: ";
-		if (!enter_int_numeric(cut_time))
+		string answer;
+		getline(cin, answer);
+		if (!string_to_integer(answer, cut_time)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом или число отрицательное!\n");
 			continue;
+		}
+
 		if (cut_time <= 0) {
 			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
 			continue;
 		}
 
 		bool cut_trend;
-		string answer;
+		answer.clear();
 		std::cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
 		std::getline(std::cin, answer);
 
@@ -199,8 +213,12 @@ void right_time_OCDF(vector<OCDF>& data) {
 
 		long long range;
 		std::cout << "Введите необходимый диапозон между временными точками (0 - выход): ";
-		if (!enter_int_numeric(range))
+		string answer;
+		getline(cin, answer);
+		if (!string_to_integer(answer, range)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом или число отрицательное!\n");
 			continue;
+		}
 
 		if (range == 0) {
 			return;
@@ -263,8 +281,12 @@ void pars_OCDF_data_per_cid(vector<OCDF>& data) {
 
 		long long number;
 		std::cout << "Введите номер сида, который необходимо оставить (0 - чтобы выйти): ";
-		if (!enter_int_numeric(number))
+		string answer;
+		getline(cin, answer);
+		if (!string_to_integer(answer, number)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом или число отрицательное!\n");
 			continue;
+		}
 
 		if (number == 0)
 			return;

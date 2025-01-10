@@ -40,6 +40,18 @@ TEST(Common_DataFormats, OCDF_Output) {
 	EXPECT_EQ(output, test_str);
 }
 
+TEST(Common_DataFormats, OCDF_Input) {
+	OCDF ocdf;
+	std::ifstream in_file;
+	string file_name = "One_Line.ocdf.csv";
+	in_file.open(file_name, std::ios::in);
+	in_file >> ocdf;
+	in_file.close();
+	EXPECT_EQ(ocdf.cid, 1);
+	EXPECT_EQ(ocdf.time, 23);
+	EXPECT_EQ(ocdf.value, 33.44f);
+}
+
 
 TEST(Common_DataFormats, TDF_Default_Constructor) {
 	TDF tdf;
@@ -95,4 +107,20 @@ TEST(Common_DataFormats, TDF_Output) {
 	auto output = testing::internal::GetCapturedStdout();
 	std::string test_str = R"(0;0;0;0;0;0;0)";
 	EXPECT_EQ(output, test_str);
+}
+
+TEST(Common_DataFormats, TDF_Input) {
+	TDF tdf;
+	std::ifstream in_file;
+	string file_name = "One_Line.tdf.csv";
+	in_file.open(file_name, std::ios::in);
+	in_file >> tdf;
+	in_file.close();
+	EXPECT_EQ(tdf.time, 66419296);
+	EXPECT_EQ(tdf.cid_1_value, 0);
+	EXPECT_EQ(tdf.cid_2_value, 0);
+	EXPECT_EQ(tdf.cid_3_value, 94);
+	EXPECT_EQ(tdf.cid_4_value, 3.2f);
+	EXPECT_EQ(tdf.cid_5_value, 95.3f);
+	EXPECT_EQ(tdf.cid_6_value, 37.7f);
 }

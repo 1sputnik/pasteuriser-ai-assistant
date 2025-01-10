@@ -74,8 +74,12 @@ void create_TDF_file() {
 	long long range;
 	while (true) {
 		std::cout << "Введите необходимый диапозон между временными точками: ";
-		if (!enter_int_numeric(range))
+		string answer;
+		getline(cin, answer);
+		if (!string_to_integer(answer, range)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом или число отрицательное!\n");
 			continue;
+		}
 
 		else if (range < 0) {
 			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");

@@ -44,6 +44,7 @@ set(FILES_FOR_TESTS
     TestFiles/Corrupted.ocdf.csv
     TestFiles/Holey.ocdf.csv
     TestFiles/One_Line.ocdf.csv
+    TestFiles/One_Line.tdf.csv
     TestFiles/Void.csv
     TestFiles/Invalid.csv
     TestFiles/Rigth.ocdf.csv

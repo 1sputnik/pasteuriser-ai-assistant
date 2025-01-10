@@ -105,8 +105,12 @@ vector<OCDF> read_OCDF_file(string special_msg) {
 
 		long long data_size;
 		std::cout << "\nСколько данных необходимо загрузить (введите 0, если надо загрузить все данные): ";
-		if (!enter_int_numeric(data_size))
+		string answer;
+		getline(cin, answer);
+		if (!string_to_integer(answer, data_size)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом или число отрицательное!\n");
 			continue;
+		}
 
 		try {
 			if (extractLastNChars(load_file_path, 4) == ".bin") {
@@ -218,8 +222,12 @@ vector<TableDataFormat> read_TDF_file(string special_msg) {
 
 		long long data_size;
 		std::cout << "\nСколько данных необходимо загрузить (введите 0, если надо загрузить все данные): ";
-		if (!enter_int_numeric(data_size))
+		string answer;
+		getline(cin, answer);
+		if (!string_to_integer(answer, data_size)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом или число отрицательное!\n");
 			continue;
+		}
 
 		try {
 			if (extractLastNChars(load_file_path, 4) == ".bin") {
