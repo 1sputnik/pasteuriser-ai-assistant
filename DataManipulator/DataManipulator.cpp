@@ -28,9 +28,9 @@ void MainDataFormat_Menu() {
 	while (true) {
 		system("cls");
 
-		std::cout << "DataManipulator: главное меню\n\n";
+		cout << "DataManipulator: главное меню\n\n";
 
-		std::cout << "Выберите пункт меню:\n"
+		cout << "Выберите пункт меню:\n"
 			<< "1 - обработка данных стандартного формата (OCDF)\n"
 			<< "2 - обработка данных табличного формата (TDF)\n"
 			<< "3 - сборка табличного формата из общего файла OCDF-формата\n"
@@ -39,7 +39,7 @@ void MainDataFormat_Menu() {
 			<< "Введите пункт меню: ";
 		
 		string answer;
-		std::getline(std::cin, answer);
+		getline(cin, answer);
 
 		if (!is_menu_point(answer)) {
 			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
@@ -60,7 +60,7 @@ void MainDataFormat_Menu() {
 
 void show_info() {
 	system("cls");
-	std::cout << "DataManipulator - это модуль, который предназначен для работы с данными, их обработкой, компоновкой и так далее.\n\n"
+	cout << "DataManipulator - это модуль, который предназначен для работы с данными, их обработкой, компоновкой и так далее.\n\n"
 
 		<< "Этот модуль использует следующую терминологию:\n\n"
 

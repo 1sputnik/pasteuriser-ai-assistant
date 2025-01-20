@@ -1,25 +1,17 @@
-﻿cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required(VERSION 3.8)
 
 set(CMAKE_CXX_STANDARD 23)
 
-project (DataManipulator VERSION 2025.01.09.2)
+project(DataManipulator VERSION 2025.01.20.1)
 
-set(DM_FILES
-        DataManipulator.h
-        DataManipulator.cpp
-        MainOCDFMenu.h
-        MainOCDFMenu.cpp
-        MainTDFMenu.h
-        MainTDFMenu.cpp
-        TDFCreator.h
-        TDFCreator.cpp
-        DMIncludes.h
+file(GLOB DM_Sources CONFIGURE_DEPENDS
+    ./*.cpp
+    ./*.h
 )
 
-file(GLOB Common_Files CONFIGURE_DEPENDS
-    	    ../Common/*.cpp
-            ../Common/*.h
+file(GLOB Common_Sources CONFIGURE_DEPENDS
+    ../Common/*.cpp
+    ../Common/*.h
 )
 
-add_executable (DataManipulator ${Common_Files} ${DM_FILES})
-
+add_executable (DataManipulator ${Common_Sources} ${DM_Sources})

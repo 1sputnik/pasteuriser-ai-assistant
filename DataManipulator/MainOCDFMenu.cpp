@@ -19,15 +19,15 @@ void MainOCDF_Menu() {
 	while (true) {
 		system("cls");
 
-		std::cout << "DataManipulator: работа с форматом OCDF\n\n";
+		cout << "DataManipulator: работа с форматом OCDF\n\n";
 
-		std::cout << "Данные загружены\n"
+		cout << "Данные загружены\n"
 			<< "Формат данных: OCDF\n"
 			<< "Размерность данных: " << data.size() << "\n"
 			<< "Первая строка данных:\t\t" << data[0] << "\n"
 			<< "Последняя строка данных:\t" << data[data.size() - 1] << "\n\n";
 
-		std::cout << "Выберите пункт меню:\n"
+		cout << "Выберите пункт меню:\n"
 			<< "1 - обрезать заданный процент данных\n"
 			<< "2 - обрезать заданное количество данных\n"
 			<< "3 - обрезать относительно заданного момента времени\n"
@@ -41,7 +41,7 @@ void MainOCDF_Menu() {
 			<< "Введите пункт меню: ";
 
 		string answer;
-		std::getline(std::cin, answer);
+		getline(cin, answer);
 
 		if (!is_menu_point(answer)) {
 			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
@@ -64,12 +64,12 @@ void cut_percent_OCDF_data(vector<OCDF>& data) {
 	while (true) {
 		system("cls");
 
-		std::cout << "DataManipulator: обрезка OCDF-данных по заданному проценту\n\n";
+		cout << "DataManipulator: обрезка OCDF-данных по заданному проценту\n\n";
 
 		double cut_percent;
-		std::cout << "Введите процент данных, который нужно оставить (число в диапазоне (0.0; 1.0)): ";
+		cout << "Введите процент данных, который нужно оставить (число в диапазоне (0.0; 1.0)): ";
 		string answer;
-		std::getline(std::cin, answer);
+		getline(cin, answer);
 		if (!string_to_double(answer, cut_percent, false)) {
 			msg_warning("\nОшибка ввода данных! Введённое значение не является действительным числом!\n\n");
 			continue;
@@ -81,9 +81,9 @@ void cut_percent_OCDF_data(vector<OCDF>& data) {
 		}
 
 		bool cut_trend;
-		std::cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
+		cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
 		answer.clear();
-		std::getline(std::cin, answer);
+		getline(cin, answer);
 		if (!is_menu_point(answer)) {
 			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
 			continue;
@@ -111,10 +111,10 @@ void cut_quantity_OCDF_data(vector<OCDF>& data) {
 	while (true) {
 		system("cls");
 
-		std::cout << "DataManipulator: обрезка OCDF-данных по заданному количеству\n\n";
+		cout << "DataManipulator: обрезка OCDF-данных по заданному количеству\n\n";
 
 		int cut_quantity;
-		std::cout << "Введите количество данных, которое нужно оставить: ";
+		cout << "Введите количество данных, которое нужно оставить: ";
 		string answer;
 		getline(cin, answer);
 		if (!string_to_integer(answer, cut_quantity)) {
@@ -129,8 +129,8 @@ void cut_quantity_OCDF_data(vector<OCDF>& data) {
 
 		bool cut_trend;
 		answer.clear();
-		std::cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
-		std::getline(std::cin, answer);
+		cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
+		getline(cin, answer);
 
 		if (!is_menu_point(answer)) {
 			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
@@ -159,10 +159,10 @@ void cut_time_OCDF_data(vector<OCDF>& data) {
 	while (true) {
 		system("cls");
 
-		std::cout << "DataManipulator: обрезка OCDF-данных по заданному моменту времени\n\n";
+		cout << "DataManipulator: обрезка OCDF-данных по заданному моменту времени\n\n";
 
 		int cut_time;
-		std::cout << "Введите момент времени, которое будет являться границей обрезки: ";
+		cout << "Введите момент времени, которое будет являться границей обрезки: ";
 		string answer;
 		getline(cin, answer);
 		if (!string_to_integer(answer, cut_time)) {
@@ -177,8 +177,8 @@ void cut_time_OCDF_data(vector<OCDF>& data) {
 
 		bool cut_trend;
 		answer.clear();
-		std::cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
-		std::getline(std::cin, answer);
+		cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
+		getline(cin, answer);
 
 		if (!is_menu_point(answer)) {
 			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
@@ -207,12 +207,12 @@ void right_time_OCDF(vector<OCDF>& data) {
 	while (true) {
 		system("cls");
 
-		std::cout << "DataManipulator: выравнивание OCDF данных по оси временни\n\n";
+		cout << "DataManipulator: выравнивание OCDF данных по оси временни\n\n";
 
-		std::cout << "Внимание! Данная операция предназначена для одного сида!\n\n";
+		cout << "Внимание! Данная операция предназначена для одного сида!\n\n";
 
 		int range;
-		std::cout << "Введите необходимый диапозон между временными точками (0 - выход): ";
+		cout << "Введите необходимый диапозон между временными точками (0 - выход): ";
 		string answer;
 		getline(cin, answer);
 		if (!string_to_integer(answer, range)) {
@@ -258,10 +258,10 @@ void show_OCDF_data(vector<OCDF>& data) {
 
 	system("cls");
 
-	std::cout << "DataManipulator: визуализация OCDF формата\n\n";
+	cout << "DataManipulator: визуализация OCDF формата\n\n";
 
 	dump_data(data, "..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
-	std::cout << "Данные визуализирвоаны!\n\n" << "Чтобы выйти в меню, закройте окно визуализации!\n";
+	cout << "Данные визуализирвоаны!\n\n" << "Чтобы выйти в меню, закройте окно визуализации!\n";
 
 	if (is_one_cid) {
 		system("py ..\\..\\..\\..\\PyVisualisation\\OCDF_OneCid_Visual.py ..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
@@ -277,10 +277,10 @@ void pars_OCDF_data_per_cid(vector<OCDF>& data) {
 	while (true) {
 		system("cls");
 
-		std::cout << "DataManipulator: парсинг OCDF формата по указанному сиду\n\n";
+		cout << "DataManipulator: парсинг OCDF формата по указанному сиду\n\n";
 
 		int number;
-		std::cout << "Введите номер сида, который необходимо оставить (0 - чтобы выйти): ";
+		cout << "Введите номер сида, который необходимо оставить (0 - чтобы выйти): ";
 		string answer;
 		getline(cin, answer);
 		if (!string_to_integer(answer, number)) {
@@ -324,9 +324,9 @@ void add_more_data(vector<OCDF>& data) {
 
 	system("cls");
 
-	std::cout << "DataManipulator: добавление новых данных OCDF формата\n\n";
+	cout << "DataManipulator: добавление новых данных OCDF формата\n\n";
 
-	std::cout << "Соединяем данные...";
+	cout << "Соединяем данные...";
 
 	vector<OCDF> all_data(data.size() + new_data.size());
 	for (size_t i = 0, j = 0, k = 0; k < all_data.size(); k++) {
@@ -368,11 +368,11 @@ void add_more_data(vector<OCDF>& data) {
 void save_OCDF_data_in_csv(vector<OCDF>& data) {
 	system("cls");
 
-	std::cout << "DataManipulator: сохранение данных OCDF формата в текстовом режиме\n\n";
+	cout << "DataManipulator: сохранение данных OCDF формата в текстовом режиме\n\n";
 
 	string dump_file_path;
-	std::cout << "Введите имя файла для загрузки в него данных: ";
-	std::getline(std::cin, dump_file_path);
+	cout << "Введите имя файла для загрузки в него данных: ";
+	getline(cin, dump_file_path);
 	for (size_t k = dump_file_path.find('\"'); k != dump_file_path.npos; k = dump_file_path.find('\"', k))
 		dump_file_path.erase(k, 1);
 
@@ -398,11 +398,11 @@ void save_OCDF_data_in_csv(vector<OCDF>& data) {
 void save_OCDF_data_in_bin(vector<OCDF>& data) {
 	system("cls");
 
-	std::cout << "DataManipulator: сохранение данных OCDF формата в бинарном режиме\n\n";
+	cout << "DataManipulator: сохранение данных OCDF формата в бинарном режиме\n\n";
 
 	string dump_file_path;
-	std::cout << "Введите имя файла для загрузки в него данных: ";
-	std::getline(std::cin, dump_file_path);
+	cout << "Введите имя файла для загрузки в него данных: ";
+	getline(cin, dump_file_path);
 	for (size_t k = dump_file_path.find('\"'); k != dump_file_path.npos; k = dump_file_path.find('\"', k))
 		dump_file_path.erase(k, 1);
 
