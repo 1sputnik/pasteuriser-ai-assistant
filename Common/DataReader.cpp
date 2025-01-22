@@ -1,26 +1,62 @@
 #include "DataReader.h"
 
+size_t check_quantity_data_lines_in_file(std::string file_name) {
+	std::ifstream file;
+	file.open(file_name);
+	std::string buffer_string;
+	size_t new_size = 0;
+	while (!file.eof()) {
+		std::getline(file, buffer_string);
+		if (buffer_string.length() > 4)
+			new_size++;
+	}
+	file.close();
+	return new_size;
+}
+
 vector<OneCIDDataFormat> load_OCDF_data(string file_name, size_t size) {
-	std::ifstream load_file;
 	OneCIDDataFormat temp_data;
-	size_t temp_size = check_quantity_data_lines_in_file(load_file, file_name);
+	size_t temp_size = check_quantity_data_lines_in_file(file_name);
 	if (size == 0 || size > temp_size) {
 		size = temp_size;
 	}
 	vector<OneCIDDataFormat> data(size);
-	load_file.open(file_name);
-	for (size_t i = 0; !load_file.eof() && i < size; i++) {
-		char buffer_char;
-		load_file >> temp_data.cid >> buffer_char >> temp_data.time >> buffer_char >> temp_data.value;
-		data.at(i) = temp_data;
+	std::ifstream load_file;
+	load_file.open(file_name, std::ios::in);
+	string line;
+	vector<string> values;
+	double temp_val;
+	try {
+		for (size_t i = 0; !load_file.eof() && i < size; i++) {
+			getline(load_file, line);
+			if (is_target_format_data(line)) {
+				values = split_string(line, ';');
+			}
+			else
+				throw std::invalid_argument("Invalid data format");
+			if (values.size() == 3) {
+				if (!string_to_integer(values[0], temp_data.time) ||
+					!string_to_integer(values[1], temp_data.time) ||
+					!string_to_double(values[2], temp_val))
+					throw std::invalid_argument("Invalid data format");
+				temp_data.value = temp_val;
+				data.at(i) = temp_data;
+			}
+			else
+				throw std::invalid_argument("Invalid data format");
+		}
 	}
+	catch (...) {
+		data.clear();
+	}
+	values.clear();
 	load_file.close();
 	return data;
 }
 
 vector<OneCIDDataFormat> binload_OCDF_data(string file_name, size_t size) {
 	std::ifstream load_file;
-	load_file.open(file_name, std::ios::binary);
+	load_file.open(file_name, std::ios::binary | std::ios::in);
 
 	load_file.seekg(0, load_file.end);
 	long long file_size = load_file.tellg();
@@ -39,10 +75,16 @@ vector<OneCIDDataFormat> binload_OCDF_data(string file_name, size_t size) {
 
 	vector<OneCIDDataFormat> data(size);
 
-	for (size_t i = 0; i < data.size(); i++) {
-		load_file.read((char*)&data[i].cid, sizeof(data[i].cid));
-		load_file.read((char*)&data[i].time, sizeof(data[i].time));
-		load_file.read((char*)&data[i].value, sizeof(data[i].value));
+	try {
+		for (size_t i = 0; i < data.size(); i++) {
+			load_file.read((char*)&data[i].cid, sizeof(data[i].cid));
+			load_file.read((char*)&data[i].time, sizeof(data[i].time));
+			load_file.read((char*)&data[i].value, sizeof(data[i].value));
+		}
+	}
+	catch (...) {
+		data.clear();
+		throw std::invalid_argument("Invalid data format");
 	}
 
 	load_file.close();
@@ -64,26 +106,27 @@ vector<OCDF> read_OCDF_file(string special_msg) {
 			load_file_path.erase(k, 1);
 
 
-		long long data_size;
+		int data_size;
 		std::cout << "\nСколько данных необходимо загрузить (введите 0, если надо загрузить все данные): ";
-		if (!enter_int_numeric(data_size))
+		string answer;
+		getline(cin, answer);
+		if (!string_to_integer(answer, data_size)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом или число отрицательное!\n");
 			continue;
+		}
 
 		try {
 			if (extractLastNChars(load_file_path, 4) == ".bin") {
 				data = binload_OCDF_data(load_file_path, data_size);
 				break;
 			}
-			else if (check_OCDF_in_file(load_file_path)) {
+			else {
 				data = load_OCDF_data(load_file_path, data_size);
 				break;
 			}
-			else {
-				msg_warning("\nОшибка загрузки данных! Неверный формат данных или невозможно считать данные необходимого формата!\n\n");
-			}
 		}
 		catch (...) {
-			msg_warning("\nОшибка загрузки данных! Невозможно считать данные!\n\n");
+			msg_warning("\nОшибка загрузки данных! Неверный формат данных или невозможно считать данные!\n");
 			data.clear();
 		}
 	}
@@ -92,19 +135,40 @@ vector<OCDF> read_OCDF_file(string special_msg) {
 }
 
 vector<TableDataFormat> load_TDF_data(string file_name, size_t size) {
-	std::ifstream load_file;
-	TableDataFormat temp_data;
-	size_t file_size;
-	file_size = check_quantity_data_lines_in_file(load_file, file_name);
-	if (file_size < size || size <= 0)
+	size_t file_size = check_quantity_data_lines_in_file(file_name);
+	if (size == 0 || size > file_size) {
 		size = file_size;
+	}
 	vector<TableDataFormat> data(size);
-	load_file.open(file_name);
-	for (size_t i = 0; !load_file.eof() && i < size; i++) {
-		char buffer_char;
-		load_file >> temp_data.time >> buffer_char >> temp_data.cid_1_value >> buffer_char >> temp_data.cid_2_value >> buffer_char >>
-			temp_data.cid_3_value >> buffer_char >> temp_data.cid_4_value >> buffer_char >> temp_data.cid_5_value >> buffer_char >> temp_data.cid_6_value;
-		data.at(i) = temp_data;
+	TableDataFormat temp_data;
+	std::ifstream load_file;
+	load_file.open(file_name, std::ios::in);
+	string line;
+	vector<string> values;
+	try {
+		for (size_t i = 0; !load_file.eof() && i < size; i++) {
+			getline(load_file, line);
+			if (is_target_format_data(line)) {
+				values = split_string(line, ';');
+			}
+			else
+				throw std::invalid_argument("Invalid data format");
+			if (values.size() == 7) {
+				temp_data.time = stoi(values[0]);
+				temp_data.cid_1_value = stof(values[1]);
+				temp_data.cid_2_value = stof(values[2]);
+				temp_data.cid_3_value = stof(values[3]);
+				temp_data.cid_4_value = stof(values[4]);
+				temp_data.cid_5_value = stof(values[5]);
+				temp_data.cid_6_value = stof(values[6]);
+				data.at(i) = temp_data;
+			}
+			else
+				throw std::invalid_argument("Invalid data format");
+		}
+	}
+	catch (...) {
+		data.clear();
 	}
 	load_file.close();
 	return data;
@@ -112,7 +176,7 @@ vector<TableDataFormat> load_TDF_data(string file_name, size_t size) {
 
 vector<TableDataFormat> binload_TDF_data(string file_name, size_t size) {
 	std::ifstream load_file;
-	load_file.open(file_name, std::ios::binary);
+	load_file.open(file_name, std::ios::binary | std::ios::in);
 
 	load_file.seekg(0, load_file.end);
 	long long file_size = load_file.tellg();
@@ -159,26 +223,27 @@ vector<TableDataFormat> read_TDF_file(string special_msg) {
 		for (size_t k = load_file_path.find('\"'); k != load_file_path.npos; k = load_file_path.find('\"', k))
 			load_file_path.erase(k, 1);
 
-		long long data_size;
+		int data_size;
 		std::cout << "\nСколько данных необходимо загрузить (введите 0, если надо загрузить все данные): ";
-		if (!enter_int_numeric(data_size))
+		string answer;
+		getline(cin, answer);
+		if (!string_to_integer(answer, data_size)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом или число отрицательное!\n");
 			continue;
+		}
 
 		try {
 			if (extractLastNChars(load_file_path, 4) == ".bin") {
 				data = binload_TDF_data(load_file_path, data_size);
 				break;
 			}
-			else if (check_OCDF_in_file(load_file_path)) {
+			else {
 				data = load_TDF_data(load_file_path, data_size);
 				break;
 			}
-			else {
-				msg_warning("\nОшибка загрузки данных! Неверный формат данных или невозможно считать строку с данными!\n\n");
-			}
 		}
 		catch (...) {
-			msg_warning("\nОшибка загрузки данных! Невозможно считать данные!\n\n");
+			msg_warning("\nОшибка загрузки данных! Неверный формат данных или невозможно считать данные!\n");
 			data.clear();
 		}
 	}

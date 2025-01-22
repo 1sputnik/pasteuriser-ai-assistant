@@ -2,6 +2,8 @@
 
 #include "DataFormats.h"
 
+size_t check_quantity_data_lines_in_file(string file_name);
+
 vector<OneCIDDataFormat> load_OCDF_data(string file_name, size_t size = 0);
 
 vector<OneCIDDataFormat> binload_OCDF_data(string file_name, size_t size = 0);
