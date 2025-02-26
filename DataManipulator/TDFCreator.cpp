@@ -31,10 +31,10 @@ void create_TDF_file() {
 
 	system("cls");
 
-	std::cout << "DataManipulator: Сборка TDF-файла из общего OCDF-файла со всеми сидами\n\n";
+	cout << "DataManipulator: Сборка TDF-файла из общего OCDF-файла со всеми сидами\n\n";
 
 	// проверка на наличие всех сидов
-	std::cout << "Проверяем наличие всех сидов...";
+	cout << "Проверяем наличие всех сидов...";
 	if (!check_all_cids(general_OCDF_data)) {
 		msg_warning("\nОшибка преобразования данных! Данные содержат не все сиды!\n\n");
 		return;
@@ -42,10 +42,10 @@ void create_TDF_file() {
 
 	system("cls");
 
-	std::cout << "DataManipulator: Сборка TDF-файла из общего OCDF-файла со всеми сидами\n\n";
+	cout << "DataManipulator: Сборка TDF-файла из общего OCDF-файла со всеми сидами\n\n";
 
 	// парсим данные
-	std::cout << "Парсим данные...";
+	cout << "Парсим данные...";
 	vector<OCDF> first_cid_data;
 	first_cid_data = parsing_data_per_cid(general_OCDF_data, 1);
 	vector<OCDF> second_cid_data;
@@ -68,14 +68,18 @@ void create_TDF_file() {
 
 	system("cls");
 
-	std::cout << "DataManipulator: Сборка TDF-файла из общего OCDF-файла со всеми сидами\n\n";
+	cout << "DataManipulator: Сборка TDF-файла из общего OCDF-файла со всеми сидами\n\n";
 
 	// вводим необходимый диапазон данных относительно времени
-	long long range;
+	int range;
 	while (true) {
-		std::cout << "Введите необходимый диапозон между временными точками: ";
-		if (!enter_int_numeric(range))
+		cout << "Введите необходимый диапозон между временными точками: ";
+		string answer;
+		getline(cin, answer);
+		if (!string_to_integer(answer, range)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом или число отрицательное!\n");
 			continue;
+		}
 
 		else if (range < 0) {
 			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
@@ -86,7 +90,7 @@ void create_TDF_file() {
 	}
 
 	// выравниваем диапазоны данных
-	std::cout << "Определяем временные границы данных сидов...";
+	cout << "Определяем временные границы данных сидов...";
 
 	vector<int> first_elements_of_cids{ first_cid_data[0].time, second_cid_data[0].time, third_cid_data[0].time,
 		forth_cid_data[0].time, fifth_cid_data[0].time, sixth_cid_data[0].time };
@@ -100,7 +104,7 @@ void create_TDF_file() {
 	int max_time_border = *max_element;
 	last_elements_of_cids.clear();
 
-	std::cout << "\b\b\b.\nВыравниваем диапазоны сидов по времени...";
+	cout << "\b\b\b.\nВыравниваем диапазоны сидов по времени...";
 
 	first_cid_data = cut_data_per_time(first_cid_data, min_time_border, true, true);
 	first_cid_data = cut_data_per_time(first_cid_data, max_time_border, false, true);
@@ -140,10 +144,10 @@ void create_TDF_file() {
 
 	system("cls");
 
-	std::cout << "DataManipulator: Сборка TDF-файла из общего OCDF-файла со всеми сидами\n\n";
+	cout << "DataManipulator: Сборка TDF-файла из общего OCDF-файла со всеми сидами\n\n";
 
 	// Собираем TDF-последовательность
-	std::cout << "Собираем данные в TDF-формат...";
+	cout << "Собираем данные в TDF-формат...";
 
 	vector<TDF> data(first_cid_data.size());
 	for (size_t i = 0; i < data.size(); i++) {
@@ -153,12 +157,12 @@ void create_TDF_file() {
 
 	system("cls");
 
-	std::cout << "DataManipulator: Сборка TDF-файла из общего OCDF-файла со всеми сидами\n\n";
+	cout << "DataManipulator: Сборка TDF-файла из общего OCDF-файла со всеми сидами\n\n";
 
 	// сохраняем TDF-последовательсноть
 	string dump_file_path;
-	std::cout << "Введите имя файла для загрузки в него данных: ";
-	std::getline(std::cin, dump_file_path);
+	cout << "Введите имя файла для загрузки в него данных: ";
+	getline(std::cin, dump_file_path);
 	for (size_t k = dump_file_path.find('\"'); k != dump_file_path.npos; k = dump_file_path.find('\"', k))
 		dump_file_path.erase(k, 1);
 
@@ -167,11 +171,18 @@ void create_TDF_file() {
 		system("cls");
 
 		string answer;
-		std::cout << "В каком формате сохранить даныне (0 - .csv, 1 - .bin): ";
-		if (!enter_menu_point(answer))
+		cout << "В каком формате сохранить даныне (0 - .csv, 1 - .bin): ";
+		getline(cin, answer);
+
+		if (!is_menu_point(answer)) {
+			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
 			continue;
-		if (!string_symbol_to_bool(answer, save_to_bin_format))
+		}
+
+		if (!string_to_bool(answer, save_to_bin_format)) {
+			msg_warning("\nОшибка ввода данных! Введённо недопустимое значение или слишком много символов!\n");
 			continue;
+		}
 
 		break;
 	}

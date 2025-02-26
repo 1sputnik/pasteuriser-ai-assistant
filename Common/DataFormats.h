@@ -2,10 +2,6 @@
 
 #include "WARNING.h"
 
-using std::vector;
-using std::string;
-using std::find;
-
 typedef long long int llint;
 
 class OneCIDDataFormat;
@@ -26,7 +22,7 @@ public:
 	OneCIDDataFormat(short cid, int time, float value);
 
 	friend std::ostream& operator<<(std::ostream& os, const OneCIDDataFormat& data);
-	friend std::istream& operator>>(std::istream& is, const OneCIDDataFormat& data);
+	friend std::istream& operator>>(std::istream& is, OneCIDDataFormat& data);
 
 	void operator=(const OneCIDDataFormat& data);
 };
@@ -47,9 +43,7 @@ public:
 	TableDataFormat(int time, float cid_1_value, float cid_2_value, float cid_3_value, float cid_4_value, float cid_5_value, float cid_6_value);
 
 	friend std::ostream& operator<<(std::ostream& os, const TableDataFormat& data);
-	friend std::istream& operator>>(std::istream& is, const TableDataFormat& data);
+	friend std::istream& operator>>(std::istream& is, TableDataFormat& data);
 
 	void operator=(const TableDataFormat& data);
 };
-
-//void load_data(TableDataFormat*& data, string file_name);

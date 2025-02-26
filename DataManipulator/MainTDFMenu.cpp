@@ -37,8 +37,11 @@ void MainTDF_Menu() {
 			<< "Введите пункт меню: ";
 
 		string answer;
-		if (!enter_menu_point(answer))
+		getline(cin, answer);
+		if (!is_menu_point(answer)) {
+			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
 			continue;
+		}
 
 		if (answer[0] == '0')
 			return;
@@ -56,25 +59,35 @@ void cut_percent_TDF_data(vector<TDF>& data) {
 	while (true) {
 		system("cls");
 
-		std::cout << "DataManipulator: обрезка TDF-данных по заданному проценту\n\n";
+		cout << "DataManipulator: обрезка TDF-данных по заданному проценту\n\n";
 
 		double cut_percent;
-		std::cout << "Введите процент данных, который нужно оставить (число в диапазоне (0.0; 1.0)): ";
-		if (!enter_double_numeric(cut_percent, false))
+		cout << "Введите процент данных, который нужно оставить (число в диапазоне (0.0; 1.0)): ";
+		string answer;
+		getline(cin, answer);
+		if (!string_to_double(answer, cut_percent, false)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является действительным числом!\n\n");
 			continue;
+		}
+
 		if (cut_percent > 1.0 || cut_percent < 0.0) {
-			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
+			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n");
 			continue;
 		}
 
 		bool cut_trend;
-		string answer;
-		std::cout << "Выберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
-		if (!enter_menu_point(answer))
+		cout << "Выберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
+		answer.clear();
+		getline(cin, answer);
+		if (!is_menu_point(answer)) {
+			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n");
 			continue;
+		}
 
-		if (!string_symbol_to_bool(answer, cut_trend))
+		if (!string_to_bool(answer, cut_trend)) {
+			msg_warning("\nОшибка ввода данных! Введённо недопустимое значение или слишком много символов!\n");
 			continue;
+		}
 
 		data = cut_percent_data(data, cut_percent, cut_trend);
 
@@ -86,25 +99,35 @@ void cut_quantity_TDF_data(vector<TDF>& data) {
 	while (true) {
 		system("cls");
 
-		std::cout << "DataManipulator: обрезка TDF-данных по заданному количеству\n\n";
+		cout << "DataManipulator: обрезка TDF-данных по заданному количеству\n\n";
 
-		long long cut_quantity;
-		std::cout << "Введите количество данных, которое нужно оставить: ";
-		if (!enter_int_numeric(cut_quantity))
+		int cut_quantity;
+		cout << "Введите количество данных, которое нужно оставить: ";
+		string answer;
+		getline(cin, answer);
+		if (!string_to_integer(answer, cut_quantity)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом или число отрицательное!\n");
 			continue;
+		}
+
 		if (cut_quantity <= 0) {
 			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
 			continue;
 		}
 
 		bool cut_trend;
-		string answer;
-		std::cout << "Выберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
-		if (!enter_menu_point(answer))
+		answer.clear();
+		cout << "Выберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
+		getline(cin, answer);
+		if (!is_menu_point(answer)) {
+			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
 			continue;
+		}
 
-		if (!string_symbol_to_bool(answer, cut_trend))
+		if (!string_to_bool(answer, cut_trend)) {
+			msg_warning("\nОшибка ввода данных! Введённо недопустимое значение или слишком много символов!\n");
 			continue;
+		}
 
 		data = cut_quntity_data(data, cut_quantity, cut_trend);
 
@@ -116,25 +139,35 @@ void cut_time_TDF_data(vector<TDF>& data) {
 	while (true) {
 		system("cls");
 
-		std::cout << "DataManipulator: обрезка TDF-данных по заданному моменту времени\n\n";
+		cout << "DataManipulator: обрезка TDF-данных по заданному моменту времени\n\n";
 
-		long long cut_time;
-		std::cout << "Введите момент времени, который будет являться границей обрезки: ";
-		if (!enter_int_numeric(cut_time))
+		int cut_time;
+		cout << "Введите момент времени, который будет являться границей обрезки: ";
+		string answer;
+		getline(cin, answer);
+		if (!string_to_integer(answer, cut_time)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом или число отрицательное!\n");
 			continue;
+		}
+
 		if (cut_time <= 0) {
 			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
 			continue;
 		}
 
 		bool cut_trend;
-		string answer;
-		std::cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
-		if (!enter_menu_point(answer))
+		answer.clear();
+		cout << "\nВыберите сторону обрезки (0 - слева направо, 1 - справо налево): ";
+		getline(cin, answer);
+		if (!is_menu_point(answer)) {
+			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n\n");
 			continue;
+		}
 
-		if (!string_symbol_to_bool(answer, cut_trend))
+		if (!string_to_bool(answer, cut_trend)) {
+			msg_warning("\nОшибка ввода данных! Введённо недопустимое значение или слишком много символов!\n");
 			continue;
+		}
 
 		vector<TDF> buffer_data = cut_data_per_time(data, cut_time, cut_trend);
 		if (buffer_data.size() == 0) {
@@ -152,10 +185,10 @@ void cut_time_TDF_data(vector<TDF>& data) {
 void show_TDF_data(vector<TDF>& data) {
 	system("cls");
 
-	std::cout << "DataManipulator: визуализация TDF формата\n\n";
+	cout << "DataManipulator: визуализация TDF формата\n\n";
 
 	dump_data(data, "..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
-	std::cout << "Данные визуализирвоаны!\n\n" << "Чтобы выйти в меню, закройте окно визуализации!\n";
+	cout << "Данные визуализирвоаны!\n\n" << "Чтобы выйти в меню, закройте окно визуализации!\n";
 
 	system("python ..\\..\\..\\..\\PyVisualisation\\TDF_Visual.py ..\\..\\..\\..\\PyVisualisation\\temp_ocdf.csv");
 
@@ -163,21 +196,25 @@ void show_TDF_data(vector<TDF>& data) {
 }
 
 void pars_TDF_data_per_cid(vector<TDF>& data) {
-	long long number;
+	int number;
 	while (true) {
 		system("cls");
 
-		std::cout << "DataManipulator: парсинг TDF формата по указанному сиду\n\n";
+		cout << "DataManipulator: парсинг TDF формата по указанному сиду\n\n";
 
-		std::cout << "Введите номер сида, который необходимо оставить (0 - чтобы выйти): ";
-		if (!enter_int_numeric(number))
+		cout << "Введите номер сида, который необходимо оставить (0 - чтобы выйти): ";
+		string answer;
+		getline(cin, answer);
+		if (!string_to_integer(answer, number)) {
+			msg_warning("\nОшибка ввода данных! Введённое значение не является целым числом или число отрицательное!\n");
 			continue;
+		}
 
 		if (number == 0)
 			return;
 
 		if (number > 6 || number < 0) {
-			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n\n");
+			msg_warning("\nОшибка ввода данных! Введённое число недопустимо!\n");
 			continue;
 		}
 
@@ -190,14 +227,21 @@ void pars_TDF_data_per_cid(vector<TDF>& data) {
 	while (true) {
 		system("cls");
 
-		std::cout << "DataManipulator: парсинг TDF формата по указанному сиду\n\n";
+		cout << "DataManipulator: парсинг TDF формата по указанному сиду\n\n";
 
 		string answer;
-		std::cout << "В каком формате сохранить даныне (0 - .csv, 1 - .bin): ";
-		if (!enter_menu_point(answer))
+		cout << "В каком формате сохранить даныне (0 - .csv, 1 - .bin): ";
+		getline(cin, answer);
+
+		if (!is_menu_point(answer)) {
+			msg_warning("\nОшибка ввода данных! Введено слишком много символов!\n");
 			continue;
-		if (!string_symbol_to_bool(answer, save_to_bin_format))
+		}
+
+		if (!string_to_bool(answer, save_to_bin_format)) {
+			msg_warning("\nОшибка ввода данных! Введённо недопустимое значение или слишком много символов!\n");
 			continue;
+		}
 
 		break;
 	}
@@ -213,11 +257,11 @@ void pars_TDF_data_per_cid(vector<TDF>& data) {
 void save_TDF_data_in_csv(vector<TDF>& data) {
 	system("cls");
 
-	std::cout << "DataManipulator: сохранение данных TDF формата в текстовом режиме\n\n";
+	cout << "DataManipulator: сохранение данных TDF формата в текстовом режиме\n\n";
 
 	string dump_file_path;
-	std::cout << "Введите имя файла для загрузки в него данных: ";
-	std::getline(std::cin, dump_file_path);
+	cout << "Введите имя файла для загрузки в него данных: ";
+	getline(cin, dump_file_path);
 	for (size_t k = dump_file_path.find('\"'); k != dump_file_path.npos; k = dump_file_path.find('\"', k))
 		dump_file_path.erase(k, 1);
 
@@ -243,11 +287,11 @@ void save_TDF_data_in_csv(vector<TDF>& data) {
 void save_TDF_data_in_bin(vector<TDF>& data) {
 	system("cls");
 
-	std::cout << "DataManipulator: сохранение данных TDF формата в бинарном режиме\n\n";
+	cout << "DataManipulator: сохранение данных TDF формата в бинарном режиме\n\n";
 
 	string dump_file_path;
-	std::cout << "Введите имя файла для загрузки в него данных: ";
-	std::getline(std::cin, dump_file_path);
+	cout << "Введите имя файла для загрузки в него данных: ";
+	getline(cin, dump_file_path);
 	for (size_t k = dump_file_path.find('\"'); k != dump_file_path.npos; k = dump_file_path.find('\"', k))
 		dump_file_path.erase(k, 1);
 

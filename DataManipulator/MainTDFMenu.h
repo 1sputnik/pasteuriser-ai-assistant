@@ -1,17 +1,6 @@
 #pragma once
 
-#include <map>
-#include <functional>
-#include <filesystem>
 #include "MainOCDFMenu.h"
-#include "../Common/DataReformer.h"
-#include "../Common/DataReader.h"
-#include "../Common/DataDumper.h"
-
-using std::map;
-using std::function;
-using std::vector;
-using std::make_pair;
 
 void MainTDF_Menu();
 void cut_percent_TDF_data(vector<TDF>& data);
