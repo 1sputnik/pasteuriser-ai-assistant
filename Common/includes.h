@@ -9,7 +9,8 @@
 #include <vector>
 #include <algorithm>
 #include <conio.h>
-
+#include "../Exceptions/IOExceptions.h"
+#include "../Exceptions/ConvertExceptions.h"
 
 using std::replace;
 using std::getline;

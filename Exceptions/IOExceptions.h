@@ -9,7 +9,7 @@ enum IO_TYPES {
     OUT_FILE
 };
 
-class IOException : public CommonException
+class IOException : public GeneralException
 {
 public:
     IOException(std::string message, IO_TYPES io_type);

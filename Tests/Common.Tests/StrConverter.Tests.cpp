@@ -94,25 +94,34 @@ TEST(Common_StrConverter, Is_Target_Format_Data) {
 
 TEST(Common_StrConverter, String_To_Bool) {
 	bool test;
+	std::string src;
 
-	std::string invalid_str = "hello";
-	EXPECT_FALSE(string_to_bool(invalid_str, test));
+	src = "hello";
+	EXPECT_FALSE(string_to_bool(src, test));
 
-	std::string wrong_str = "2";
-	EXPECT_FALSE(string_to_bool(wrong_str, test));
+	src = "2";
+	EXPECT_FALSE(string_to_bool(src, test));
 
-	std::string zero_one_str = "01";
-	EXPECT_FALSE(string_to_bool(zero_one_str, test));
+	src = "true";
+	EXPECT_TRUE(string_to_bool(src, test));
+	EXPECT_TRUE(test);
 
-	std::string void_str = "";
-	EXPECT_FALSE(string_to_bool(void_str, test));
-
-	std::string zero = "0";
-	EXPECT_TRUE(string_to_bool(zero, test));
+	src = "false";
+	EXPECT_TRUE(string_to_bool(src, test));
 	EXPECT_FALSE(test);
 
-	std::string one = "1";
-	EXPECT_TRUE(string_to_bool(one, test));
+	src = "01";
+	EXPECT_FALSE(string_to_bool(src, test));
+
+	src = "";
+	EXPECT_FALSE(string_to_bool(src, test));
+
+	src = "0";
+	EXPECT_TRUE(string_to_bool(src, test));
+	EXPECT_FALSE(test);
+
+	src = "1";
+	EXPECT_TRUE(string_to_bool(src, test));
 	EXPECT_TRUE(test);
 }
 
@@ -139,6 +148,31 @@ TEST(Common_StrConverter, String_To_Integer) {
 
 	std::string biginteger = "123456789123456789123456789";
 	EXPECT_FALSE(string_to_integer(biginteger, result));
+}
+
+TEST(Common_StrConverter, String_To_Short) {
+	short result;
+
+	std::string invalid_str = "hello";
+	EXPECT_FALSE(string_to_short(invalid_str, result));
+
+	std::string zero_one_str = "01";
+	EXPECT_TRUE(string_to_short(zero_one_str, result));
+	EXPECT_EQ(result, 1);
+
+	std::string void_str = "";
+	EXPECT_FALSE(string_to_short(void_str, result));
+
+	std::string zero = "0";
+	EXPECT_TRUE(string_to_short(zero, result));
+	EXPECT_EQ(result, 0);
+
+	std::string integer = "12345";
+	EXPECT_TRUE(string_to_short(integer, result));
+	EXPECT_EQ(result, 12345);
+
+	std::string biginteger = "123456789123456789123456789";
+	EXPECT_FALSE(string_to_short(biginteger, result));
 }
 
 TEST(Common_StrConverter, String_To_Double) {

@@ -33,17 +33,17 @@ vector<OneCIDDataFormat> load_OCDF_data(string file_name, size_t size) {
 				values = split_string(line, ';');
 			}
 			else
-				throw std::invalid_argument("Invalid data format");
+				throw IOException("Строка с данными не подходит под целевой формат!", IO_TYPES::IN_FILE);
 			if (values.size() == 3) {
-				if (!string_to_integer(values[0], temp_data.time) ||
+				if (!string_to_short(values[0], temp_data.cid) ||
 					!string_to_integer(values[1], temp_data.time) ||
 					!string_to_double(values[2], temp_val))
-					throw std::invalid_argument("Invalid data format");
+					throw IOException("Невозможно преобразовать данные к необходимому формату!", IO_TYPES::IN_FILE);
 				temp_data.value = temp_val;
 				data.at(i) = temp_data;
 			}
 			else
-				throw std::invalid_argument("Invalid data format");
+				throw IOException("Строка с данными не содержит информацию о сиде, времени и величине!", IO_TYPES::IN_FILE);
 		}
 	}
 	catch (...) {
@@ -116,7 +116,7 @@ vector<OCDF> read_OCDF_file(string special_msg) {
 		}
 
 		try {
-			if (extractLastNChars(load_file_path, 4) == ".bin") {
+			if (extract_last_n_chars(load_file_path, 4) == ".bin") {
 				data = binload_OCDF_data(load_file_path, data_size);
 				break;
 			}
@@ -233,7 +233,7 @@ vector<TableDataFormat> read_TDF_file(string special_msg) {
 		}
 
 		try {
-			if (extractLastNChars(load_file_path, 4) == ".bin") {
+			if (extract_last_n_chars(load_file_path, 4) == ".bin") {
 				data = binload_TDF_data(load_file_path, data_size);
 				break;
 			}

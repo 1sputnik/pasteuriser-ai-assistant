@@ -6,6 +6,8 @@ bool string_to_double(string str, double& numeric, bool invers_descriptor = fals
 
 bool string_to_integer(string str, int& numeric);
 
+bool string_to_short(string str, short& numeric);
+
 bool string_to_bool(string str, bool& answer);
 
 bool is_double(const string& str);

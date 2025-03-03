@@ -1,9 +1,9 @@
 #include "StrConverter.h"
 
 
-vector<char> integer_symbols{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
-vector<char> float_symbols{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0' };
-vector<char> format_symbols{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', ';', '\n', '\r' };
+static vector<char> integer_symbols{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
+static vector<char> float_symbols{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'};
+static vector<char> format_symbols{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.', ';', '\n', '\r' };
 
 
 bool string_to_double(string str, double& numeric, bool invers_descriptor) {
@@ -13,7 +13,13 @@ bool string_to_double(string str, double& numeric, bool invers_descriptor) {
 	if (is_double(str)) {
 		if (invers_descriptor)
 			replace(str.begin(), str.end(), '.', ',');
-		numeric = stod(str);
+		try {
+			numeric = stod(str);
+		}
+		catch (...) {
+			numeric = 0;
+			throw StrConvertException("Не удалось преобразовать std::string в double!", str);
+		}
 		return true;
 	}
 	return false;
@@ -23,24 +29,49 @@ bool string_to_integer(string str, int& numeric) {
 	if (str.length() > 9) {
 		return false;
 	}
-    else if (is_integer(str)) {
-		numeric = stol(str);
+	else if (is_integer(str)) {
+		try {
+			numeric = int(stol(str));
+		}
+		catch (...) {
+			numeric = 0;
+			throw StrConvertException("Не удалось преобразовать std::string в int!", str);
+		}
+		return true;
+	}
+	return false;
+}
+
+bool string_to_short(string str, short& numeric) {
+	string max_short_value_str = "32767";
+	if (str.length() > 5) {
+		return false;
+	}
+	else if (is_integer(str)) {
+		try{
+			numeric = short(stol(str));
+		}
+		catch (...) {
+			numeric = 0;
+			throw StrConvertException("Не удалось преобразовать std::string в short!", str);
+		}
 		return true;
 	}
 	return false;
 }
 
 bool string_to_bool(string str, bool& answer) {
-	if (str == "0") {
+	if ( (str == "0") || (str == "false") ) {
 		answer = false;
+		return true;
 	}
-	else if (str == "1") {
+	else if ( (str == "1") || (str == "true") ) {
 		answer = true;
+		return true;
 	}
 	else {
 		return false;
 	}
-	return true;
 }
 
 bool is_double(const string& str) {

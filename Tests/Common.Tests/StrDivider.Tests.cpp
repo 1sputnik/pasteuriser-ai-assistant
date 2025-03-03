@@ -2,28 +2,105 @@
 
 TEST(Common_StrDivider, Extract_Last_N_Chars) {
 	std::string answer;
+	std::string src;
+	int len;
 
-	std::string void_str = "";
-	answer = extractLastNChars(void_str, 5);
+	src = "";
+	len = 5;
+	answer = extract_last_n_chars(src, len);
 	EXPECT_EQ(answer, "");
 
-	std::string file_name = "D:\\PASTER-CORE\\PAIA\\CMakeLists.txt";
-	answer = extractLastNChars(file_name, 3);
+	src = "D:\\PASTER-CORE\\PAIA\\CMakeLists.txt";
+	len = 3;
+	answer = extract_last_n_chars(src, len);
 	EXPECT_EQ(answer, "txt");
 
-	std::string str = "test_str";
-	int str_len_1 = str.length();
-	answer = extractLastNChars(str, str_len_1);
+	src = "test_str";
+	len = src.length();
+	answer = extract_last_n_chars(src, len);
 	EXPECT_EQ(answer, "test_str");
 
-	int str_len_2 = str.length() - 3;
-	answer = extractLastNChars(str, str_len_2);
+	len = src.length() - 3;
+	answer = extract_last_n_chars(src, len);
 	EXPECT_EQ(answer, "t_str");
 
-	int str_len_3 = str.length() + 2;
-	answer = extractLastNChars(str, str_len_3);
+	len = src.length() + 2;
+	answer = extract_last_n_chars(src, len);
 	EXPECT_EQ(answer, "test_str");
+
+	len = 0;
+	answer = extract_last_n_chars(src, len);
+	EXPECT_EQ(answer, "");
 }
+
+TEST(Common_StrDivider, Extract_Last_N_Chars_EXC) {
+	std::string answer;
+	std::string src;
+	int len;
+	bool test_result = false;
+
+	src = "test_str";
+	len = (-4);
+	try {
+		answer = extract_last_n_chars(src, len);
+	}
+	catch (const CommonException& CmnEXC) {
+		test_result = true;
+	}
+	EXPECT_TRUE(test_result);
+}
+
+
+TEST(Common_StrDivider, Extract_First_N_Chars) {
+	std::string answer;
+	std::string src;
+	int len;
+
+	src = "";
+	len = 5;
+	answer = extract_first_n_chars(src, len);
+	EXPECT_EQ(answer, "");
+
+	src = "D:\\PASTER-CORE\\PAIA\\CMakeLists.txt";
+	len = 6;
+	answer = extract_first_n_chars(src, len);
+	EXPECT_EQ(answer, "D:\\PAS");
+
+	src = "test_str";
+	len = src.length();
+	answer = extract_first_n_chars(src, len);
+	EXPECT_EQ(answer, "test_str");
+
+	len = src.length() - 3;
+	answer = extract_first_n_chars(src, len);
+	EXPECT_EQ(answer, "test_");
+
+	len = src.length() + 2;
+	answer = extract_first_n_chars(src, len);
+	EXPECT_EQ(answer, "test_str");
+
+	len = 0;
+	answer = extract_first_n_chars(src, len);
+	EXPECT_EQ(answer, "");
+}
+
+TEST(Common_StrDivider, Extract_First_N_Chars_EXC) {
+	std::string answer;
+	std::string src;
+	int len;
+	bool result = false;
+
+	src = "test_str";
+	len = (-4);
+	try {
+		answer = extract_first_n_chars(src, len);
+	}
+	catch (const CommonException& CmnEXC) {
+		result = true;
+	}
+	EXPECT_TRUE(result);
+}
+
 
 TEST(Common_StrDivider, Split_String_Char_Descriptor) {
 	std::vector<std::string> answer;

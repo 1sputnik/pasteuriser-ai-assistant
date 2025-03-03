@@ -1,10 +1,23 @@
 #include "StrDivider.h"
 
-string extractLastNChars(const string & str, int n) {
-	if (str.size() <= n) {
+string extract_last_n_chars(const string& str, int n) {
+	if (n < 0) {
+		throw CommonException("Ошибка выделения последних символов строки! Значение количества меньше 0!");
+	}
+	else if (n >= str.size()) {
 		return str;
 	}
 	return str.substr(str.size() - n);
+}
+
+string extract_first_n_chars(const string& str, int n) {
+	if (n < 0) {
+		throw CommonException("Ошибка выделения первых символов строки! Значение количества меньше 0!");
+	}
+	else if (n >= str.size()) {
+		return str;
+	}
+	return str.substr(0, n);
 }
 
 vector<string> split_string(const string str, char descriptor) {
